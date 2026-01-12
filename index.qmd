@@ -1,0 +1,8 @@
+# Introduction {.unnumbered}
+
+These are notes on the logic of experiments. 
+
+Understanding the logic of experiments helps one clearly understand: 
+
+1. *why randomization is powerful* and 
+1. *what randomization **does** and **does not** get you*.

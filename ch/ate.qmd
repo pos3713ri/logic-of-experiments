@@ -1,0 +1,262 @@
+# ATE
+
+In this chapter, we define the **average treatment effect** or the **ATE**. This is the key quantity of interest that we want to estimate with an experiment. But to define (and understand) the ATE, we need to define several preliminary concepts.
+
+## Potential Outcomes
+
+The fundamental problem of causal inference is that we can never observe what *would have happened* to the same individual if we had instead assigned them to a different condition. We can observe the outcome under---at most---one condition. 
+
+To formalize this, we use the **potential outcomes framework**.
+
+For each individual $i$ in our study, we define two potential outcomes:
+
+- $Y_i(1)$: the outcome individual $i$ *would* experience if assigned to treatment ($D_i = 1$)
+- $Y_i(0)$: the outcome individual $i$ *would* experience if assigned to control ($D_i = 0$)
+
+These are called "potential" outcomes because we can observe no more than one of them for any given individual. If individual $i$ receives treatment, we observe $Y_i(1)$ but not $Y_i(0)$. If individual $i$ is in control, we observe $Y_i(0)$ but not $Y_i(1)$.
+
+The unobserved potential outcome for each individual is called the **counterfactual**. The counterfactual represents what *would have* happened in the hypothetical scenario in which the individual was assigned to a *different condition*.
+
+To make this concrete, consider a hypothetical experiment with 10 respondents. The table below shows both potential outcomes for each respondent—something we could never actually observe in reality, but which helps us understand the framework:
+
+| Respondent | $Y_i(0)$ | $Y_i(1)$ |
+|------|----------|----------|
+| 1    | 4        | 7        |
+| 2    | 6        | 5        |
+| 3    | 5        | 5        |
+| 4    | 3        | 9        |
+| 5    | 7        | 10       |
+| 6    | 5        | 4        |
+| 7    | 4        | 8        |
+| 8    | 6        | 7        |
+| 9    | 5        | 3        |
+| 10   | 4        | 6        |
+
+
+Importantly, though, we cannot observe both potential outcomes. But for now, let's ignore that difficulty.
+
+## The Individual-Level Treatment Effect
+
+Once we have defined potential outcomes, we can define the **individual-level treatment effect** for individual $i$ as $\tau_i = Y_i(1) - Y_i(0)$.
+
+This represents the causal effect of treatment for that specific individual. It's simply the difference between what would happen if they were assigned to treatment versus what would happen if they were assigned to control.
+
+If we knew all the potential outcomes, then we could compute the individual-level treatment effect for each respondent. 
+
+| Respondent | $Y_i(0)$ | $Y_i(1)$ | $\tau_i$ |
+|------|----------|----------|----------|
+| 1    | 4        | 7        | 7 - 4 = 3        |
+| 2    | 6        | 5        | 5 - 6 = -1       |
+| 3    | 5        | 5        | 5 - 5 = 0        |
+| 4    | 3        | 9        | 9 - 3 = 6        |
+| 5    | 7        | 10       | 10 - 7 = 3        |
+| 6    | 5        | 4        | 4 - 5 = -1       |
+| 7    | 4        | 8        | 8 - 4 = 4        |
+| 8    | 6        | 7        | 7 - 6 = 1        |
+| 9    | 5        | 3        | 3 - 5 = -2       |
+| 10   | 4        | 6        | 6 - 4 = 2        |
+
+Again, there's a fundamental problem: we can never observe $\tau_i$ directly because we never observe both potential outcomes for the same individual. This is sometimes called the **fundamental problem of causal inference**. We observe either $Y_i(1)$ or $Y_i(0)$, but never both. But again, let's continue to ignore this pesky problem.
+
+## The Average Treatment Effect
+
+We already know that we cannot observe the individual-level treatment effects. So instead, let's cleverly *sidestep* the problem. Let's define the **average treatment effect** or **ATE**, defined as
+
+$$
+\begin{align}
+\text{ATE} &= \frac{1}{N}\sum_{i=1}^{N} [Y_i(1) - Y_i(0)] \\
+&= \frac{1}{N}\sum_{i=1}^{N} Y_i(1) - \frac{1}{N}\sum_{i=1}^{N} Y_i(0) \\
+&= \text{avg} \left( Y_i(1) \right) - \text{avg} \left( Y_i(0) \right) \\ 
+&= \text{avg. of ALL p.o. under treatment } - \text{avg. of ALL p.o. under control}
+\end{align}
+$$
+
+
+
+The ATE represents the average causal effect of treatment across all individuals in the population. It tells us: on average, how much does treatment change outcomes?
+
+Here's another way to think about. Suppose we assigned *everyone* to treatment and computed the average outcome. Suppose we also assigned *everyone* to control and computed the average outcome. (We can't assign *everyone* to treatment  *and everyone* to control, but suppose we could). The ATE is the difference between this two average. 
+
+Again, we cannot observe the ATE, but it turns out that this quantity can be estimated. In later sections, we'll show how we can use randomized experiments to estimate the ATE. But for now, let's focus on the meaning of the concept.
+
+To make this concrete, we can compute the ATE for the potential outcomes above.
+
+| Respondent | $Y_i(0)$ | $Y_i(1)$ |
+|------|----------|----------|
+| 1    | 4        | 7        |
+| 2    | 6        | 5        |
+| 3    | 5        | 5        |
+| 4    | 3        | 9        |
+| 5    | 7        | 10       |
+| 6    | 5        | 4        |
+| 7    | 4        | 8        |
+| 8    | 6        | 7        |
+| 9    | 5        | 3        |
+| 10   | 4        | 6        |
+
+Using this table, we can compute the ATE by finding the average of all potential outcomes under control and the average of all potential outcomes under treatment:
+
+$$
+\begin{align}
+\text{ATE} &= \frac{1}{N}\sum_{i=1}^{N} Y_i(1) - \frac{1}{N}\sum_{i=1}^{N} Y_i(0) \\
+&= \frac{1}{10}(7 + 5 + 5 + 9 + 10 + 4 + 8 + 7 + 3 + 6) - \frac{1}{10}(4 + 6 + 5 + 3 + 7 + 5 + 4 + 6 + 5 + 4) \\
+&= \frac{64}{10} - \frac{49}{10} \\
+&= 6.4 - 4.9 \\
+&= 1.5
+\end{align}
+$$
+The ATE is 1.5, meaning that *on average*, treatment increases outcomes by 1.5 units. (We could average the $\tau_i$ in the table above to obtain the identical value.)
+
+::: {.callout-tip}
+When we write about the "average treatment effect," it should be understood as something very specific. It should be understood as the difference between two quantities: the hypothetical difference between (1) the average value of the outcome if we assigned *everyone* to treatment and (2) the average value of the outcome if we assigned *everyone* to control. 
+:::
+
+## Special Cases
+
+### The Sharp Null Hypothesis
+
+The **sharp null hypothesis** is a particularly strong claim about individual treatment effects. The sharp null hypothesis states that
+
+$$\text{sharp null hypothesis}: Y_i(1) = Y_i(0) \text{ for all } i.$$
+
+This hypothesis states that treatment has *exactly zero effect* for every single individual in the study. That is, for each individual in the experiment, the outcome is identical regardless of whether it is assigned to treatment or control. Under the sharp null, the treatment effect $\tau_i = 0$ for all $i$.
+
+This hypothesis is helpful because it completely specifies all potential outcomes. If we assume the sharp null hypothesis holds, then we can compute the counterfactual outcome from the observed outcome.
+
+- Suppose we observe $Y_i(0)$ for a control individual, we know that $Y_i(1) = Y_i(0)$. 
+- Similarly, suppose we observe $Y_i(1)$ for a treated individual, we know that $Y_i(0) = Y_i(1)$.
+
+While we never know whether the sharp null hypothesis holds---and it seems implausible that it *ever* would hold---it can sometimes be convenient to check what would happen *if it did hold*. 
+
+The table below shows a set of potential outcomes where the sharp null holds. 
+
+| Respondent | $Y_i(0)$ | $Y_i(1)$ | $\tau_i$ |
+|------|----------|----------|----------|
+| 1    | 4        | 4        | 4 - 4 = 0        |
+| 2    | 6        | 6        | 6 - 6 = 0        |
+| 3    | 5        | 5        | 5 - 5 = 0        |
+| 4    | 3        | 3        | 3 - 3 = 0        |
+| 5    | 7        | 7        | 7 - 7 = 0        |
+| 6    | 5        | 5        | 5 - 5 = 0        |
+| 7    | 4        | 4        | 4 - 4 = 0        |
+| 8    | 6        | 6        | 6 - 6 = 0        |
+| 9    | 5        | 5        | 5 - 5 = 0        |
+| 10   | 4        | 4        | 4 - 4 = 0        |
+
+Under the sharp null hypothesis, $Y_i(1) = Y_i(0)$ for all individuals $i$, which means $\tau_i = 0$ for all individuals. We can verify this by computing the ATE:
+
+$$
+\begin{align}
+\text{ATE} &= \frac{1}{N}\sum_{i=1}^{N} Y_i(1) - \frac{1}{N}\sum_{i=1}^{N} Y_i(0) \\
+&= \frac{1}{10}(4 + 6 + 5 + 3 + 7 + 5 + 4 + 6 + 5 + 4) - \frac{1}{10}(4 + 6 + 5 + 3 + 7 + 5 + 4 + 6 + 5 + 4) \\
+&= \frac{49}{10} - \frac{49}{10} \\
+&= 4.9 - 4.9 \\
+&= 0
+\end{align}
+$$
+
+The ATE is exactly 0. This follows from the fact that all of the individual-level effects are exactly zero as well.
+
+### Constant Treatment Effects
+
+Another implausible but sometimes-helpful hypothesis is the **constant treatment effects** assumption that
+
+$$\tau_i = \tau \text{ for all individuals } i$$
+
+This assumes that while the individual-level treatment effect may be different from zero, that effect is *exactly the same* for every individual so that $$Y_i(1) - Y_i(0) = \tau \text{ for all } i$$. Here, $\tau$ is a fixed number like 2 or -4.2 that is the same for all the individuals.
+
+As before, we never know whether individual-level treatment effects are constant---and it seems implausible they *ever* would be. But it can sometimes be convenient to check what would happen *if they were constant*. 
+
+Similar to the sharp null hypothesis, the constant effects hypothesis is helpful because it completely specifies all potential outcomes. It allows us to compute the counterfactual outcome from the observed outcome.
+
+- Suppose we observe $Y_i(0)$ for a control individual, we know that $Y_i(1)$ is 2 points larger than that so that $Y_i(1) = Y_i(0) + 2$. 
+- Similarly, suppose we observe $Y_i(1)$ for a treated individual, we know that $Y_i(0)$ is 2 points less than that so that $Y_i(0) = Y_i(1) - 2$. 
+
+
+The table below shows a set of potential outcomes where treatment effects are constant at $\tau = 2$ for all individuals.
+
+| Respondent | $Y_i(0)$ | $Y_i(1)$ | $\tau_i$ |
+|------|----------|----------|----------|
+| 1    | 4        | 6        | 6 - 4 = 2        |
+| 2    | 6        | 8        | 8 - 6 = 2        |
+| 3    | 5        | 7        | 7 - 5 = 2        |
+| 4    | 3        | 5        | 5 - 3 = 2        |
+| 5    | 7        | 9        | 9 - 7 = 2        |
+| 6    | 5        | 7        | 7 - 5 = 2        |
+| 7    | 4        | 6        | 6 - 4 = 2        |
+| 8    | 6        | 8        | 8 - 6 = 2        |
+| 9    | 5        | 7        | 7 - 5 = 2        |
+| 10   | 4        | 6        | 6 - 4 = 2        |
+
+$$
+\begin{align}
+\text{ATE} &= \frac{1}{N}\sum_{i=1}^{N} Y_i(1) - \frac{1}{N}\sum_{i=1}^{N} Y_i(0) \\
+&= \frac{1}{10}(6 + 8 + 7 + 5 + 9 + 7 + 6 + 8 + 7 + 6) - \frac{1}{10}(4 + 6 + 5 + 3 + 7 + 5 + 4 + 6 + 5 + 4) \\
+&= \frac{69}{10} - \frac{49}{10} \\
+&= 6.9 - 4.9 \\
+&= 2
+\end{align}
+$$
+
+The ATE is exactly 2. This follows from the fact that all of the individual-level effects are exactly 2 as well. When treatment effects are constant, the ATE perfectly captures the treatment effect for every individual.
+
+## Rasinski's Question-Wording Experiment
+
+In a famous survey experiment, Rasinski (1989) was curious about how question wording affects public support for government spending.^[Respondents were randomly assigned to one of two conditions that asked about spending on programs for low-income individuals, but used different labels to describe these programs. The experiment was conducted across three years (1984, 1985, and 1986) and consistently found that far more respondents said the government was spending "too little" when the program was described as "assistance to the poor" (around 63-65%) compared to when it was described as "welfare" (around 20-25%). This represents a dramatic difference of approximately 40 percentage points due solely to the choice of label used to describe the same underlying government program.]
+
+Respondents could be assigned to one of two conditions: treatment or control. The two conditions featured an identical question stem, but varied in how they describe the spending.
+
+**Question stem** (identical for both conditions): *"Are we spending too much, too little, or about the right amount on..."*
+
+**Treatment condition**: *"...assistance to the poor?"*
+
+**Control condition**: *"...welfare?"*
+
+**Response options**:
+
+- Too little = 1
+- About right = 2
+- Too much = 3
+
+Thus each respondent had two potential outcomes:
+
+- $Y_i(1)$: the response respondent $i$ *would* give if assigned to the treatment condition ("assistance to the poor")
+- $Y_i(0)$: the response respondent $i$ *would* give if assigned to the control condition ("welfare")
+
+As before, we can never observe both potential outcomes for the same respondent. We can observe their response if the program is described as "assistance to the poor" or as "welfare", but *not both*.
+
+### Hypothetical Potential Outcomes
+
+To illustrate the concepts, suppose we could magically observe both potential outcomes for a sample of 10 respondents. The table below shows what each respondent would answer under each condition:
+
+| Respondent | $Y_i(0)$ ("welfare") | $Y_i(1)$ ("assistance") | $\tau_i$ |
+|------------|-------------------|----------------------|----------|
+| 1          | 3 (Too much)      | 1 (Too little)       | 1 - 3 = -2 |
+| 2          | 3 (Too much)      | 2 (About right)      | 2 - 3 = -1 |
+| 3          | 2 (About right)   | 1 (Too little)       | 1 - 2 = -1 |
+| 4          | 3 (Too much)      | 1 (Too little)       | 1 - 3 = -2 |
+| 5          | 2 (About right)   | 1 (Too little)       | 1 - 2 = -1 |
+| 6          | 3 (Too much)      | 2 (About right)      | 2 - 3 = -1 |
+| 7          | 2 (About right)   | 1 (Too little)       | 1 - 2 = -1 |
+| 8          | 3 (Too much)      | 1 (Too little)       | 1 - 3 = -2 |
+| 9          | 2 (About right)   | 2 (About right)      | 2 - 2 = 0 |
+| 10         | 3 (Too much)      | 1 (Too little)       | 1 - 3 = -2 |
+
+Notice that for most respondents, the treatment effect $\tau_i$ is negative. This means that asking about "assistance to the poor" produces *lower* numeric responses than asking about "welfare." In this case, lower numbers indicate more support for spending ("too little" = 1), these negative treatment effects actually represent *increased support* for spending when using the "assistance to the poor" wording.
+
+### Computing the ATE
+
+We can compute the ATE for this hypothetical data:
+
+$$
+\begin{align}
+\text{ATE} &= \frac{1}{N}\sum_{i=1}^{N} Y_i(1) - \frac{1}{N}\sum_{i=1}^{N} Y_i(0) \\
+&= \frac{1}{10}(1 + 2 + 1 + 1 + 1 + 2 + 1 + 1 + 2 + 1) - \frac{1}{10}(3 + 3 + 2 + 3 + 2 + 3 + 2 + 3 + 2 + 3) \\
+&= \frac{13}{10} - \frac{26}{10} \\
+&= 1.3 - 2.6 \\
+&= -1.3
+\end{align}
+$$
+
+The ATE is -1.3. Since lower values on our 1-2-3 scale indicate more support for spending, this negative ATE means that the "assistance to the poor" wording increases support for spending by an average of 1.3 scale points compared to the "welfare" wording.
+

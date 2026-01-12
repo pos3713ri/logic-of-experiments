@@ -1,0 +1,33 @@
+project:
+  type: book
+  output-dir: docs/
+  
+freeze: auto  
+
+execute:
+  warning: false
+  message: false
+  cache: true
+
+
+book:
+  title: "The Logic of Experiments"
+  author: "Carlisle Rainey"
+  chapters:
+    - index.qmd
+    - ch/ate.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme:
+      - journal
+      - brand
+    css: _styles.css  
+    citation-location: margin
+    reference-location: margin
+
+
+
+
