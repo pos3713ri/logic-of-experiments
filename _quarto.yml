@@ -2,12 +2,12 @@ project:
   type: book
   output-dir: docs/
   
-freeze: auto  
+freeze: false
 
 execute:
   warning: false
   message: false
-  cache: true
+  cache: false
 
 
 book:
@@ -16,6 +16,7 @@ book:
   chapters:
     - index.qmd
     - ch/ate.qmd
+    - ch/ate-hat.qmd
 
 bibliography: references.bib
 

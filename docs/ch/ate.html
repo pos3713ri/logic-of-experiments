@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -30,6 +50,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../ch/ate-hat.html" rel="next">
 <link href="../index.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -147,6 +168,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">ATE</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch/ate-hat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Estimating the ATE</span></span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -170,12 +197,13 @@ window.Quarto = {
   <li><a href="#hypothetical-potential-outcomes" id="toc-hypothetical-potential-outcomes" class="nav-link" data-scroll-target="#hypothetical-potential-outcomes"><span class="header-section-number">1.5.1</span> Hypothetical Potential Outcomes</a></li>
   <li><a href="#computing-the-ate" id="toc-computing-the-ate" class="nav-link" data-scroll-target="#computing-the-ate"><span class="header-section-number">1.5.2</span> Computing the ATE</a></li>
   </ul></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">1.6</span> Exercises</a>
+  <li><a href="#key-terms" id="toc-key-terms" class="nav-link" data-scroll-target="#key-terms"><span class="header-section-number">1.6</span> Key Terms</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">1.7</span> Exercises</a>
   <ul class="collapse">
-  <li><a href="#conceptual-understanding" id="toc-conceptual-understanding" class="nav-link" data-scroll-target="#conceptual-understanding"><span class="header-section-number">1.6.1</span> Conceptual Understanding</a></li>
-  <li><a href="#computational-practice" id="toc-computational-practice" class="nav-link" data-scroll-target="#computational-practice"><span class="header-section-number">1.6.2</span> Computational Practice</a></li>
-  <li><a href="#application-to-rasinskis-experiment" id="toc-application-to-rasinskis-experiment" class="nav-link" data-scroll-target="#application-to-rasinskis-experiment"><span class="header-section-number">1.6.3</span> Application to Rasinski’s Experiment</a></li>
-  <li><a href="#critical-thinking" id="toc-critical-thinking" class="nav-link" data-scroll-target="#critical-thinking"><span class="header-section-number">1.6.4</span> Critical Thinking</a></li>
+  <li><a href="#conceptual-understanding" id="toc-conceptual-understanding" class="nav-link" data-scroll-target="#conceptual-understanding"><span class="header-section-number">1.7.1</span> Conceptual Understanding</a></li>
+  <li><a href="#computational-practice" id="toc-computational-practice" class="nav-link" data-scroll-target="#computational-practice"><span class="header-section-number">1.7.2</span> Computational Practice</a></li>
+  <li><a href="#application-to-rasinskis-experiment" id="toc-application-to-rasinskis-experiment" class="nav-link" data-scroll-target="#application-to-rasinskis-experiment"><span class="header-section-number">1.7.3</span> Application to Rasinski’s Experiment</a></li>
+  <li><a href="#critical-thinking" id="toc-critical-thinking" class="nav-link" data-scroll-target="#critical-thinking"><span class="header-section-number">1.7.4</span> Critical Thinking</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -653,8 +681,10 @@ Tip
 </section>
 <section id="rasinskis-question-wording-experiment" class="level2 page-columns page-full" data-number="1.5">
 <h2 data-number="1.5" class="anchored" data-anchor-id="rasinskis-question-wording-experiment"><span class="header-section-number">1.5</span> Rasinski’s Question-Wording Experiment</h2>
-<p>In a famous survey experiment, Rasinski (1989) was curious about how question wording affects public support for government spending.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Respondents were randomly assigned to one of two conditions that asked about spending on programs for low-income individuals, but used different labels to describe these programs. The experiment was conducted across three years (1984, 1985, and 1986) and consistently found that far more respondents said the government was spending “too little” when the program was described as “assistance to the poor” (around 63-65%) compared to when it was described as “welfare” (around 20-25%). This represents a dramatic difference of approximately 40 percentage points due solely to the choice of label used to describe the same underlying government program.</p></div></div><p>Respondents could be assigned to one of two conditions: treatment or control. The two conditions featured an identical question stem, but varied in how they describe the spending.</p>
+<p>In a famous survey experiment, <span class="citation" data-cites="rasinski1989">Rasinski (<a href="#ref-rasinski1989" role="doc-biblioref">1989</a>)</span> was curious about how question wording affects public support for government spending.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="ref-rasinski1989" class="csl-entry" role="listitem">
+Rasinski, Kenneth A. 1989. <span>“The Effect of Question Wording on Public Support for Government Spending.”</span> <em>Public Opinion Quarterly</em> 53 (3): 388–94.
+</div><div id="fn1"><p><sup>1</sup>&nbsp;Respondents were randomly assigned to one of two conditions that asked about spending on programs for low-income individuals, but used different labels to describe these programs. The experiment was conducted across three years (1984, 1985, and 1986) and consistently found that far more respondents said the government was spending “too little” when the program was described as “assistance to the poor” (around 63-65%) compared to when it was described as “welfare” (around 20-25%). This represents a dramatic difference of approximately 40 percentage points due solely to the choice of label used to describe the same underlying government program.</p></div></div><p>Respondents could be assigned to one of two conditions: treatment or control. The two conditions featured an identical question stem, but varied in how they describe the spending.</p>
 <p><strong>Question stem</strong> (identical for both conditions): <em>“Are we spending too much, too little, or about the right amount on…”</em></p>
 <p><strong>Treatment condition</strong>: <em>“…assistance to the poor?”</em></p>
 <p><strong>Control condition</strong>: <em>“…welfare?”</em></p>
@@ -768,19 +798,122 @@ Tip
 <p>The ATE is -1.3. Since lower values on our 1-2-3 scale indicate more support for spending, this negative ATE means that the “assistance to the poor” wording increases support for spending by an average of 1.3 scale points compared to the “welfare” wording.</p>
 </section>
 </section>
-<section id="exercises" class="level2" data-number="1.6">
-<h2 data-number="1.6" class="anchored" data-anchor-id="exercises"><span class="header-section-number">1.6</span> Exercises</h2>
-<section id="conceptual-understanding" class="level3" data-number="1.6.1">
-<h3 data-number="1.6.1" class="anchored" data-anchor-id="conceptual-understanding"><span class="header-section-number">1.6.1</span> Conceptual Understanding</h3>
-<ol type="1">
-<li><p><strong>Defining Potential Outcomes</strong>: In your own words, explain what <span class="math inline">\(Y_i(1)\)</span> and <span class="math inline">\(Y_i(0)\)</span> represent in the context of Rasinski’s question-wording experiment. Why can we never observe both potential outcomes for the same respondent?</p></li>
-<li><p><strong>The Fundamental Problem</strong>: Explain why we call it the “fundamental problem of causal inference.” What makes this problem “fundamental” rather than just “difficult”?</p></li>
-<li><p><strong>ATE Interpretation</strong>: A researcher finds an ATE of 3.2 in an experiment testing the effect of a new study technique on exam scores (measured 0-100). Write two sentences explaining what this means in plain language that a non-statistician could understand.</p></li>
-<li><p><strong>Sharp Null vs.&nbsp;Zero ATE</strong>: Is it possible to have an ATE of zero even when the sharp null hypothesis does not hold? Explain your answer and provide an example using a simple table of potential outcomes for 4 individuals.</p></li>
-</ol>
+<section id="key-terms" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="key-terms"><span class="header-section-number">1.6</span> Key Terms</h2>
+<ul>
+<li>Potential outcomes</li>
+<li>Potential outcomes framework</li>
+<li>Counterfactual</li>
+<li>Individual-level treatment effect</li>
+<li>Fundamental problem of causal inference</li>
+<li>Average treatment effect (ATE)</li>
+<li>Sharp null hypothesis</li>
+<li>Constant treatment effects</li>
+</ul>
 </section>
-<section id="computational-practice" class="level3" data-number="1.6.2">
-<h3 data-number="1.6.2" class="anchored" data-anchor-id="computational-practice"><span class="header-section-number">1.6.2</span> Computational Practice</h3>
+<section id="exercises" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="exercises"><span class="header-section-number">1.7</span> Exercises</h2>
+<section id="conceptual-understanding" class="level3" data-number="1.7.1">
+<h3 data-number="1.7.1" class="anchored" data-anchor-id="conceptual-understanding"><span class="header-section-number">1.7.1</span> Conceptual Understanding</h3>
+<ol type="1">
+<li><strong>Defining Potential Outcomes</strong>: In your own words, explain what <span class="math inline">\(Y_i(1)\)</span> and <span class="math inline">\(Y_i(0)\)</span> represent in the context of Rasinski’s question-wording experiment. Why can we never observe both potential outcomes for the same respondent?</li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>In Rasinski’s question-wording experiment, each respondent has two potential outcomes:</p>
+<ul>
+<li><p><span class="math inline">\(Y_i(1)\)</span> is the response that respondent <span class="math inline">\(i\)</span> <em>would</em> give if asked about spending on “assistance to the poor.” This is the potential outcome under the treatment condition.</p></li>
+<li><p><span class="math inline">\(Y_i(0)\)</span> is the response that respondent <span class="math inline">\(i\)</span> <em>would</em> give if asked about spending on “welfare.” This is the potential outcome under the control condition.</p></li>
+</ul>
+<p>We can never observe both potential outcomes for the same respondent because each respondent can only answer <em>one version</em> of the question. Once respondent <span class="math inline">\(i\)</span> sees the question with “welfare” and gives their answer, we cannot rewind time and show them the “assistance to the poor” version as if they had never seen the first one. At most, we observe one potential outcome per respondent—either <span class="math inline">\(Y_i(1)\)</span> or <span class="math inline">\(Y_i(0)\)</span>, but never both.</p>
+<p>This is the fundamental problem of causal inference.</p>
+</details>
+<ol start="2" type="1">
+<li><strong>The Fundamental Problem</strong>: Explain why we call it the “fundamental problem of causal inference.” What makes this problem “fundamental” rather than just “difficult”?</li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>We call it the “fundamental” problem of causal inference—rather than just a “difficult” problem—because it cannot be solved, even in principle.</p>
+<p>A “difficult” problem is one we might overcome with better technology, more data, or cleverer methods. The fundamental problem is different: it is a logical impossibility. At any given moment, an individual either receives treatment or does not. We cannot observe the same person in two different states of the world at the same time. No amount of resources or ingenuity can change this fact.</p>
+<p>This is why we need research designs—like randomized experiments—that allow us to <em>estimate</em> causal effects at the group level, even though we can never directly <em>observe</em> individual-level causal effects.</p>
+</details>
+<ol start="3" type="1">
+<li><strong>ATE Interpretation</strong>: A researcher finds an ATE of 3.2 in an experiment testing the effect of a new study technique on exam scores (measured 0-100). Write two sentences explaining what this means in plain language that a non-statistician could understand.</li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>An ATE of 3.2 means that, on average, students who use the new study technique score about 3.2 points higher on the exam compared to what they would have scored without using the technique.</p>
+<p>Another way to say this: if we could magically give the study technique to all students and then also observe what would have happened if none of them used it, the average difference between these two scenarios would be 3.2 points.</p>
+</details>
+<ol start="4" type="1">
+<li><strong>Sharp Null vs.&nbsp;Zero ATE</strong>: Is it possible to have an ATE of zero even when the sharp null hypothesis does not hold? Explain your answer and provide an example using a simple table of potential outcomes for 4 individuals.</li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>Yes, it is possible to have an ATE of zero even when the sharp null hypothesis does not hold.</p>
+<p>The sharp null hypothesis is a strong claim: it requires that <span class="math inline">\(\tau_i = 0\)</span> for <em>every single individual</em>. That is, <span class="math inline">\(Y_i(1) = Y_i(0)\)</span> for all <span class="math inline">\(i\)</span>.</p>
+<p>The ATE, on the other hand, is just the <em>average</em> of the individual treatment effects:</p>
+<p><span class="math display">\[\text{ATE} = \frac{1}{N} \sum_{i=1}^{N} \tau_i\]</span></p>
+<p>If some individuals have positive treatment effects and others have negative treatment effects, these can cancel out, producing an ATE of zero even though the treatment affected every individual.</p>
+<p>Here is a concrete example with 4 individuals:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Individual</th>
+<th><span class="math inline">\(Y_i(0)\)</span></th>
+<th><span class="math inline">\(Y_i(1)\)</span></th>
+<th><span class="math inline">\(\tau_i = Y_i(1) - Y_i(0)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>5</td>
+<td>8</td>
+<td><span class="math inline">\(8 - 5 = 3\)</span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>7</td>
+<td>4</td>
+<td><span class="math inline">\(4 - 7 = -3\)</span></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>6</td>
+<td>8</td>
+<td><span class="math inline">\(8 - 6 = 2\)</span></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>8</td>
+<td>6</td>
+<td><span class="math inline">\(6 - 8 = -2\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Computing the ATE:</p>
+<p><span class="math display">\[
+\begin{align}
+\text{ATE} &amp;= \frac{1}{4} \sum_{i=1}^{4} \tau_i \\
+&amp;= \frac{1}{4}(3 + (-3) + 2 + (-2)) \\
+&amp;= \frac{0}{4} \\
+&amp;= 0
+\end{align}
+\]</span></p>
+<p>The ATE equals zero, but the sharp null does <em>not</em> hold. The treatment affected every single individual—individuals 1 and 3 experienced positive effects of 3 and 2, while individuals 2 and 4 experienced negative effects of -3 and -2. The effects simply cancel out when we average them.</p>
+</details>
+</section>
+<section id="computational-practice" class="level3" data-number="1.7.2">
+<h3 data-number="1.7.2" class="anchored" data-anchor-id="computational-practice"><span class="header-section-number">1.7.2</span> Computational Practice</h3>
 <ol start="5" type="1">
 <li><p><strong>Computing Individual Treatment Effects</strong>: Consider the following potential outcomes for 6 respondents in a hypothetical experiment:</p>
 <table class="caption-top table">
@@ -829,6 +962,88 @@ Tip
 <li><p>Calculate the ATE.</p></li>
 <li><p>Which respondents experienced a positive treatment effect? A negative treatment effect? No treatment effect?</p></li>
 </ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> To find each individual treatment effect, we compute <span class="math inline">\(\tau_i = Y_i(1) - Y_i(0)\)</span>:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Respondent</th>
+<th><span class="math inline">\(Y_i(0)\)</span></th>
+<th><span class="math inline">\(Y_i(1)\)</span></th>
+<th><span class="math inline">\(\tau_i = Y_i(1) - Y_i(0)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>5</td>
+<td>8</td>
+<td><span class="math inline">\(8 - 5 = 3\)</span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>7</td>
+<td>6</td>
+<td><span class="math inline">\(6 - 7 = -1\)</span></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>4</td>
+<td>7</td>
+<td><span class="math inline">\(7 - 4 = 3\)</span></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>6</td>
+<td>9</td>
+<td><span class="math inline">\(9 - 6 = 3\)</span></td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>5</td>
+<td>5</td>
+<td><span class="math inline">\(5 - 5 = 0\)</span></td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>8</td>
+<td>7</td>
+<td><span class="math inline">\(7 - 8 = -1\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Part b.</strong> We can compute the ATE by averaging the individual treatment effects:</p>
+<p><span class="math display">\[
+\begin{align}
+\text{ATE} &amp;= \frac{1}{6} \sum_{i=1}^{6} \tau_i \\
+&amp;= \frac{1}{6}(3 + (-1) + 3 + 3 + 0 + (-1)) \\
+&amp;= \frac{7}{6} \\
+&amp;\approx 1.167
+\end{align}
+\]</span></p>
+<p>We can verify this by computing the ATE as the difference between the average potential outcome under treatment and the average potential outcome under control:</p>
+<p><span class="math display">\[
+\begin{align}
+\text{ATE} &amp;= \frac{1}{6}\sum_{i=1}^{6} Y_i(1) - \frac{1}{6}\sum_{i=1}^{6} Y_i(0) \\
+&amp;= \frac{1}{6}(8 + 6 + 7 + 9 + 5 + 7) - \frac{1}{6}(5 + 7 + 4 + 6 + 5 + 8) \\
+&amp;= \frac{42}{6} - \frac{35}{6} \\
+&amp;= 7 - 5.833 \\
+&amp;\approx 1.167
+\end{align}
+\]</span></p>
+<p>Both methods give the same answer.</p>
+<p><strong>Part c.</strong> Classifying the treatment effects:</p>
+<ul>
+<li><strong>Positive treatment effect</strong> (<span class="math inline">\(\tau_i &gt; 0\)</span>): Respondents 1, 3, and 4 (with effects of 3, 3, and 3)</li>
+<li><strong>Negative treatment effect</strong> (<span class="math inline">\(\tau_i &lt; 0\)</span>): Respondents 2 and 6 (with effects of -1 and -1)</li>
+<li><strong>No treatment effect</strong> (<span class="math inline">\(\tau_i = 0\)</span>): Respondent 5</li>
+</ul>
+</details>
+<ol start="6" type="1">
 <li><p><strong>Verifying the Sharp Null</strong>: Consider the following potential outcomes:</p>
 <table class="caption-top table">
 <thead>
@@ -866,23 +1081,211 @@ Tip
 <li><p>Calculate the ATE.</p></li>
 <li><p>Under the sharp null hypothesis, what can you always say about the ATE?</p></li>
 </ol></li>
-<li><p><strong>Constant Treatment Effects</strong>: Create a table of potential outcomes for 5 individuals where the constant treatment effects assumption holds with <span class="math inline">\(\tau = -2.5\)</span> for all individuals. Show that the ATE equals -2.5.</p></li>
 </ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> Yes, this satisfies the sharp null hypothesis.</p>
+<p>The sharp null hypothesis requires that <span class="math inline">\(Y_i(1) = Y_i(0)\)</span> for <em>all</em> individuals. We can check each respondent:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Respondent</th>
+<th><span class="math inline">\(Y_i(0)\)</span></th>
+<th><span class="math inline">\(Y_i(1)\)</span></th>
+<th><span class="math inline">\(Y_i(1) = Y_i(0)\)</span>?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>12</td>
+<td>12</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>8</td>
+<td>8</td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>15</td>
+<td>15</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>10</td>
+<td>10</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p>For every individual, the potential outcome under treatment equals the potential outcome under control. The sharp null hypothesis holds.</p>
+<p><strong>Part b.</strong> Computing the ATE:</p>
+<p><span class="math display">\[
+\begin{align}
+\text{ATE} &amp;= \frac{1}{4}\sum_{i=1}^{4} Y_i(1) - \frac{1}{4}\sum_{i=1}^{4} Y_i(0) \\
+&amp;= \frac{1}{4}(12 + 8 + 15 + 10) - \frac{1}{4}(12 + 8 + 15 + 10) \\
+&amp;= \frac{45}{4} - \frac{45}{4} \\
+&amp;= 11.25 - 11.25 \\
+&amp;= 0
+\end{align}
+\]</span></p>
+<p><strong>Part c.</strong> Under the sharp null hypothesis, the ATE is <em>always</em> exactly zero.</p>
+<p>This follows directly from the definitions. If <span class="math inline">\(Y_i(1) = Y_i(0)\)</span> for all <span class="math inline">\(i\)</span>, then:</p>
+<p><span class="math display">\[\tau_i = Y_i(1) - Y_i(0) = 0 \text{ for all } i\]</span></p>
+<p>The ATE is the average of the individual treatment effects:</p>
+<p><span class="math display">\[\text{ATE} = \frac{1}{N} \sum_{i=1}^{N} \tau_i = \frac{1}{N} \sum_{i=1}^{N} 0 = 0\]</span></p>
+<p>The average of zeros is always zero.</p>
+</details>
+<ol start="7" type="1">
+<li><strong>Constant Treatment Effects</strong>: Create a table of potential outcomes for 5 individuals where the constant treatment effects assumption holds with <span class="math inline">\(\tau = -2.5\)</span> for all individuals. Show that the ATE equals -2.5.</li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>The constant treatment effects assumption requires that <span class="math inline">\(\tau_i = \tau\)</span> for all individuals. With <span class="math inline">\(\tau = -2.5\)</span>, we need <span class="math inline">\(Y_i(1) - Y_i(0) = -2.5\)</span> for every individual.</p>
+<p>We can choose any values for <span class="math inline">\(Y_i(0)\)</span> and then compute <span class="math inline">\(Y_i(1) = Y_i(0) + (-2.5) = Y_i(0) - 2.5\)</span>:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 13%">
+<col style="width: 33%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Individual</th>
+<th><span class="math inline">\(Y_i(0)\)</span></th>
+<th><span class="math inline">\(Y_i(1) = Y_i(0) - 2.5\)</span></th>
+<th><span class="math inline">\(\tau_i = Y_i(1) - Y_i(0)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>10</td>
+<td>7.5</td>
+<td><span class="math inline">\(7.5 - 10 = -2.5\)</span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>8</td>
+<td>5.5</td>
+<td><span class="math inline">\(5.5 - 8 = -2.5\)</span></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>12</td>
+<td>9.5</td>
+<td><span class="math inline">\(9.5 - 12 = -2.5\)</span></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>6</td>
+<td>3.5</td>
+<td><span class="math inline">\(3.5 - 6 = -2.5\)</span></td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>9</td>
+<td>6.5</td>
+<td><span class="math inline">\(6.5 - 9 = -2.5\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Now we verify that the ATE equals -2.5:</p>
+<p><span class="math display">\[
+\begin{align}
+\text{ATE} &amp;= \frac{1}{5}\sum_{i=1}^{5} Y_i(1) - \frac{1}{5}\sum_{i=1}^{5} Y_i(0) \\
+&amp;= \frac{1}{5}(7.5 + 5.5 + 9.5 + 3.5 + 6.5) - \frac{1}{5}(10 + 8 + 12 + 6 + 9) \\
+&amp;= \frac{32.5}{5} - \frac{45}{5} \\
+&amp;= 6.5 - 9 \\
+&amp;= -2.5
+\end{align}
+\]</span></p>
+<p>When treatment effects are constant at <span class="math inline">\(\tau\)</span> for all individuals, the ATE equals <span class="math inline">\(\tau\)</span>. This makes sense: the ATE is the average of the individual treatment effects, and the average of a constant is just that constant.</p>
+</details>
 </section>
-<section id="application-to-rasinskis-experiment" class="level3" data-number="1.6.3">
-<h3 data-number="1.6.3" class="anchored" data-anchor-id="application-to-rasinskis-experiment"><span class="header-section-number">1.6.3</span> Application to Rasinski’s Experiment</h3>
+<section id="application-to-rasinskis-experiment" class="level3" data-number="1.7.3">
+<h3 data-number="1.7.3" class="anchored" data-anchor-id="application-to-rasinskis-experiment"><span class="header-section-number">1.7.3</span> Application to Rasinski’s Experiment</h3>
 <ol start="8" type="1">
 <li><p><strong>Understanding the Conditions</strong>:</p>
 <ol type="a">
 <li><p>In Rasinski’s experiment, what exactly differs between the treatment and control conditions? What stays the same?</p></li>
 <li><p>Why might the word “welfare” produce different responses than “assistance to the poor” even though both refer to the same government programs?</p></li>
 </ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong></p>
+<p><em>What differs between the conditions</em>: Only the label used to describe the government programs. The treatment condition uses “assistance to the poor” while the control condition uses “welfare.”</p>
+<p><em>What stays the same</em>: Everything else is identical:</p>
+<ul>
+<li>The question stem: “Are we spending too much, too little, or about the right amount on…”</li>
+<li>The response options: Too little, About right, Too much</li>
+<li>The numeric coding: 1, 2, 3</li>
+<li>The underlying concept being asked about (government spending on programs for low-income people)</li>
+</ul>
+<p><strong>Part b.</strong> The words “welfare” and “assistance to the poor” may produce different responses because they carry different connotations, even though they refer to the same government programs.</p>
+<p>“Welfare” has acquired negative associations in American political discourse. It is often linked to stereotypes about dependency, fraud, or undeserving recipients. Many people have strong negative reactions to the word itself.</p>
+<p>“Assistance to the poor” is more neutral and descriptive. It focuses attention on the humanitarian purpose of helping people in need, without triggering the same negative associations.</p>
+<p>These different framings can activate different considerations in respondents’ minds, leading them to express different levels of support even though the underlying programs are identical. This is exactly what Rasinski’s experiment was designed to detect.</p>
+</details>
+<ol start="9" type="1">
 <li><p><strong>Interpreting Rasinski’s Results</strong>: In the hypothetical Rasinski data presented in the notes, the ATE was -1.3.</p>
 <ol type="a">
 <li><p>Explain what this negative ATE means substantively. Does it indicate increased or decreased support for spending?</p></li>
 <li><p>Why is the sign (positive or negative) of the ATE potentially confusing in this example?</p></li>
 <li><p>If we had instead coded responses as: Too little = 3, About right = 2, Too much = 1, what would the ATE have been? Would your substantive interpretation change?</p></li>
 </ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> The ATE of -1.3 means that, on average, respondents gave responses that were 1.3 points <em>lower</em> on the 1-2-3 scale when asked about “assistance to the poor” compared to when asked about “welfare.”</p>
+<p>But what does “lower” mean substantively? Recall the coding:</p>
+<ul>
+<li>Too little = 1 (more support for spending)</li>
+<li>About right = 2</li>
+<li>Too much = 3 (less support for spending)</li>
+</ul>
+<p>Lower numbers indicate <em>more</em> support for spending. So a negative ATE indicates <em>increased</em> support for spending when using the “assistance to the poor” wording. The treatment (changing “welfare” to “assistance to the poor”) made people more supportive of government spending.</p>
+<p><strong>Part b.</strong> The sign is potentially confusing because the coding scheme runs in the opposite direction from what we might intuitively expect. We often associate “positive” with “more” and “negative” with “less.” But here, a <em>negative</em> ATE means <em>more</em> support for spending.</p>
+<p>This is an artifact of how the response options were numbered. The researcher could have coded the responses differently.</p>
+<p><strong>Part c.</strong> If we reversed the coding:</p>
+<ul>
+<li>Too little = 3 (more support for spending)</li>
+<li>About right = 2</li>
+<li>Too much = 1 (less support for spending)</li>
+</ul>
+<p>Then each potential outcome would transform:</p>
+<ul>
+<li>Original values of 1 become 3</li>
+<li>Original values of 2 stay 2</li>
+<li>Original values of 3 become 1</li>
+</ul>
+<p>Using the hypothetical data from the chapter, the new ATE would be:</p>
+<p><span class="math display">\[
+\begin{align}
+\text{ATE} &amp;= \frac{1}{10}(3 + 2 + 3 + 3 + 3 + 2 + 3 + 3 + 2 + 3) - \frac{1}{10}(1 + 1 + 2 + 1 + 2 + 1 + 2 + 1 + 2 + 1) \\
+&amp;= \frac{27}{10} - \frac{14}{10} \\
+&amp;= 2.7 - 1.4 \\
+&amp;= +1.3
+\end{align}
+\]</span></p>
+<p>The ATE becomes <span class="math inline">\(+1.3\)</span> instead of <span class="math inline">\(-1.3\)</span>.</p>
+<p>The <em>substantive</em> interpretation does not change: the “assistance to the poor” wording still increases support for spending compared to “welfare.” The sign of the ATE simply reflects our arbitrary choice of how to code the responses.</p>
+</details>
+<ol start="10" type="1">
 <li><p><strong>Rasinski’s Potential Outcomes</strong>: Consider respondent 9 in the hypothetical Rasinski data, who answered “About right” (2) under both conditions.</p>
 <ol type="a">
 <li><p>What is this respondent’s individual treatment effect (<span class="math inline">\(\tau_9\)</span>)?</p></li>
@@ -890,21 +1293,128 @@ Tip
 <li><p>Can you construct an example with different potential outcomes where the treatment has a large effect for every individual, but the ATE is still zero?</p></li>
 </ol></li>
 </ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> Respondent 9 answered “About right” (coded as 2) under both conditions:</p>
+<ul>
+<li><span class="math inline">\(Y_9(1) = 2\)</span> (response if asked about “assistance to the poor”)</li>
+<li><span class="math inline">\(Y_9(0) = 2\)</span> (response if asked about “welfare”)</li>
+</ul>
+<p>The individual treatment effect is:</p>
+<p><span class="math display">\[\tau_9 = Y_9(1) - Y_9(0) = 2 - 2 = 0\]</span></p>
+<p><strong>Part b.</strong> For this particular respondent, the question wording had no effect on their <em>observed categorical response</em>. They gave the same answer—“About right”—regardless of which version of the question they received.</p>
+<p>However, this does not necessarily mean the wording had no psychological effect whatsoever. It could be that:</p>
+<ul>
+<li>The respondent holds consistent, moderate views on this issue that are not affected by framing</li>
+<li>The two framings activated different considerations, but those considerations happened to produce the same response category</li>
+<li>The respondent gave a default “middle” response without processing the question carefully</li>
+</ul>
+<p>All we can conclude is that the treatment did not change this respondent’s response on this particular three-category scale.</p>
+<p><strong>Part c.</strong> Yes. Here is an example where treatment has a large effect (<span class="math inline">\(|\tau_i| = 3\)</span>) for every individual, but the ATE is zero:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Individual</th>
+<th><span class="math inline">\(Y_i(0)\)</span></th>
+<th><span class="math inline">\(Y_i(1)\)</span></th>
+<th><span class="math inline">\(\tau_i\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>2</td>
+<td>5</td>
+<td><span class="math inline">\(5 - 2 = 3\)</span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>6</td>
+<td>3</td>
+<td><span class="math inline">\(3 - 6 = -3\)</span></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>4</td>
+<td>7</td>
+<td><span class="math inline">\(7 - 4 = 3\)</span></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>8</td>
+<td>5</td>
+<td><span class="math inline">\(5 - 8 = -3\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Every individual experiences a treatment effect of either <span class="math inline">\(+3\)</span> or <span class="math inline">\(-3\)</span>. The treatment clearly matters for each person. But the ATE is:</p>
+<p><span class="math display">\[
+\begin{align}
+\text{ATE} &amp;= \frac{1}{4}(3 + (-3) + 3 + (-3)) \\
+&amp;= \frac{0}{4} \\
+&amp;= 0
+\end{align}
+\]</span></p>
+<p>The positive and negative effects cancel perfectly, producing an ATE of zero despite large individual effects.</p>
+</details>
 </section>
-<section id="critical-thinking" class="level3" data-number="1.6.4">
-<h3 data-number="1.6.4" class="anchored" data-anchor-id="critical-thinking"><span class="header-section-number">1.6.4</span> Critical Thinking</h3>
+<section id="critical-thinking" class="level3" data-number="1.7.4">
+<h3 data-number="1.7.4" class="anchored" data-anchor-id="critical-thinking"><span class="header-section-number">1.7.4</span> Critical Thinking</h3>
 <ol start="11" type="1">
 <li><p><strong>Beyond the Average</strong>: In the original hypothetical example (with 10 respondents and ATE = 1.5), we saw that treatment effects varied across individuals, with some positive, some negative, and some zero.</p>
 <ol type="a">
 <li><p>Why might this variation in individual treatment effects matter for policy or practical decisions?</p></li>
 <li><p>What are the limitations of focusing only on the ATE when individual treatment effects vary substantially?</p></li>
 </ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> Variation in individual treatment effects matters for policy and practical decisions because:</p>
+<p><em>Targeting interventions</em>: If treatment helps some people but harms others, we might want to identify who benefits and offer the treatment only to them. A positive ATE could mask the fact that a substantial group is being harmed.</p>
+<p><em>Equity concerns</em>: Even if the average effect is positive, we might care about <em>who</em> benefits. If benefits are concentrated among people who are already well-off, while disadvantaged groups see little improvement, this raises fairness concerns that the ATE alone cannot reveal.</p>
+<p><em>Individual decision-making</em>: A person deciding whether to undergo a treatment cares about the effect on <em>them</em>, not the average effect across all people. If effects are highly variable, the ATE may be a poor guide for any particular individual.</p>
+<p><em>Understanding mechanisms</em>: Variation in effects can help us understand <em>why</em> a treatment works. If effects are larger for certain subgroups, this may point to underlying mechanisms or suggest how to improve the treatment.</p>
+<p><strong>Part b.</strong> The ATE has several limitations when individual treatment effects vary substantially:</p>
+<ul>
+<li><p>The ATE can hide important heterogeneity. An ATE of zero could mean “the treatment has no effect on anyone” or “the treatment has large positive effects for half the population and large negative effects for the other half.” These are very different situations with very different policy implications.</p></li>
+<li><p>The ATE does not tell us who benefits and who is harmed.</p></li>
+<li><p>The ATE treats all individuals equally. But we might care more about effects on certain groups, such as those who are most disadvantaged or most at risk.</p></li>
+<li><p>The ATE is a single summary number. Like any average, it can be misleading if the underlying distribution is skewed or bimodal.</p></li>
+<li><p>For individual decision-making, knowing the ATE does not tell any specific person whether the treatment will help or harm <em>them</em>.</p></li>
+</ul>
+</details>
+<ol start="12" type="1">
 <li><p><strong>Assumption Plausibility</strong>:</p>
 <ol type="a">
 <li><p>For what kinds of treatments or contexts—if any—might the constant treatment effects assumption be approximately reasonable?</p></li>
 <li><p>For what kinds of treatments would this assumption be clearly implausible? Provide a specific example and explain why treatment effects would likely vary across individuals.</p></li>
 </ol></li>
 </ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> The constant treatment effects assumption might be <em>approximately</em> reasonable in some contexts:</p>
+<p><em>Simple, additive interventions</em>: A treatment that mechanically adds a fixed amount might have roughly constant effects. For example, if a government program gives every recipient exactly $500, the effect on “dollars received” is constant at $500 for everyone.</p>
+<p><em>Highly standardized settings with homogeneous units</em>: In carefully controlled laboratory experiments with nearly identical subjects (such as certain agricultural experiments with genetically identical plants), treatment effects might be relatively uniform.</p>
+<p><em>Very small effects</em>: When treatment effects are small relative to natural variation in outcomes, the assumption of constant effects might not matter much practically, even if it’s technically false.</p>
+<p>Even in these cases, truly constant effects are unlikely. But the assumption might be close enough to be useful for certain purposes.</p>
+<p><strong>Part b.</strong> Constant treatment effects would be clearly implausible for treatments where individual circumstances strongly influence how people respond.</p>
+<p><em>Example: A job training program’s effect on earnings</em></p>
+<p>Treatment effects would likely vary substantially across individuals because:</p>
+<ul>
+<li><p><em>Baseline skills</em>: Someone with no prior job skills might benefit enormously from training, while someone who already has strong skills might gain little or nothing.</p></li>
+<li><p><em>Local labor markets</em>: The value of new skills depends on whether employers in the person’s area are hiring for jobs that use those skills. A person in a booming job market might see large earnings gains; a person in a depressed area might see none.</p></li>
+<li><p><em>Personal circumstances</em>: People differ in their ability to apply what they learn, their job search networks, the discrimination they face, their health, their family responsibilities, and countless other factors that affect how training translates into earnings.</p></li>
+<li><p><em>Motivation and engagement</em>: Some participants engage deeply with training while others do not, leading to different outcomes.</p></li>
+</ul>
+<p>For a job training program, we would expect some participants to see large earnings gains, others to see modest gains, and some to see no gain or even losses (if, say, the time spent in training caused them to miss other opportunities). Assuming constant effects would ignore this important variation.</p>
+</details>
+
 
 
 </section>
@@ -1336,6 +1846,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="../ch/ate-hat.html" class="pagination-link" aria-label="Estimating the ATE">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Estimating the ATE</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

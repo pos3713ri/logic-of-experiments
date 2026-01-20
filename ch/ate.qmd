@@ -202,7 +202,7 @@ The ATE is exactly 2. This follows from the fact that all of the individual-leve
 
 ## Rasinski's Question-Wording Experiment
 
-In a famous survey experiment, Rasinski (1989) was curious about how question wording affects public support for government spending.^[Respondents were randomly assigned to one of two conditions that asked about spending on programs for low-income individuals, but used different labels to describe these programs. The experiment was conducted across three years (1984, 1985, and 1986) and consistently found that far more respondents said the government was spending "too little" when the program was described as "assistance to the poor" (around 63-65%) compared to when it was described as "welfare" (around 20-25%). This represents a dramatic difference of approximately 40 percentage points due solely to the choice of label used to describe the same underlying government program.]
+In a famous survey experiment, @rasinski1989 was curious about how question wording affects public support for government spending.^[Respondents were randomly assigned to one of two conditions that asked about spending on programs for low-income individuals, but used different labels to describe these programs. The experiment was conducted across three years (1984, 1985, and 1986) and consistently found that far more respondents said the government was spending "too little" when the program was described as "assistance to the poor" (around 63-65%) compared to when it was described as "welfare" (around 20-25%). This represents a dramatic difference of approximately 40 percentage points due solely to the choice of label used to describe the same underlying government program.]
 
 Respondents could be assigned to one of two conditions: treatment or control. The two conditions featured an identical question stem, but varied in how they describe the spending.
 
@@ -260,17 +260,100 @@ $$
 
 The ATE is -1.3. Since lower values on our 1-2-3 scale indicate more support for spending, this negative ATE means that the "assistance to the poor" wording increases support for spending by an average of 1.3 scale points compared to the "welfare" wording.
 
+## Key Terms
+
+- Potential outcomes
+- Potential outcomes framework
+- Counterfactual
+- Individual-level treatment effect
+- Fundamental problem of causal inference
+- Average treatment effect (ATE)
+- Sharp null hypothesis
+- Constant treatment effects
+
 ## Exercises
 
 ### Conceptual Understanding
 
 1. **Defining Potential Outcomes**: In your own words, explain what $Y_i(1)$ and $Y_i(0)$ represent in the context of Rasinski's question-wording experiment. Why can we never observe both potential outcomes for the same respondent?
 
+<details>
+<summary>Solution</summary>
+
+In Rasinski's question-wording experiment, each respondent has two potential outcomes:
+
+- $Y_i(1)$ is the response that respondent $i$ *would* give if asked about spending on "assistance to the poor." This is the potential outcome under the treatment condition.
+
+- $Y_i(0)$ is the response that respondent $i$ *would* give if asked about spending on "welfare." This is the potential outcome under the control condition.
+
+We can never observe both potential outcomes for the same respondent because each respondent can only answer *one version* of the question. Once respondent $i$ sees the question with "welfare" and gives their answer, we cannot rewind time and show them the "assistance to the poor" version as if they had never seen the first one. At most, we observe one potential outcome per respondent---either $Y_i(1)$ or $Y_i(0)$, but never both.
+
+This is the fundamental problem of causal inference.
+
+</details>
+
 2. **The Fundamental Problem**: Explain why we call it the "fundamental problem of causal inference." What makes this problem "fundamental" rather than just "difficult"?
+
+<details>
+<summary>Solution</summary>
+
+We call it the "fundamental" problem of causal inference---rather than just a "difficult" problem---because it cannot be solved, even in principle.
+
+A "difficult" problem is one we might overcome with better technology, more data, or cleverer methods. The fundamental problem is different: it is a logical impossibility. At any given moment, an individual either receives treatment or does not. We cannot observe the same person in two different states of the world at the same time. No amount of resources or ingenuity can change this fact.
+
+This is why we need research designs---like randomized experiments---that allow us to *estimate* causal effects at the group level, even though we can never directly *observe* individual-level causal effects.
+
+</details>
 
 3. **ATE Interpretation**: A researcher finds an ATE of 3.2 in an experiment testing the effect of a new study technique on exam scores (measured 0-100). Write two sentences explaining what this means in plain language that a non-statistician could understand.
 
+<details>
+<summary>Solution</summary>
+
+An ATE of 3.2 means that, on average, students who use the new study technique score about 3.2 points higher on the exam compared to what they would have scored without using the technique.
+
+Another way to say this: if we could magically give the study technique to all students and then also observe what would have happened if none of them used it, the average difference between these two scenarios would be 3.2 points.
+
+</details>
+
 4. **Sharp Null vs. Zero ATE**: Is it possible to have an ATE of zero even when the sharp null hypothesis does not hold? Explain your answer and provide an example using a simple table of potential outcomes for 4 individuals.
+
+<details>
+<summary>Solution</summary>
+
+Yes, it is possible to have an ATE of zero even when the sharp null hypothesis does not hold.
+
+The sharp null hypothesis is a strong claim: it requires that $\tau_i = 0$ for *every single individual*. That is, $Y_i(1) = Y_i(0)$ for all $i$.
+
+The ATE, on the other hand, is just the *average* of the individual treatment effects:
+
+$$\text{ATE} = \frac{1}{N} \sum_{i=1}^{N} \tau_i$$
+
+If some individuals have positive treatment effects and others have negative treatment effects, these can cancel out, producing an ATE of zero even though the treatment affected every individual.
+
+Here is a concrete example with 4 individuals:
+
+| Individual | $Y_i(0)$ | $Y_i(1)$ | $\tau_i = Y_i(1) - Y_i(0)$ |
+|------------|----------|----------|----------------------------|
+| 1          | 5        | 8        | $8 - 5 = 3$                |
+| 2          | 7        | 4        | $4 - 7 = -3$               |
+| 3          | 6        | 8        | $8 - 6 = 2$                |
+| 4          | 8        | 6        | $6 - 8 = -2$               |
+
+Computing the ATE:
+
+$$
+\begin{align}
+\text{ATE} &= \frac{1}{4} \sum_{i=1}^{4} \tau_i \\
+&= \frac{1}{4}(3 + (-3) + 2 + (-2)) \\
+&= \frac{0}{4} \\
+&= 0
+\end{align}
+$$
+
+The ATE equals zero, but the sharp null does *not* hold. The treatment affected every single individual---individuals 1 and 3 experienced positive effects of 3 and 2, while individuals 2 and 4 experienced negative effects of -3 and -2. The effects simply cancel out when we average them.
+
+</details>
 
 ### Computational Practice
 
@@ -286,10 +369,57 @@ The ATE is -1.3. Since lower values on our 1-2-3 scale indicate more support for
    | 6          | 8        | 7        |
 
    a. Calculate the individual-level treatment effect ($\tau_i$) for each respondent.
-   
+
    b. Calculate the ATE.
-   
+
    c. Which respondents experienced a positive treatment effect? A negative treatment effect? No treatment effect?
+
+<details>
+<summary>Solution</summary>
+
+**Part a.** To find each individual treatment effect, we compute $\tau_i = Y_i(1) - Y_i(0)$:
+
+| Respondent | $Y_i(0)$ | $Y_i(1)$ | $\tau_i = Y_i(1) - Y_i(0)$ |
+|------------|----------|----------|----------------------------|
+| 1          | 5        | 8        | $8 - 5 = 3$                |
+| 2          | 7        | 6        | $6 - 7 = -1$               |
+| 3          | 4        | 7        | $7 - 4 = 3$                |
+| 4          | 6        | 9        | $9 - 6 = 3$                |
+| 5          | 5        | 5        | $5 - 5 = 0$                |
+| 6          | 8        | 7        | $7 - 8 = -1$               |
+
+**Part b.** We can compute the ATE by averaging the individual treatment effects:
+
+$$
+\begin{align}
+\text{ATE} &= \frac{1}{6} \sum_{i=1}^{6} \tau_i \\
+&= \frac{1}{6}(3 + (-1) + 3 + 3 + 0 + (-1)) \\
+&= \frac{7}{6} \\
+&\approx 1.167
+\end{align}
+$$
+
+We can verify this by computing the ATE as the difference between the average potential outcome under treatment and the average potential outcome under control:
+
+$$
+\begin{align}
+\text{ATE} &= \frac{1}{6}\sum_{i=1}^{6} Y_i(1) - \frac{1}{6}\sum_{i=1}^{6} Y_i(0) \\
+&= \frac{1}{6}(8 + 6 + 7 + 9 + 5 + 7) - \frac{1}{6}(5 + 7 + 4 + 6 + 5 + 8) \\
+&= \frac{42}{6} - \frac{35}{6} \\
+&= 7 - 5.833 \\
+&\approx 1.167
+\end{align}
+$$
+
+Both methods give the same answer.
+
+**Part c.** Classifying the treatment effects:
+
+- **Positive treatment effect** ($\tau_i > 0$): Respondents 1, 3, and 4 (with effects of 3, 3, and 3)
+- **Negative treatment effect** ($\tau_i < 0$): Respondents 2 and 6 (with effects of -1 and -1)
+- **No treatment effect** ($\tau_i = 0$): Respondent 5
+
+</details>
 
 6. **Verifying the Sharp Null**: Consider the following potential outcomes:
 
@@ -301,47 +431,293 @@ The ATE is -1.3. Since lower values on our 1-2-3 scale indicate more support for
    | 4          | 10       | 10       |
 
    a. Does this satisfy the sharp null hypothesis? How do you know?
-   
+
    b. Calculate the ATE.
-   
+
    c. Under the sharp null hypothesis, what can you always say about the ATE?
+
+<details>
+<summary>Solution</summary>
+
+**Part a.** Yes, this satisfies the sharp null hypothesis.
+
+The sharp null hypothesis requires that $Y_i(1) = Y_i(0)$ for *all* individuals. We can check each respondent:
+
+| Respondent | $Y_i(0)$ | $Y_i(1)$ | $Y_i(1) = Y_i(0)$? |
+|------------|----------|----------|---------------------|
+| 1          | 12       | 12       | Yes                 |
+| 2          | 8        | 8        | Yes                 |
+| 3          | 15       | 15       | Yes                 |
+| 4          | 10       | 10       | Yes                 |
+
+For every individual, the potential outcome under treatment equals the potential outcome under control. The sharp null hypothesis holds.
+
+**Part b.** Computing the ATE:
+
+$$
+\begin{align}
+\text{ATE} &= \frac{1}{4}\sum_{i=1}^{4} Y_i(1) - \frac{1}{4}\sum_{i=1}^{4} Y_i(0) \\
+&= \frac{1}{4}(12 + 8 + 15 + 10) - \frac{1}{4}(12 + 8 + 15 + 10) \\
+&= \frac{45}{4} - \frac{45}{4} \\
+&= 11.25 - 11.25 \\
+&= 0
+\end{align}
+$$
+
+**Part c.** Under the sharp null hypothesis, the ATE is *always* exactly zero.
+
+This follows directly from the definitions. If $Y_i(1) = Y_i(0)$ for all $i$, then:
+
+$$\tau_i = Y_i(1) - Y_i(0) = 0 \text{ for all } i$$
+
+The ATE is the average of the individual treatment effects:
+
+$$\text{ATE} = \frac{1}{N} \sum_{i=1}^{N} \tau_i = \frac{1}{N} \sum_{i=1}^{N} 0 = 0$$
+
+The average of zeros is always zero.
+
+</details>
 
 7. **Constant Treatment Effects**: Create a table of potential outcomes for 5 individuals where the constant treatment effects assumption holds with $\tau = -2.5$ for all individuals. Show that the ATE equals -2.5.
 
+<details>
+<summary>Solution</summary>
+
+The constant treatment effects assumption requires that $\tau_i = \tau$ for all individuals. With $\tau = -2.5$, we need $Y_i(1) - Y_i(0) = -2.5$ for every individual.
+
+We can choose any values for $Y_i(0)$ and then compute $Y_i(1) = Y_i(0) + (-2.5) = Y_i(0) - 2.5$:
+
+| Individual | $Y_i(0)$ | $Y_i(1) = Y_i(0) - 2.5$ | $\tau_i = Y_i(1) - Y_i(0)$ |
+|------------|----------|-------------------------|----------------------------|
+| 1          | 10       | 7.5                     | $7.5 - 10 = -2.5$          |
+| 2          | 8        | 5.5                     | $5.5 - 8 = -2.5$           |
+| 3          | 12       | 9.5                     | $9.5 - 12 = -2.5$          |
+| 4          | 6        | 3.5                     | $3.5 - 6 = -2.5$           |
+| 5          | 9        | 6.5                     | $6.5 - 9 = -2.5$           |
+
+Now we verify that the ATE equals -2.5:
+
+$$
+\begin{align}
+\text{ATE} &= \frac{1}{5}\sum_{i=1}^{5} Y_i(1) - \frac{1}{5}\sum_{i=1}^{5} Y_i(0) \\
+&= \frac{1}{5}(7.5 + 5.5 + 9.5 + 3.5 + 6.5) - \frac{1}{5}(10 + 8 + 12 + 6 + 9) \\
+&= \frac{32.5}{5} - \frac{45}{5} \\
+&= 6.5 - 9 \\
+&= -2.5
+\end{align}
+$$
+
+When treatment effects are constant at $\tau$ for all individuals, the ATE equals $\tau$. This makes sense: the ATE is the average of the individual treatment effects, and the average of a constant is just that constant.
+
+</details>
+
 ### Application to Rasinski's Experiment
 
-8. **Understanding the Conditions**: 
-   
+8. **Understanding the Conditions**:
+
    a. In Rasinski's experiment, what exactly differs between the treatment and control conditions? What stays the same?
-   
+
    b. Why might the word "welfare" produce different responses than "assistance to the poor" even though both refer to the same government programs?
+
+<details>
+<summary>Solution</summary>
+
+**Part a.**
+
+*What differs between the conditions*: Only the label used to describe the government programs. The treatment condition uses "assistance to the poor" while the control condition uses "welfare."
+
+*What stays the same*: Everything else is identical:
+
+- The question stem: "Are we spending too much, too little, or about the right amount on..."
+- The response options: Too little, About right, Too much
+- The numeric coding: 1, 2, 3
+- The underlying concept being asked about (government spending on programs for low-income people)
+
+**Part b.** The words "welfare" and "assistance to the poor" may produce different responses because they carry different connotations, even though they refer to the same government programs.
+
+"Welfare" has acquired negative associations in American political discourse. It is often linked to stereotypes about dependency, fraud, or undeserving recipients. Many people have strong negative reactions to the word itself.
+
+"Assistance to the poor" is more neutral and descriptive. It focuses attention on the humanitarian purpose of helping people in need, without triggering the same negative associations.
+
+These different framings can activate different considerations in respondents' minds, leading them to express different levels of support even though the underlying programs are identical. This is exactly what Rasinski's experiment was designed to detect.
+
+</details>
 
 9. **Interpreting Rasinski's Results**: In the hypothetical Rasinski data presented in the notes, the ATE was -1.3.
 
    a. Explain what this negative ATE means substantively. Does it indicate increased or decreased support for spending?
-   
+
    b. Why is the sign (positive or negative) of the ATE potentially confusing in this example?
-   
+
    c. If we had instead coded responses as: Too little = 3, About right = 2, Too much = 1, what would the ATE have been? Would your substantive interpretation change?
+
+<details>
+<summary>Solution</summary>
+
+**Part a.** The ATE of -1.3 means that, on average, respondents gave responses that were 1.3 points *lower* on the 1-2-3 scale when asked about "assistance to the poor" compared to when asked about "welfare."
+
+But what does "lower" mean substantively? Recall the coding:
+
+- Too little = 1 (more support for spending)
+- About right = 2
+- Too much = 3 (less support for spending)
+
+Lower numbers indicate *more* support for spending. So a negative ATE indicates *increased* support for spending when using the "assistance to the poor" wording. The treatment (changing "welfare" to "assistance to the poor") made people more supportive of government spending.
+
+**Part b.** The sign is potentially confusing because the coding scheme runs in the opposite direction from what we might intuitively expect. We often associate "positive" with "more" and "negative" with "less." But here, a *negative* ATE means *more* support for spending.
+
+This is an artifact of how the response options were numbered. The researcher could have coded the responses differently.
+
+**Part c.** If we reversed the coding:
+
+- Too little = 3 (more support for spending)
+- About right = 2
+- Too much = 1 (less support for spending)
+
+Then each potential outcome would transform:
+
+- Original values of 1 become 3
+- Original values of 2 stay 2
+- Original values of 3 become 1
+
+Using the hypothetical data from the chapter, the new ATE would be:
+
+$$
+\begin{align}
+\text{ATE} &= \frac{1}{10}(3 + 2 + 3 + 3 + 3 + 2 + 3 + 3 + 2 + 3) - \frac{1}{10}(1 + 1 + 2 + 1 + 2 + 1 + 2 + 1 + 2 + 1) \\
+&= \frac{27}{10} - \frac{14}{10} \\
+&= 2.7 - 1.4 \\
+&= +1.3
+\end{align}
+$$
+
+The ATE becomes $+1.3$ instead of $-1.3$.
+
+The *substantive* interpretation does not change: the "assistance to the poor" wording still increases support for spending compared to "welfare." The sign of the ATE simply reflects our arbitrary choice of how to code the responses.
+
+</details>
 
 10. **Rasinski's Potential Outcomes**: Consider respondent 9 in the hypothetical Rasinski data, who answered "About right" (2) under both conditions.
 
     a. What is this respondent's individual treatment effect ($\tau_9$)?
-    
+
     b. Does this mean the question wording had no effect on this respondent? Explain.
-    
+
     c. Can you construct an example with different potential outcomes where the treatment has a large effect for every individual, but the ATE is still zero?
+
+<details>
+<summary>Solution</summary>
+
+**Part a.** Respondent 9 answered "About right" (coded as 2) under both conditions:
+
+- $Y_9(1) = 2$ (response if asked about "assistance to the poor")
+- $Y_9(0) = 2$ (response if asked about "welfare")
+
+The individual treatment effect is:
+
+$$\tau_9 = Y_9(1) - Y_9(0) = 2 - 2 = 0$$
+
+**Part b.** For this particular respondent, the question wording had no effect on their *observed categorical response*. They gave the same answer---"About right"---regardless of which version of the question they received.
+
+However, this does not necessarily mean the wording had no psychological effect whatsoever. It could be that:
+
+- The respondent holds consistent, moderate views on this issue that are not affected by framing
+- The two framings activated different considerations, but those considerations happened to produce the same response category
+- The respondent gave a default "middle" response without processing the question carefully
+
+All we can conclude is that the treatment did not change this respondent's response on this particular three-category scale.
+
+**Part c.** Yes. Here is an example where treatment has a large effect ($|\tau_i| = 3$) for every individual, but the ATE is zero:
+
+| Individual | $Y_i(0)$ | $Y_i(1)$ | $\tau_i$ |
+|------------|----------|----------|----------|
+| 1          | 2        | 5        | $5 - 2 = 3$  |
+| 2          | 6        | 3        | $3 - 6 = -3$ |
+| 3          | 4        | 7        | $7 - 4 = 3$  |
+| 4          | 8        | 5        | $5 - 8 = -3$ |
+
+Every individual experiences a treatment effect of either $+3$ or $-3$. The treatment clearly matters for each person. But the ATE is:
+
+$$
+\begin{align}
+\text{ATE} &= \frac{1}{4}(3 + (-3) + 3 + (-3)) \\
+&= \frac{0}{4} \\
+&= 0
+\end{align}
+$$
+
+The positive and negative effects cancel perfectly, producing an ATE of zero despite large individual effects.
+
+</details>
 
 ### Critical Thinking
 
-11. **Beyond the Average**: In the original hypothetical example (with 10 respondents and ATE = 1.5), we saw that treatment effects varied across individuals, with some positive, some negative, and some zero. 
+11. **Beyond the Average**: In the original hypothetical example (with 10 respondents and ATE = 1.5), we saw that treatment effects varied across individuals, with some positive, some negative, and some zero.
 
     a. Why might this variation in individual treatment effects matter for policy or practical decisions?
-    
+
     b. What are the limitations of focusing only on the ATE when individual treatment effects vary substantially?
 
-12. **Assumption Plausibility**: 
-    
+<details>
+<summary>Solution</summary>
+
+**Part a.** Variation in individual treatment effects matters for policy and practical decisions because:
+
+*Targeting interventions*: If treatment helps some people but harms others, we might want to identify who benefits and offer the treatment only to them. A positive ATE could mask the fact that a substantial group is being harmed.
+
+*Equity concerns*: Even if the average effect is positive, we might care about *who* benefits. If benefits are concentrated among people who are already well-off, while disadvantaged groups see little improvement, this raises fairness concerns that the ATE alone cannot reveal.
+
+*Individual decision-making*: A person deciding whether to undergo a treatment cares about the effect on *them*, not the average effect across all people. If effects are highly variable, the ATE may be a poor guide for any particular individual.
+
+*Understanding mechanisms*: Variation in effects can help us understand *why* a treatment works. If effects are larger for certain subgroups, this may point to underlying mechanisms or suggest how to improve the treatment.
+
+**Part b.** The ATE has several limitations when individual treatment effects vary substantially:
+
+- The ATE can hide important heterogeneity. An ATE of zero could mean "the treatment has no effect on anyone" or "the treatment has large positive effects for half the population and large negative effects for the other half." These are very different situations with very different policy implications.
+
+- The ATE does not tell us who benefits and who is harmed.
+
+- The ATE treats all individuals equally. But we might care more about effects on certain groups, such as those who are most disadvantaged or most at risk.
+
+- The ATE is a single summary number. Like any average, it can be misleading if the underlying distribution is skewed or bimodal.
+
+- For individual decision-making, knowing the ATE does not tell any specific person whether the treatment will help or harm *them*.
+
+</details>
+
+12. **Assumption Plausibility**:
+
     a. For what kinds of treatments or contexts---if any---might the constant treatment effects assumption be approximately reasonable?
-    
+
     b. For what kinds of treatments would this assumption be clearly implausible? Provide a specific example and explain why treatment effects would likely vary across individuals.
+
+<details>
+<summary>Solution</summary>
+
+**Part a.** The constant treatment effects assumption might be *approximately* reasonable in some contexts:
+
+*Simple, additive interventions*: A treatment that mechanically adds a fixed amount might have roughly constant effects. For example, if a government program gives every recipient exactly \$500, the effect on "dollars received" is constant at \$500 for everyone.
+
+*Highly standardized settings with homogeneous units*: In carefully controlled laboratory experiments with nearly identical subjects (such as certain agricultural experiments with genetically identical plants), treatment effects might be relatively uniform.
+
+*Very small effects*: When treatment effects are small relative to natural variation in outcomes, the assumption of constant effects might not matter much practically, even if it's technically false.
+
+Even in these cases, truly constant effects are unlikely. But the assumption might be close enough to be useful for certain purposes.
+
+**Part b.** Constant treatment effects would be clearly implausible for treatments where individual circumstances strongly influence how people respond.
+
+*Example: A job training program's effect on earnings*
+
+Treatment effects would likely vary substantially across individuals because:
+
+- *Baseline skills*: Someone with no prior job skills might benefit enormously from training, while someone who already has strong skills might gain little or nothing.
+
+- *Local labor markets*: The value of new skills depends on whether employers in the person's area are hiring for jobs that use those skills. A person in a booming job market might see large earnings gains; a person in a depressed area might see none.
+
+- *Personal circumstances*: People differ in their ability to apply what they learn, their job search networks, the discrimination they face, their health, their family responsibilities, and countless other factors that affect how training translates into earnings.
+
+- *Motivation and engagement*: Some participants engage deeply with training while others do not, leading to different outcomes.
+
+For a job training program, we would expect some participants to see large earnings gains, others to see modest gains, and some to see no gain or even losses (if, say, the time spent in training caused them to miss other opportunities). Assuming constant effects would ignore this important variation.
+
+</details>

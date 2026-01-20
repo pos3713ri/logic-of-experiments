@@ -1,0 +1,2722 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2&nbsp; Estimating the ATE – The Logic of Experiments</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../ch/ate.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-2db5a64a0f9238d29502e24e892d8c52.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../_styles.css">
+</head>
+
+<body class="nav-sidebar floating slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ch/ate-hat.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Estimating the ATE</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">The Logic of Experiments</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch/ate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">ATE</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch/ate-hat.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Estimating the ATE</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#the-problem-a-solution" id="toc-the-problem-a-solution" class="nav-link active" data-scroll-target="#the-problem-a-solution"><span class="header-section-number">2.1</span> The Problem; A Solution?</a>
+  <ul class="collapse">
+  <li><a href="#problem-we-cant-observe-the-ate" id="toc-problem-we-cant-observe-the-ate" class="nav-link" data-scroll-target="#problem-we-cant-observe-the-ate"><span class="header-section-number">2.1.1</span> Problem: We Can’t Observe the ATE</a></li>
+  <li><a href="#solution-random-assignment" id="toc-solution-random-assignment" class="nav-link" data-scroll-target="#solution-random-assignment"><span class="header-section-number">2.1.2</span> Solution?: Random Assignment</a></li>
+  </ul></li>
+  <li><a href="#the-observed-data" id="toc-the-observed-data" class="nav-link" data-scroll-target="#the-observed-data"><span class="header-section-number">2.2</span> The Observed Data</a>
+  <ul class="collapse">
+  <li><a href="#what-the-data-look-like" id="toc-what-the-data-look-like" class="nav-link" data-scroll-target="#what-the-data-look-like"><span class="header-section-number">2.2.1</span> What the Data Look Like</a></li>
+  </ul></li>
+  <li><a href="#the-difference-in-means-estimator" id="toc-the-difference-in-means-estimator" class="nav-link" data-scroll-target="#the-difference-in-means-estimator"><span class="header-section-number">2.3</span> The Difference-in-Means Estimator</a>
+  <ul class="collapse">
+  <li><a href="#computing-the-estimate" id="toc-computing-the-estimate" class="nav-link" data-scroll-target="#computing-the-estimate"><span class="header-section-number">2.3.1</span> Computing the Estimate</a></li>
+  </ul></li>
+  <li><a href="#why-this-estimator" id="toc-why-this-estimator" class="nav-link" data-scroll-target="#why-this-estimator"><span class="header-section-number">2.4</span> Why This Estimator?</a></li>
+  <li><a href="#design-based-inference" id="toc-design-based-inference" class="nav-link" data-scroll-target="#design-based-inference"><span class="header-section-number">2.5</span> Design-Based Inference</a></li>
+  <li><a href="#unbiasedness-of-widehattextate" id="toc-unbiasedness-of-widehattextate" class="nav-link" data-scroll-target="#unbiasedness-of-widehattextate"><span class="header-section-number">2.6</span> Unbiasedness of <span class="math inline">\(\widehat{\text{ATE}}\)</span></a>
+  <ul class="collapse">
+  <li><a href="#the-expectation-operator-ecdot" id="toc-the-expectation-operator-ecdot" class="nav-link" data-scroll-target="#the-expectation-operator-ecdot"><span class="header-section-number">2.6.1</span> The Expectation Operator <span class="math inline">\(E[\cdot]\)</span></a></li>
+  <li><a href="#the-theorem" id="toc-the-theorem" class="nav-link" data-scroll-target="#the-theorem"><span class="header-section-number">2.6.2</span> The Theorem</a></li>
+  <li><a href="#the-proof" id="toc-the-proof" class="nav-link" data-scroll-target="#the-proof"><span class="header-section-number">2.6.3</span> The Proof</a></li>
+  <li><a href="#what-does-unbiasedness-mean" id="toc-what-does-unbiasedness-mean" class="nav-link" data-scroll-target="#what-does-unbiasedness-mean"><span class="header-section-number">2.6.4</span> What Does Unbiasedness Mean?</a></li>
+  <li><a href="#no-model-required" id="toc-no-model-required" class="nav-link" data-scroll-target="#no-model-required"><span class="header-section-number">2.6.5</span> No Model Required</a></li>
+  </ul></li>
+  <li><a href="#a-different-randomization" id="toc-a-different-randomization" class="nav-link" data-scroll-target="#a-different-randomization"><span class="header-section-number">2.7</span> A Different Randomization</a></li>
+  <li><a href="#computing-widehattextate-in-r" id="toc-computing-widehattextate-in-r" class="nav-link" data-scroll-target="#computing-widehattextate-in-r"><span class="header-section-number">2.8</span> Computing <span class="math inline">\(\widehat{\text{ATE}}\)</span> in R</a>
+  <ul class="collapse">
+  <li><a href="#the-mock-rasinski-data" id="toc-the-mock-rasinski-data" class="nav-link" data-scroll-target="#the-mock-rasinski-data"><span class="header-section-number">2.8.1</span> The Mock Rasinski Data</a></li>
+  <li><a href="#approach-1-using-mean" id="toc-approach-1-using-mean" class="nav-link" data-scroll-target="#approach-1-using-mean"><span class="header-section-number">2.8.2</span> Approach 1: Using <code>mean()</code></a></li>
+  <li><a href="#approach-2-using-lm" id="toc-approach-2-using-lm" class="nav-link" data-scroll-target="#approach-2-using-lm"><span class="header-section-number">2.8.3</span> Approach 2: Using <code>lm()</code></a></li>
+  </ul></li>
+  <li><a href="#key-terms" id="toc-key-terms" class="nav-link" data-scroll-target="#key-terms"><span class="header-section-number">2.9</span> Key Terms</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">2.10</span> Exercises</a>
+  <ul class="collapse">
+  <li><a href="#conceptual-understanding" id="toc-conceptual-understanding" class="nav-link" data-scroll-target="#conceptual-understanding"><span class="header-section-number">2.10.1</span> Conceptual Understanding</a></li>
+  <li><a href="#computational-practice" id="toc-computational-practice" class="nav-link" data-scroll-target="#computational-practice"><span class="header-section-number">2.10.2</span> Computational Practice</a></li>
+  <li><a href="#application-to-rasinskis-experiment" id="toc-application-to-rasinskis-experiment" class="nav-link" data-scroll-target="#application-to-rasinskis-experiment"><span class="header-section-number">2.10.3</span> Application to Rasinski’s Experiment</a></li>
+  <li><a href="#critical-thinking" id="toc-critical-thinking" class="nav-link" data-scroll-target="#critical-thinking"><span class="header-section-number">2.10.4</span> Critical Thinking</a></li>
+  <li><a href="#r-practice" id="toc-r-practice" class="nav-link" data-scroll-target="#r-practice"><span class="header-section-number">2.10.5</span> R Practice</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Estimating the ATE</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>In the previous chapter, we defined the average treatment effect (ATE) as the difference in average potential outcomes under treatment and control. This is simply the <em>hypothetical</em> difference between the average outcome if we assigned everyone to treatment and the average outcome if we assigned everyone to contrl.</p>
+<p>But we also acknowledged a fundamental problem: we can never observe both potential outcomes for the same individual. So how can we design a procedure to <em>estimate</em> the ATE from data?</p>
+<p>In this chapter, we develop a a simple and intuitive procedure and estimator.</p>
+<ol type="1">
+<li>First, randomly assign individuals to treatment or control.</li>
+<li>Second, compute the difference in average outcomes between the treatment and control groups</li>
+</ol>
+<p>We show that this is a <em>good procedure</em> because it is an unbiased estimator of the ATE. Importantly, this result relies only on the <em>design</em> of the experiment (the random assignment), not on any assumptions about how outcomes are generated.</p>
+<section id="the-problem-a-solution" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="the-problem-a-solution"><span class="header-section-number">2.1</span> The Problem; A Solution?</h2>
+<section id="problem-we-cant-observe-the-ate" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="problem-we-cant-observe-the-ate"><span class="header-section-number">2.1.1</span> Problem: We Can’t Observe the ATE</h3>
+<p>Recall from the previous chapter that we define the ATE as the difference between two averages: the average outcome if we assigned <em>everyone</em> to treatment minus the average outcome if we assigned <em>everyone</em> to control.</p>
+<p>But here’s the problem: we can’t assign everyone to treatment <em>and</em> everyone to control. Each individual can only be in one condition. If we assign someone to treatment, we see their outcome under treatment (but not their outcome under control). If we assign someone to control, we see their outcome under control (but not their outcome under treatment).</p>
+<p>This means we can never directly compute the ATE. So how do we get around this?</p>
+</section>
+<section id="solution-random-assignment" class="level3" data-number="2.1.2">
+<h3 data-number="2.1.2" class="anchored" data-anchor-id="solution-random-assignment"><span class="header-section-number">2.1.2</span> Solution?: Random Assignment</h3>
+<p>The key insight is that we don’t need to observe <em>everyone’s</em> outcome under treatment to learn about the average outcome under treatment. If we randomly assign individuals to treatment, then the individuals who happen to be assigned to treatment are—on average—just like the individuals who happen to be assigned to control. They are a simple random sample from the same population.</p>
+<p>This is the logic of a <strong>completely randomized experiment</strong>. We take our group of individuals and randomly divide them into two groups: some go to treatment, some go to control.</p>
+<ul>
+<li>The <strong>treated individuals</strong> are a random sample of the full group. So the average outcome we observe among treated individuals should be a good estimate of what the average outcome <em>would have been</em> if we had assigned everyone to treatment.</li>
+<li>Similarly, the average outcome among <strong>control individuals</strong> should be a good estimate of what the average outcome <em>would have been</em> if we had assigned everyone to control.</li>
+</ul>
+<p>In other words, random assignment lets us <em>estimate</em> the two quantities we need—the average outcome under treatment and the average outcome under control—even though we can’t observe them directly for everyone.</p>
+<p>The difference between these two estimates gives us an <em>estimate</em> of the ATE. It won’t be perfect. Any particular randomization might, by chance, put more higher-outcome individuals in one group than the other. But on average, across all possible randomizations, this approach gets it exactly right.</p>
+</section>
+</section>
+<section id="the-observed-data" class="level2 page-columns page-full" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="the-observed-data"><span class="header-section-number">2.2</span> The Observed Data</h2>
+<p>In a completely randomized experiment, we have <span class="math inline">\(N\)</span> individuals. We randomly assign <span class="math inline">\(N_t\)</span> individuals to treatment and the remaining <span class="math inline">\(N_c = N - N_t\)</span> individuals to control, where <span class="math inline">\(1 &lt; N_t &lt; N\)</span> (so at least one individual is in each group).</p>
+
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
+<p>In practice, we tend to use a <em>balanced</em> design where <span class="math inline">\(N_t = N_c = \dfrac{N}{2}\)</span>, so that half of the respondents go into the treatment group and an equal number go into the control group.</p>
+</div></div><p>We use the indicator variable <span class="math inline">\(D_i\)</span> to denote the treatment assignment for individual <span class="math inline">\(i\)</span>.</p>
+<ul>
+<li><span class="math inline">\(D_i = 1\)</span> if individual <span class="math inline">\(i\)</span> is assigned to treatment</li>
+<li><span class="math inline">\(D_i = 0\)</span> if individual <span class="math inline">\(i\)</span> is assigned to control</li>
+</ul>
+<p>Thus we can write that</p>
+<p><span class="math display">\[
+N_t = \sum_{i=1}^{N} D_i \quad \text{and} \quad N_c = \sum_{i=1}^{N} (1 - D_i).
+\]</span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Understanding This Notation
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The big sigma (<span class="math inline">\(\sum\)</span>) just means “add up.” The expression <span class="math inline">\(\sum_{i=1}^{N} D_i\)</span> says this: start with individual 1, then individual 2, then individual 3, and so on up to individual <span class="math inline">\(N\)</span>, and add up all their <span class="math inline">\(D_i\)</span> values.</p>
+<p>Since each <span class="math inline">\(D_i\)</span> is either 0 (control) or 1 (treatment), adding them up counts how many 1’s there are—that is, how many individuals are in the treatment group. That’s <span class="math inline">\(N_t\)</span>.</p>
+<p>The expression <span class="math inline">\((1 - D_i)\)</span> just flips the indicator. If <span class="math inline">\(D_i = 1\)</span>, then <span class="math inline">\(1 - D_i = 0\)</span>. If <span class="math inline">\(D_i = 0\)</span>, then <span class="math inline">\(1 - D_i = 1\)</span>. So adding up all the <span class="math inline">\((1 - D_i)\)</span> values counts how many 0’s there are in the original <span class="math inline">\(D_i\)</span>’s—that is, how many individuals are in the control group. That’s <span class="math inline">\(N_c\)</span>.</p>
+<p><strong>Example.</strong> Suppose we have <span class="math inline">\(N = 5\)</span> individuals with the following treatment assignments:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Individual <span class="math inline">\(i\)</span></th>
+<th><span class="math inline">\(D_i\)</span></th>
+<th><span class="math inline">\(1 - D_i\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>To count the treated individuals, we add up the <span class="math inline">\(D_i\)</span> column: <span class="math inline">\(N_t = 1 + 0 + 1 + 0 + 1 = 3\)</span>.</p>
+<p>To count the control individuals, we add up the <span class="math inline">\(1 - D_i\)</span> column: <span class="math inline">\(N_c = 0 + 1 + 0 + 1 + 0 = 2\)</span>.</p>
+<p>Three individuals are treated; two are in control.</p>
+</div>
+</div>
+</div>
+<p>For each individual, we observe only one potential outcome. We call this the <strong>observed outcome</strong>, denoted <span class="math inline">\(Y_i^{\text{obs}}\)</span>, so that</p>
+<p><span class="math display">\[
+Y_i^{\text{obs}} = Y_i(D_i) =
+\begin{cases}
+Y_i(0) &amp; \text{if } D_i = 0 \\
+Y_i(1) &amp; \text{if } D_i = 1
+\end{cases}.
+\]</span></p>
+<p>The other potential outcome—the one we don’t observe—is the <strong>missing outcome</strong>, denoted <span class="math inline">\(Y_i^{\text{mis}}\)</span>, so that</p>
+<p><span class="math display">\[
+Y_i^{\text{mis}} = Y_i(1 - D_i) =
+\begin{cases}
+Y_i(1) &amp; \text{if } D_i = 0 \\
+Y_i(0) &amp; \text{if } D_i = 1
+\end{cases}.
+\]</span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Understanding This Notation
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The notation <span class="math inline">\(Y_i(D_i)\)</span> means “plug the value of <span class="math inline">\(D_i\)</span> into the potential outcome function.” Since <span class="math inline">\(D_i\)</span> is either 0 or 1, this gives us either <span class="math inline">\(Y_i(0)\)</span> or <span class="math inline">\(Y_i(1)\)</span>—whichever one actually happened.</p>
+<p>The curly brace notation is just a compact way of writing “if-then” rules. It says: look at <span class="math inline">\(D_i\)</span>, and depending on its value, pick the corresponding potential outcome.</p>
+<p>For the observed outcome <span class="math inline">\(Y_i^{\text{obs}}\)</span>, we get the potential outcome that matches the treatment the individual actually received. For the missing outcome <span class="math inline">\(Y_i^{\text{mis}}\)</span>, we get the <em>other</em> potential outcome—the one we can’t see.</p>
+<p><strong>Example.</strong> Suppose we have <span class="math inline">\(N = 5\)</span> individuals with the following potential outcomes and treatment assignments:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 8%">
+<col style="width: 24%">
+<col style="width: 24%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Individual <span class="math inline">\(i\)</span></th>
+<th><span class="math inline">\(Y_i(0)\)</span></th>
+<th><span class="math inline">\(Y_i(1)\)</span></th>
+<th><span class="math inline">\(D_i\)</span></th>
+<th><span class="math inline">\(Y_i^{\text{obs}}\)</span></th>
+<th><span class="math inline">\(Y_i^{\text{mis}}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>4</td>
+<td>7</td>
+<td>1</td>
+<td>7</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>6</td>
+<td>5</td>
+<td>0</td>
+<td>6</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>5</td>
+<td>8</td>
+<td>1</td>
+<td>8</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>3</td>
+<td>6</td>
+<td>0</td>
+<td>3</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>7</td>
+<td>9</td>
+<td>1</td>
+<td>9</td>
+<td>7</td>
+</tr>
+</tbody>
+</table>
+<p>For individual 1, <span class="math inline">\(D_1 = 1\)</span> (treated), so we observe <span class="math inline">\(Y_1^{\text{obs}} = Y_1(1) = 7\)</span> and the missing outcome is <span class="math inline">\(Y_1^{\text{mis}} = Y_1(0) = 4\)</span>.</p>
+<p>For individual 2, <span class="math inline">\(D_2 = 0\)</span> (control), so we observe <span class="math inline">\(Y_2^{\text{obs}} = Y_2(0) = 6\)</span> and the missing outcome is <span class="math inline">\(Y_2^{\text{mis}} = Y_2(1) = 5\)</span>.</p>
+</div>
+</div>
+</div>
+<section id="what-the-data-look-like" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="what-the-data-look-like"><span class="header-section-number">2.2.1</span> What the Data Look Like</h3>
+<p>To make this concrete, consider again our hypothetical experiment with 10 respondents. Suppose we know all the potential outcomes:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Respondent</th>
+<th><span class="math inline">\(Y_i(0)\)</span></th>
+<th><span class="math inline">\(Y_i(1)\)</span></th>
+<th><span class="math inline">\(\tau_i\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>4</td>
+<td>7</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>6</td>
+<td>5</td>
+<td>-1</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>5</td>
+<td>5</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>3</td>
+<td>9</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>7</td>
+<td>10</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>5</td>
+<td>4</td>
+<td>-1</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>4</td>
+<td>8</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>6</td>
+<td>7</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>5</td>
+<td>3</td>
+<td>-2</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>4</td>
+<td>6</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>We computed in the previous chapter that <span class="math inline">\(\text{ATE} = 1.5\)</span> for these data.</p>
+<p>Now suppose we run an experiment with <span class="math inline">\(N_t = 5\)</span> and <span class="math inline">\(N_c = 5\)</span>. After randomization, respondents 1, 4, 5, 7, and 10 are assigned to treatment, while respondents 2, 3, 6, 8, and 9 are assigned to control. What do we actually observe?</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Respondent</th>
+<th><span class="math inline">\(Y_i(0)\)</span></th>
+<th><span class="math inline">\(Y_i(1)\)</span></th>
+<th><span class="math inline">\(D_i\)</span></th>
+<th><span class="math inline">\(Y_i^{\text{obs}}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>?</td>
+<td>7</td>
+<td>1</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>6</td>
+<td>?</td>
+<td>0</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>5</td>
+<td>?</td>
+<td>0</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>?</td>
+<td>9</td>
+<td>1</td>
+<td>9</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>?</td>
+<td>10</td>
+<td>1</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>5</td>
+<td>?</td>
+<td>0</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>?</td>
+<td>8</td>
+<td>1</td>
+<td>8</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>6</td>
+<td>?</td>
+<td>0</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>5</td>
+<td>?</td>
+<td>0</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>?</td>
+<td>6</td>
+<td>1</td>
+<td>6</td>
+</tr>
+</tbody>
+</table>
+<p>Notice that for each respondent, we observe exactly one potential outcome. The question marks represent the counterfactual outcomes we can never observe. We cannot compute <span class="math inline">\(\tau_i = Y_i(1) - Y_i(0)\)</span> for any individual because we never have both values.</p>
+<p>But here’s the key insight: even though we can’t compute individual treatment effects, we <em>can</em> compute averages within the treatment and control groups.</p>
+</section>
+</section>
+<section id="the-difference-in-means-estimator" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="the-difference-in-means-estimator"><span class="header-section-number">2.3</span> The Difference-in-Means Estimator</h2>
+<p>A natural approach is to estimate the ATE by comparing the average outcome among treated individuals to the average outcome among control individuals. We define <span class="math inline">\(\overline{Y}^{\text{obs}}_{t}\)</span> and <span class="math inline">\(\overline{Y}^{\text{obs}}_{c}\)</span> as</p>
+<p><span class="math display">\[
+\overline{Y}^{\text{obs}}_{t} = \frac{1}{N_t} \sum_{i:D_i=1} Y^{\text{obs}}_{i} \quad \text{and} \quad \overline{Y}^{\text{obs}}_{c} = \frac{1}{N_c} \sum_{i:D_i=0} Y^{\text{obs}}_{i}.
+\]</span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Understanding This Notation
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The bar over <span class="math inline">\(Y\)</span> (as in <span class="math inline">\(\overline{Y}\)</span>) means “average.” So <span class="math inline">\(\overline{Y}^{\text{obs}}_{t}\)</span> is the average observed outcome in the treatment group, and <span class="math inline">\(\overline{Y}^{\text{obs}}_{c}\)</span> is the average observed outcome in the control group.</p>
+<p>The subscript <span class="math inline">\(i:D_i=1\)</span> under the summation sign means “only add up the individuals where <span class="math inline">\(D_i = 1\)</span>”—that is, only the treated individuals. Similarly, <span class="math inline">\(i:D_i=0\)</span> means “only the control individuals.”</p>
+<p>So the formula says this: add up the observed outcomes for all treated individuals, then divide by <span class="math inline">\(N_t\)</span> (the number of treated individuals) to get the average. Do the same for control individuals, dividing by <span class="math inline">\(N_c\)</span>.</p>
+<p><strong>Example.</strong> Suppose we have <span class="math inline">\(N = 5\)</span> individuals:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Individual <span class="math inline">\(i\)</span></th>
+<th><span class="math inline">\(D_i\)</span></th>
+<th><span class="math inline">\(Y_i^{\text{obs}}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>0</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>1</td>
+<td>8</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>0</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>1</td>
+<td>9</td>
+</tr>
+</tbody>
+</table>
+<p>There are <span class="math inline">\(N_t = 3\)</span> treated individuals (individuals 1, 3, and 5) and <span class="math inline">\(N_c = 2\)</span> control individuals (individuals 2 and 4).</p>
+<p>For the treatment group, we add up only the outcomes where <span class="math inline">\(D_i = 1\)</span>, so that</p>
+<p><span class="math display">\[
+\overline{Y}^{\text{obs}}_{t} = \frac{1}{3}(7 + 8 + 9) = \frac{24}{3} = 8.
+\]</span></p>
+<p>For the control group, we add up only the outcomes where <span class="math inline">\(D_i = 0\)</span>, so that</p>
+<p><span class="math display">\[
+\overline{Y}^{\text{obs}}_{c} = \frac{1}{2}(6 + 3) = \frac{9}{2} = 4.5.
+\]</span></p>
+</div>
+</div>
+</div>
+<p>These are the average observed outcomes in the treatment group and the control group, respectively.</p>
+<p>The <strong>difference-in-means estimator</strong> for the ATE is</p>
+<p><span class="math display">\[
+\widehat{\text{ATE}} = \overline{Y}^{\text{obs}}_{t} - \overline{Y}^{\text{obs}}_{c}.
+\]</span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Understanding This Notation
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The “hat” over ATE (as in <span class="math inline">\(\widehat{\text{ATE}}\)</span>) means “estimate of.” We can’t compute the true ATE because we don’t observe all potential outcomes, so we estimate it using the data we have.</p>
+<p>The formula says: take the average outcome among treated individuals and subtract the average outcome among control individuals. That’s it—just a difference of two averages.</p>
+<p><strong>Example.</strong> Using the same 5 individuals from before:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Individual <span class="math inline">\(i\)</span></th>
+<th><span class="math inline">\(D_i\)</span></th>
+<th><span class="math inline">\(Y_i^{\text{obs}}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>0</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>1</td>
+<td>8</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>0</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>1</td>
+<td>9</td>
+</tr>
+</tbody>
+</table>
+<p>We already computed <span class="math inline">\(\overline{Y}^{\text{obs}}_{t} = 8\)</span> and <span class="math inline">\(\overline{Y}^{\text{obs}}_{c} = 4.5\)</span>.</p>
+<p>Thus <span class="math inline">\(\widehat{\text{ATE}} = 8 - 4.5 = 3.5\)</span>. Our estimate is that the treatment increases outcomes by 3.5 units on average.</p>
+</div>
+</div>
+</div>
+<section id="computing-the-estimate" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="computing-the-estimate"><span class="header-section-number">2.3.1</span> Computing the Estimate</h3>
+<p>Using our example data, we can compute</p>
+<p><span class="math display">\[
+\begin{align}
+\overline{Y}^{\text{obs}}_{t} &amp;= \frac{1}{5}(7 + 9 + 10 + 8 + 6) = \frac{40}{5} = 8
+\end{align}
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\begin{align}
+\overline{Y}^{\text{obs}}_{c} &amp;= \frac{1}{5}(6 + 5 + 5 + 6 + 5) = \frac{27}{5} = 5.4
+\end{align}.
+\]</span></p>
+<p>Therefore <span class="math inline">\(\widehat{\text{ATE}} = 8 - 5.4 = 2.6\)</span>. But recall that the true ATE (which we computed using all potential outcomes) is 1.5. So our estimate is off by 1.1 units.</p>
+<p>Is this a problem? Not necessarily. Any particular estimate will differ from the true ATE due to the randomness in treatment assignment. The question is whether, <em>on average</em> across all possible randomizations, our estimator gets it right.</p>
+</section>
+</section>
+<section id="why-this-estimator" class="level2 page-columns page-full" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="why-this-estimator"><span class="header-section-number">2.4</span> Why This Estimator?</h2>
+<p>Why is <span class="math inline">\(\widehat{\text{ATE}} = \overline{Y}^{\text{obs}}_{t} - \overline{Y}^{\text{obs}}_{c}\)</span> a sensible estimator of the ATE?</p>
+<p>Recall that we define the ATE as</p>
+<p><span class="math display">\[
+\text{ATE} = \frac{1}{N}\sum_{i=1}^{N} Y_i(1) - \frac{1}{N}\sum_{i=1}^{N} Y_i(0) = \overline{Y}(1) - \overline{Y}(0).
+\]</span></p>
+<p>The ATE is the difference between two <em>population</em> averages: the average of <em>all</em> potential outcomes under treatment and the average of <em>all</em> potential outcomes under control.</p>
+<p>Our estimator replaces these population averages with sample averages:</p>
+<ul>
+<li>Instead of averaging <span class="math inline">\(Y_i(1)\)</span> over all individuals, we average <span class="math inline">\(Y_i^{\text{obs}}\)</span> over individuals assigned to treatment</li>
+<li>Instead of averaging <span class="math inline">\(Y_i(0)\)</span> over all individuals, we average <span class="math inline">\(Y_i^{\text{obs}}\)</span> over individuals assigned to control</li>
+</ul>
+
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
+<p>This “plug-in” approach—replacing population quantities with their sample counterparts—is a fundamental strategy in statistics. Under random assignment, the treated individuals are a random sample from the population, so <span class="math inline">\(\overline{Y}^{\text{obs}}_{t}\)</span> should be a good estimate of <span class="math inline">\(\overline{Y}(1)\)</span>. Similarly, the control individuals are a random sample, so <span class="math inline">\(\overline{Y}^{\text{obs}}_{c}\)</span> should be a good estimate of <span class="math inline">\(\overline{Y}(0)\)</span>.</p>
+</div></div></section>
+<section id="design-based-inference" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="design-based-inference"><span class="header-section-number">2.5</span> Design-Based Inference</h2>
+<p>Before proving that the estimator <span class="math inline">\(\widehat{\text{ATE}}\)</span> is unbiased, we need to understand</p>
+<ol type="1">
+<li><em>that</em> the estimate $ is a noisy and random estimate and<br>
+</li>
+<li><em>what</em> makes this estimate random in the first place.</li>
+</ol>
+<p>In typical statistical settings, we imagine that data are drawn from some distribution <span class="math inline">\(Y_i \sim f(\theta)\)</span>. The randomness comes from imagining that the data could have been different if we had drawn a different sample from the population.</p>
+<p>But in the potential outcomes framework for randomized experiments, we take a different view. The potential outcomes <span class="math inline">\(Y_i(0)\)</span> and <span class="math inline">\(Y_i(1)\)</span> are treated as <em>fixed</em> values, not random variables. They are simply the outcomes each individual <em>would</em> experience under each condition—there’s nothing random about the <em>potential</em> outcomes.</p>
+<p>The only randomness in the experiment comes from the treatment assignment <span class="math inline">\(D_i\)</span>. And because we designed the randomization mechanism, we know exactly how this randomness works.</p>
+<p>This is important: <strong>because we designed the randomization mechanism, we know exactly how this randomness works.</strong></p>
+<p>This is called <strong>design-based inference</strong> in which all uncertainty comes from the design of the experiment (i.e., the random assignment in this case), not from any model of how outcomes are generated.</p>
+<p>To make this explicit, we can rewrite the estimator to highlight what is random and what is fixed, so that</p>
+<p><span class="math display">\[
+\widehat{\text{ATE}} = \frac{1}{N} \sum_{i=1}^{N} \left( \frac{D_i \cdot Y_i(1)}{N_t/N} - \frac{(1 - D_i) \cdot Y_i(0)}{N_c/N} \right).
+\]</span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Understanding This Notation
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>This formula looks intimidating, but it’s just a clever rewriting of the difference-in-means estimator that separates the random part (<span class="math inline">\(D_i\)</span>) from the fixed parts (potential outcomes).</p>
+<p>Let’s break it down piece by piece:</p>
+<ul>
+<li><p><span class="math inline">\(D_i \cdot Y_i(1)\)</span>: This equals <span class="math inline">\(Y_i(1)\)</span> when individual <span class="math inline">\(i\)</span> is treated (<span class="math inline">\(D_i = 1\)</span>) and equals 0 when individual <span class="math inline">\(i\)</span> is in control (<span class="math inline">\(D_i = 0\)</span>). So it “turns on” the treated potential outcome only for treated individuals.</p></li>
+<li><p><span class="math inline">\((1 - D_i) \cdot Y_i(0)\)</span>: This does the opposite—it equals <span class="math inline">\(Y_i(0)\)</span> when <span class="math inline">\(D_i = 0\)</span> and equals 0 when <span class="math inline">\(D_i = 1\)</span>. It “turns on” the control potential outcome only for control individuals.</p></li>
+<li><p><span class="math inline">\(N_t/N\)</span>: This is the fraction of individuals assigned to treatment (the treatment probability).</p></li>
+<li><p>Dividing by <span class="math inline">\(N_t/N\)</span> in the first term and <span class="math inline">\(N_c/N\)</span> in the second term rescales each contribution so that the formula averages correctly over each group.</p></li>
+</ul>
+<p>The key insight is that when you work through the algebra, this formula gives exactly the same answer as <span class="math inline">\(\overline{Y}^{\text{obs}}_{t} - \overline{Y}^{\text{obs}}_{c}\)</span>. But writing it this way makes clear that <span class="math inline">\(D_i\)</span> is the only random quantity—the potential outcomes <span class="math inline">\(Y_i(1)\)</span> and <span class="math inline">\(Y_i(0)\)</span> are fixed numbers.</p>
+<p><strong>Example.</strong> Suppose <span class="math inline">\(N = 4\)</span> with <span class="math inline">\(N_t = 2\)</span> and <span class="math inline">\(N_c = 2\)</span> and the following potential outcomes and randomization:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Individual <span class="math inline">\(i\)</span></th>
+<th><span class="math inline">\(Y_i(0)\)</span></th>
+<th><span class="math inline">\(Y_i(1)\)</span></th>
+<th><span class="math inline">\(D_i\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>4</td>
+<td>7</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>6</td>
+<td>5</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>3</td>
+<td>8</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>For individual 1 (<span class="math inline">\(D_1 = 1\)</span>): the contribution is <span class="math inline">\(\frac{1 \cdot 7}{2/4} - \frac{0 \cdot 4}{2/4} = \frac{7}{0.5} - 0 = 14\)</span>.</p>
+<p>For individual 2 (<span class="math inline">\(D_2 = 0\)</span>): the contribution is <span class="math inline">\(\frac{0 \cdot 5}{2/4} - \frac{1 \cdot 6}{2/4} = 0 - \frac{6}{0.5} = -12\)</span>.</p>
+<p>For individual 3 (<span class="math inline">\(D_3 = 1\)</span>): the contribution is <span class="math inline">\(\frac{1 \cdot 8}{0.5} - 0 = 16\)</span>.</p>
+<p>For individual 4 (<span class="math inline">\(D_4 = 0\)</span>): the contribution is <span class="math inline">\(0 - \frac{5}{0.5} = -10\)</span>.</p>
+<p>Adding these and dividing by <span class="math inline">\(N = 4\)</span>: <span class="math inline">\(\widehat{\text{ATE}} = \frac{1}{4}(14 - 12 + 16 - 10) = \frac{8}{4} = 2\)</span>.</p>
+<p>You can verify this equals the simple difference in means: <span class="math inline">\(\overline{Y}^{\text{obs}}_{t} = \frac{7 + 8}{2} = 7.5\)</span> and <span class="math inline">\(\overline{Y}^{\text{obs}}_{c} = \frac{6 + 5}{2} = 5.5\)</span>, so <span class="math inline">\(\widehat{\text{ATE}} = 7.5 - 5.5 = 2\)</span>.</p>
+</div>
+</div>
+</div>
+<p>In this expression</p>
+<ul>
+<li><span class="math inline">\(Y_i(1)\)</span> and <span class="math inline">\(Y_i(0)\)</span> are fixed (the potential outcomes)</li>
+<li><span class="math inline">\(N\)</span>, <span class="math inline">\(N_t\)</span>, and <span class="math inline">\(N_c\)</span> are fixed (determined by design)</li>
+<li><span class="math inline">\(D_i\)</span> is random (the only source of uncertainty)</li>
+</ul>
+<p>The subscript notation <span class="math inline">\(E_D[\cdot]\)</span> indicates that we are taking expectations with respect to the randomization distribution—the distribution induced by the random assignment of individuals to treatment and control.</p>
+</section>
+<section id="unbiasedness-of-widehattextate" class="level2 page-columns page-full" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="unbiasedness-of-widehattextate"><span class="header-section-number">2.6</span> Unbiasedness of <span class="math inline">\(\widehat{\text{ATE}}\)</span></h2>
+<p>We now prove the key result: <span class="math inline">\(\widehat{\text{ATE}}\)</span> is an unbiased estimator of <span class="math inline">\(\text{ATE}\)</span>. Informally, this means that our estimator “gets it right on average”. It means that if we could repeat the randomization many times, our estimates would exactly equal the ATE in the long-run.</p>
+<p>To state this result precisely, we need to introduce some notation. The notation is tedious, but the underlying idea is straightforward, important, and powerful.</p>
+<section id="the-expectation-operator-ecdot" class="level3 page-columns page-full" data-number="2.6.1">
+<h3 data-number="2.6.1" class="anchored" data-anchor-id="the-expectation-operator-ecdot"><span class="header-section-number">2.6.1</span> The Expectation Operator <span class="math inline">\(E[\cdot]\)</span></h3>
+<p>The expectation operator <span class="math inline">\(E[\cdot]\)</span> is just a way of writing “long-run average.”</p>
+
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
+<p>The expectation of a random variable is its <em>average value</em> across all possible outcomes, weighted by how likely each outcome is. You can think of <span class="math inline">\(E[X]\)</span> as asking: “If I could repeat this random process infinitely many times, what would <span class="math inline">\(X\)</span> average out to?”</p>
+</div></div><p>For our purposes, we need four simple rules about expectations.</p>
+<p><strong>Rule 1: The expectation of a constant is that constant.</strong></p>
+<p>If <span class="math inline">\(c\)</span> is a fixed number (not random), then <span class="math inline">\(E[c] = c\)</span>.</p>
+<p>If something never changes, its “average” is just itself. For example, <span class="math inline">\(E[5] = 5\)</span>.</p>
+<p><strong>Rule 2: Constants can be pulled outside the expectation.</strong></p>
+<p>If <span class="math inline">\(c\)</span> is a constant and <span class="math inline">\(X\)</span> is random, then <span class="math inline">\(E[c \cdot X] = c \cdot E[X]\)</span>.</p>
+<p>The average of “5 times something random” equals 5 times the average of that random thing. If on average you earn $100 per day, then on average you earn $500 per five-day week.</p>
+<p><strong>Rule 3: The expectation of a sum is the sum of the expectations.</strong></p>
+<p>If <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are random variables, then<br>
+<span class="math display">\[
+E[X + Y] = E[X] + E[Y].
+\]</span></p>
+<p>The average of “two random things added together” equals the sum of their averages. If on average you earn $100 per day from your job and $20 per day from side work, then on average you earn $120 per day total. You do <strong>not</strong> need <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> to be independent for this rule to hold.</p>
+<p><strong>Rule 4: The expectation of a binary (0/1) random variable equals its probability of being 1.</strong></p>
+<p>If <span class="math inline">\(X\)</span> can only be 0 or 1, then <span class="math inline">\(E[X] = \Pr(X = 1)\)</span>.</p>
+<p>This is the key rule for our proof. And it’s intuitive. If you flip a fair coin and let <span class="math inline">\(X = 1\)</span> for heads and <span class="math inline">\(X = 0\)</span> for tails, what’s the average value of <span class="math inline">\(X\)</span>? Half the time you get 1, half the time you get 0, so the average is <span class="math inline">\(\frac{1}{2}(1) + \frac{1}{2}(0) = 0.5\)</span>. And <span class="math inline">\(\Pr(X = 1) = 0.5\)</span>. They match!</p>
+<p>More generally, if you repeat the process many times, the fraction of 1’s you observe will approach the probability of getting a 1. So the average value equals the probability.</p>
+
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
+<p>Why does Rule 4 work? Well, remember that the expectation of a random variable is defined as the sum of each possible value times its probability, so that</p>
+<p><span class="math display">\[
+E[X] = \sum_{\text{all values } x} x \cdot \Pr(X = x).
+\]</span></p>
+<p>For a binary variable that can only be 0 or 1, then we have</p>
+<p><span class="math display">\[
+E[X] = 0 \cdot \Pr(X = 0) + 1 \cdot \Pr(X = 1) = \Pr(X = 1).
+\]</span></p>
+<p>The zero term disappears, and we’re left with just the probability that <span class="math inline">\(X\)</span> equals 1.</p>
+<p><strong>Example.</strong> Suppose you roll a die and let <span class="math inline">\(X = 1\)</span> if you roll a 6, and <span class="math inline">\(X = 0\)</span> otherwise. Then <span class="math inline">\(\Pr(X = 1) = 1/6\)</span>, so <span class="math inline">\(E[X] = 1/6 \approx 0.167\)</span>. If you rolled the die 600 times, you’d expect about 100 sixes, and your average value of <span class="math inline">\(X\)</span> would be about <span class="math inline">\(100/600 = 0.167\)</span>.</p>
+</div></div></section>
+<section id="the-theorem" class="level3" data-number="2.6.2">
+<h3 data-number="2.6.2" class="anchored" data-anchor-id="the-theorem"><span class="header-section-number">2.6.2</span> The Theorem</h3>
+<p>Now we can state the key result precisely. When we write <span class="math inline">\(E_D[\widehat{\text{ATE}}]\)</span>, we mean “the average value of our estimate across all possible random assignments.” (The subscript <span class="math inline">\(D\)</span> reminds us that the only randomness comes from treatment assignment.)</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Theorem
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Under random assignment, <span class="math inline">\(\widehat{\text{ATE}} = \overline{Y}^{\text{obs}}_{t} - \overline{Y}^{\text{obs}}_{c}\)</span> is an unbiased estimator of the ATE. This mean that <span class="math display">\[
+E_D[\widehat{\text{ATE}}] = \text{ATE}.
+\]</span></p>
+</div>
+</div>
+<p>If we average our estimate over all the different ways we could have randomly assigned individuals to treatment and control, we get exactly the true ATE.</p>
+</section>
+<section id="the-proof" class="level3 page-columns page-full" data-number="2.6.3">
+<h3 data-number="2.6.3" class="anchored" data-anchor-id="the-proof"><span class="header-section-number">2.6.3</span> The Proof</h3>
+<p><strong>Proof.</strong> We want to show that <span class="math inline">\(E_D[\widehat{\text{ATE}}] = \text{ATE}\)</span>.</p>
+<p><strong>Step 1: Write the estimator to separate random from fixed.</strong></p>
+<p>First, we write <span class="math inline">\(\widehat{\text{ATE}}\)</span> in a form that clearly separates the random part (<span class="math inline">\(D_i\)</span>) from the fixed parts (the potential outcomes <span class="math inline">\(Y_i(1)\)</span> and <span class="math inline">\(Y_i(0)\)</span>). We borrow the representation above, where</p>
+<p><span class="math display">\[
+\widehat{\text{ATE}} = \frac{1}{N} \sum_{i=1}^{N} \left( \frac{D_i \cdot Y_i(1)}{N_t/N} - \frac{(1 - D_i) \cdot Y_i(0)}{N_c/N} \right).
+\]</span></p>
+<p>This formula looks complicated, but it has two important features:</p>
+<ol type="1">
+<li>It equals the difference in the observed means (though this is only apparent after studying it carefully).</li>
+<li>It highlights that <span class="math inline">\(D_i\)</span> is the <em>only</em> random thing.</li>
+<li>It will be easy to use with the rules for expectations.</li>
+</ol>
+<p><strong>Step 2: Take the expectation.</strong></p>
+<p>Now we ask: what is the average value of <span class="math inline">\(\widehat{\text{ATE}}\)</span> across all possible randomizations?</p>
+<p><span class="math display">\[
+E_D[\widehat{\text{ATE}}] = E_D\left[ \frac{1}{N} \sum_{i=1}^{N} \left( \frac{D_i \cdot Y_i(1)}{N_t/N} - \frac{(1 - D_i) \cdot Y_i(0)}{N_c/N} \right) \right]
+\]</span></p>
+<p><strong>Step 3: Move the expectation inside.</strong></p>
+<p>Here’s where the magic happens. Because the potential outcomes are <em>fixed</em> numbers and only <span class="math inline">\(D_i\)</span> is random, we can move the expectation operator inside the formula until it includes <em>only</em> <span class="math inline">\(D_i\)</span> and <span class="math inline">\(1 - D_i\)</span>. Rule 2 above allows us to do this.</p>
+
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
+<p>Think of it this way: if you’re computing the average of “5 times something random,” you can compute it as “5 times the average of that random thing” (that’s Rule 2). The <span class="math inline">\(\frac{1}{N}\)</span>, the <span class="math inline">\(\sum\)</span>, the potential outcomes <span class="math inline">\(Y_i(1)\)</span> and <span class="math inline">\(Y_i(0)\)</span>, the fractions <span class="math inline">\(N_t/N\)</span> and <span class="math inline">\(N_c/N\)</span> are all fixed numbers that pass right through the expectation. The expectation only “grabs onto” the random part, <span class="math inline">\(D_i\)</span>.</p>
+</div></div><p><span class="math display">\[
+E_D[\widehat{\text{ATE}}] = \frac{1}{N} \sum_{i=1}^{N} \left( \frac{E_D[D_i] \cdot Y_i(1)}{N_t/N} - \frac{E_D[1 - D_i] \cdot Y_i(0)}{N_c/N} \right)
+\]</span></p>
+<p><span class="math display">\[\begin{align}
+E_D[\widehat{\text{ATE}}]
+&amp;= E_D\!\left[
+\frac{1}{N} \sum_{i=1}^{N}
+\left(
+\frac{D_i\, Y_i(1)}{N_t/N}
+-
+\frac{(1 - D_i)\, Y_i(0)}{N_c/N}
+\right)
+\right]
+\qquad \text{(definition of the estimator)} \\[6pt]
+
+&amp;= \frac{1}{N}
+E_D\!\left[
+\sum_{i=1}^{N}
+\left(
+\frac{D_i\, Y_i(1)}{N_t/N}
+-
+\frac{(1 - D_i)\, Y_i(0)}{N_c/N}
+\right)
+\right]
+\qquad \text{($\tfrac{1}{N}$ is constant; Rule 2)} \\[6pt]
+
+&amp;= \frac{1}{N}
+\sum_{i=1}^{N}
+E_D\!\left[
+\frac{D_i\, Y_i(1)}{N_t/N}
+-
+\frac{(1 - D_i)\, Y_i(0)}{N_c/N}
+\right]
+\qquad \text{(expectation of asum; Rule 3)} \\[6pt]
+
+&amp;= \frac{1}{N}
+\sum_{i=1}^{N}
+\left(
+\frac{Y_i(1)}{N_t/N} \, E_D[D_i]
+-
+\frac{Y_i(0)}{N_c/N} \, E_D[1 - D_i]
+\right)
+\qquad \text{(only $D_i$ is random; Rule 2)}.
+\end{align}\]</span> }</p>
+<p><strong>Step 4: Compute the expectation of <span class="math inline">\(D_i\)</span>.</strong></p>
+<p>Now we need to find <span class="math inline">\(E_D[D_i]\)</span>. Remember that <span class="math inline">\(D_i\)</span> is a binary variable that equals 1 if individual <span class="math inline">\(i\)</span> is assigned to treatment, and 0 if individual <span class="math inline">\(i\)</span> is assigned to control. By Rule 4, the expectation of a binary variable equals its probability of being 1, so that</p>
+<p><span class="math display">\[
+E_D[D_i] = \Pr(D_i = 1).
+\]</span></p>
+<p>Under completely randomized assignment, every individual has the same chance of being assigned to treatment. If we’re assigning <span class="math inline">\(N_t\)</span> individuals to treatment out of <span class="math inline">\(N\)</span> total individuals, then each individual has probability <span class="math inline">\(N_t/N\)</span> of being treated so that</p>
+<p><span class="math display">\[
+E_D[D_i] = \Pr(D_i = 1) = \frac{N_t}{N}.
+\]</span></p>
+<p><strong>Step 5: Compute the expectation of <span class="math inline">\(1 - D_i\)</span>.</strong></p>
+<p>Similarly, <span class="math inline">\(1 - D_i\)</span> is also binary. It equals 1 when <span class="math inline">\(D_i = 0\)</span> (individual in control) and equals 0 when <span class="math inline">\(D_i = 1\)</span> (individual in treatment). Then we have</p>
+<p><span class="math display">\[
+E_D[1 - D_i] = \Pr(D_i = 0) = \frac{N_c}{N}.
+\]</span></p>
+<p><strong>Step 6: Substitute and simplify.</strong></p>
+<p>Now we plug these values back in, we obtain</p>
+<p><span class="math display">\[
+\begin{align}
+E_D[\widehat{\text{ATE}}] &amp;= \frac{1}{N} \sum_{i=1}^{N} \left( \frac{(N_t/N) \cdot Y_i(1)}{N_t/N} - \frac{(N_c/N) \cdot Y_i(0)}{N_c/N} \right).
+\end{align}
+\]</span> Then something magical happens. In the first term, we have <span class="math inline">\(N_t/N\)</span> in both the numerator and denominator, so they cancel out.</p>
+<p>The same thing happens with <span class="math inline">\(N_c/N\)</span> in the second term, so that</p>
+<p><span class="math display">\[
+\begin{align}
+E_D[\widehat{\text{ATE}}] &amp;= \frac{1}{N} \sum_{i=1}^{N} \left( Y_i(1) - Y_i(0) \right).
+\end{align}
+\]</span></p>
+<p>This is just the average of individual treatment effects across all individuals. This is exactly the definition of the ATE, so that</p>
+<p><span class="math display">\[
+E_D[\widehat{\text{ATE}}] = \text{ATE}.
+\]</span></p>
+<p>This completes the proof and shows that <span class="math inline">\(\widehat{\text{ATE}}\)</span> is an unbiased estimator of <span class="math inline">\(\widehat{\text{ATE}}\)</span>. <span class="math inline">\(\square\)</span></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The key insight is that the fractions <span class="math inline">\(N_t/N\)</span> and <span class="math inline">\(N_c/N\)</span> cancel perfectly. This happens because (1) the probability of assignment to treatment equals <span class="math inline">\(N_t/N\)</span>, and (2) we divide by <span class="math inline">\(N_t\)</span> when averaging over treated individuals. The “selection” into treatment is perfectly balanced by the “weighting” in our estimator.</p>
+</div>
+</div>
+</section>
+<section id="what-does-unbiasedness-mean" class="level3" data-number="2.6.4">
+<h3 data-number="2.6.4" class="anchored" data-anchor-id="what-does-unbiasedness-mean"><span class="header-section-number">2.6.4</span> What Does Unbiasedness Mean?</h3>
+<p>Unbiasedness means that <em>on average</em>, across all possible randomizations, our estimator equals the true ATE. Any particular estimate might be too high or too low, but there’s no systematic tendency to over- or under-estimate.</p>
+<p>In our example, we got <span class="math inline">\(\widehat{\text{ATE}} = 2.6\)</span> when the true ATE is 1.5. This particular randomization overestimated. But if we had assigned different individuals to treatment, we might have gotten a different estimate. Some randomizations would overestimate, some would underestimate, and on average we would get it right.</p>
+</section>
+<section id="no-model-required" class="level3" data-number="2.6.5">
+<h3 data-number="2.6.5" class="anchored" data-anchor-id="no-model-required"><span class="header-section-number">2.6.5</span> No Model Required</h3>
+<p>Notice what we did <em>not</em> assume in this proof:</p>
+<ul>
+<li>We did not assume any particular distribution for the outcomes</li>
+<li>We did not assume the treatment effects are constant</li>
+<li>We did not assume the outcomes are normally distributed</li>
+<li>We did not assume any functional form for how treatment affects outcomes</li>
+<li>We did not assume a “large” sample</li>
+</ul>
+<p>The only assumption is that treatment was randomly assigned. This is why randomized experiments are so powerful. Randomization provides unbiased estimates (and other good things to be discussed later) without requiring strong modeling assumptions.</p>
+</section>
+</section>
+<section id="a-different-randomization" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="a-different-randomization"><span class="header-section-number">2.7</span> A Different Randomization</h2>
+<p>To reinforce that <span class="math inline">\(\widehat{\text{ATE}}\)</span> depends on the randomization, consider what happens with a different random assignment. Suppose instead that individuals 2, 3, 6, 8, and 9 are assigned to treatment, while individuals 1, 4, 5, 7, and 10 are assigned to control.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Respondent</th>
+<th><span class="math inline">\(Y_i(0)\)</span></th>
+<th><span class="math inline">\(Y_i(1)\)</span></th>
+<th><span class="math inline">\(D_i\)</span></th>
+<th><span class="math inline">\(Y_i^{\text{obs}}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>4</td>
+<td>?</td>
+<td>0</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>?</td>
+<td>5</td>
+<td>1</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>?</td>
+<td>5</td>
+<td>1</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>3</td>
+<td>?</td>
+<td>0</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>7</td>
+<td>?</td>
+<td>0</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>?</td>
+<td>4</td>
+<td>1</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>4</td>
+<td>?</td>
+<td>0</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>?</td>
+<td>7</td>
+<td>1</td>
+<td>7</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>?</td>
+<td>3</td>
+<td>1</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>4</td>
+<td>?</td>
+<td>0</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+<p>Now we compute</p>
+<p><span class="math display">\[
+\begin{align}
+\overline{Y}^{\text{obs}}_{t} &amp;= \frac{1}{5}(5 + 5 + 4 + 7 + 3) = \frac{24}{5} = 4.8
+\end{align}
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\begin{align}
+\overline{Y}^{\text{obs}}_{c} &amp;= \frac{1}{5}(4 + 3 + 7 + 4 + 4) = \frac{22}{5} = 4.4.
+\end{align}
+\]</span></p>
+<p>Thus <span class="math inline">\(\widehat{\text{ATE}} = 4.8 - 4.4 = 0.4\)</span>.</p>
+<p>This randomization gives us <span class="math inline">\(\widehat{\text{ATE}} = 0.4\)</span>, which underestimates the true ATE of 1.5. The first randomization overestimated (2.6), this one underestimates (0.4). Unbiasedness tells us that if we averaged over <em>all</em> possible randomizations, we would get exactly 1.5.</p>
+</section>
+<section id="computing-widehattextate-in-r" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="computing-widehattextate-in-r"><span class="header-section-number">2.8</span> Computing <span class="math inline">\(\widehat{\text{ATE}}\)</span> in R</h2>
+<p>So far, we have computed <span class="math inline">\(\widehat{\text{ATE}}\)</span> by hand. In practice, we use software. In this section, we walk through two approaches in R: (1) using <code>mean()</code> to compute the difference in means directly, and (2) using <code>lm()</code> to fit a linear regression. Both approaches give the same answer, but <code>mean()</code> is a little more intuitive and <code>lm()</code> is more useful in the practice.</p>
+<section id="the-mock-rasinski-data" class="level3" data-number="2.8.1">
+<h3 data-number="2.8.1" class="anchored" data-anchor-id="the-mock-rasinski-data"><span class="header-section-number">2.8.1</span> The Mock Rasinski Data</h3>
+<p>We collected data that mimics Rasinski’s experiment. Each respondent was randomly assigned to see either the “welfare” wording or the “assistance to the poor” wording. The respondent then indicated whether they thought government spending on this program was “Too little,” “About right,” or “Too much.”</p>
+<p>First, let’s load the data and prepare it for analysis. For convenience, I’ve written a little <code>tribble()</code> as a convenient way to hold the data (rather than loading from a CSV).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forcats)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># load the mock rasinski data</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>rasinski <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>desc,                     <span class="sc">~</span>response,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                <span class="st">"Too little"</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                <span class="st">"Too little"</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                <span class="st">"Too little"</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                <span class="st">"Too little"</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"About right"</span>,</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"About right"</span>,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                <span class="st">"Too little"</span>,</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                <span class="st">"Too little"</span>,</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                <span class="st">"About right"</span>,</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                <span class="st">"About right"</span>,</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                <span class="st">"Too little"</span>,</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                <span class="st">"Too much"</span>,</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                <span class="st">"About right"</span>,</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too much"</span>,</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                <span class="st">"Too little"</span>,</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                <span class="st">"About right"</span>,</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                <span class="st">"About right"</span>,</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                <span class="st">"About right"</span>,</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                <span class="st">"Too little"</span>,</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                <span class="st">"Too little"</span>,</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                <span class="st">"Too little"</span>,</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                <span class="st">"Too little"</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="co"># take a quick look</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(rasinski)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 39
+Columns: 2
+$ desc     &lt;chr&gt; "assistance to the poor", "welfare", "assistance to the poor"…
+$ response &lt;chr&gt; "Too little", "Too little", "Too little", "Too little", "Too …</code></pre>
+</div>
+</div>
+<p>The <code>desc</code> variable contains the experimental condition. It takes on the value <code>"welfare"</code> (control) or <code>"assistance to the poor"</code> (treatment). The <code>response</code> variable contains the respondent’s answer.</p>
+<p>Following Rasinski’s coding scheme from the previous chapter, we code the outcome numerically:</p>
+<ul>
+<li>Too little = 1</li>
+<li>About right = 2</li>
+<li>Too much = 3</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># code the outcome variable numerically</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>rasinski <span class="ot">&lt;-</span> rasinski <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">outcome =</span> <span class="fu">case_when</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      response <span class="sc">==</span> <span class="st">"Too little"</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>      response <span class="sc">==</span> <span class="st">"About right"</span> <span class="sc">~</span> <span class="dv">2</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>      response <span class="sc">==</span> <span class="st">"Too much"</span> <span class="sc">~</span> <span class="dv">3</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 39
+Columns: 3
+$ desc     &lt;chr&gt; "assistance to the poor", "welfare", "assistance to the poor"…
+$ response &lt;chr&gt; "Too little", "Too little", "Too little", "Too little", "Too …
+$ outcome  &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, 3…</code></pre>
+</div>
+</div>
+<p>We also need to create a treatment indicator variable. Following our convention, treatment (<span class="math inline">\(D_i = 1\)</span>) is the “assistance to the poor” wording and control (<span class="math inline">\(D_i = 0\)</span>) is the “welfare” wording.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create treatment indicator</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>rasinski <span class="ot">&lt;-</span> rasinski <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">treatment =</span> <span class="fu">if_else</span>(desc <span class="sc">==</span> <span class="st">"assistance to the poor"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 39
+Columns: 4
+$ desc      &lt;chr&gt; "assistance to the poor", "welfare", "assistance to the poor…
+$ response  &lt;chr&gt; "Too little", "Too little", "Too little", "Too little", "Too…
+$ outcome   &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, …
+$ treatment &lt;dbl&gt; 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, …</code></pre>
+</div>
+</div>
+</section>
+<section id="approach-1-using-mean" class="level3" data-number="2.8.2">
+<h3 data-number="2.8.2" class="anchored" data-anchor-id="approach-1-using-mean"><span class="header-section-number">2.8.2</span> Approach 1: Using <code>mean()</code></h3>
+<p>The difference-in-means estimator is</p>
+<p><span class="math display">\[
+\widehat{\text{ATE}} = \overline{Y}^{\text{obs}}_{t} - \overline{Y}^{\text{obs}}_{c}.
+\]</span></p>
+<p>We can compute this directly using R’s <code>mean()</code> function. The key is to subset the data to get the outcomes for each group separately.</p>
+<p><strong>Step 1: Identify the treated and control observations.</strong></p>
+<p>We use logical indexing to select rows where the treatment indicator equals 1 (treated) or 0 (control).</p>
+<p>We can write compactly in a single line.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># direct computation of difference in means</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>ate_hat <span class="ot">&lt;-</span> <span class="fu">mean</span>(rasinski<span class="sc">$</span>outcome[rasinski<span class="sc">$</span>treatment <span class="sc">==</span> <span class="dv">1</span>]) <span class="sc">-</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(rasinski<span class="sc">$</span>outcome[rasinski<span class="sc">$</span>treatment <span class="sc">==</span> <span class="dv">0</span>])</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>ate_hat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.2210526</code></pre>
+</div>
+</div>
+<p>The estimated ATE is -0.221. Since lower values indicate more support for spending (“Too little” = 1), a negative estimate means the “assistance to the poor” wording increases support for spending compared to the “welfare” wording.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+This Is Only an Estimate
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Remember that <span class="math inline">\(\widehat{\text{ATE}}\)</span> is an <em>estimate</em> of the true <span class="math inline">\(\text{ATE}\)</span>, not the <span class="math inline">\(\text{ATE}\)</span> itself. If we had randomized respondents differently—assigning different people to treatment and control—we would have observed different outcomes and computed a different estimate. Perhaps it would have been a bit larger, perhaps a bit smaller, or perhaps even the opposite sign.</p>
+<p>This is a fundamental feature of randomized experiments: the estimate we get depends on the particular randomization we happened to draw. The true <span class="math inline">\(\text{ATE}\)</span> is fixed (it’s determined by the potential outcomes in the population), but our estimate of it varies with the randomization.</p>
+<p>In future chapters, we will address this uncertainty head-on. Our framework allows us to say a great deal about <em>how good</em> our estimate is—that is, how close <span class="math inline">\(\widehat{\text{ATE}}\)</span> is likely to be to the true <span class="math inline">\(\text{ATE}\)</span>. For now, just keep in mind that the number we computed is our best guess, but it comes with uncertainty that we haven’t yet quantified.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="approach-2-using-lm" class="level3" data-number="2.8.3">
+<h3 data-number="2.8.3" class="anchored" data-anchor-id="approach-2-using-lm"><span class="header-section-number">2.8.3</span> Approach 2: Using <code>lm()</code></h3>
+<p><strong>Setting Up the Model</strong></p>
+<p>Linear regression with <code>lm()</code> provides another way to compute the same estimate. This might seem surprising at first. After all, regression is usually taught as a way to model <em>relationships</em> between variables. But it turns out that a simple regression of the outcome on a treatment indicator gives us exactly the difference in means.</p>
+<p>When can fit the model</p>
+<p><span class="math display">\[
+Y_i = \beta_0 + \beta_1 D_i + \epsilon_i,
+\]</span></p>
+<p>where <span class="math inline">\(D_i\)</span> is the treatment indicator (1 = treated, 0 = control).</p>
+<p>The estimated coefficients have a direct interpretation:</p>
+<ul>
+<li><span class="math inline">\(\hat{\beta}_0\)</span> is the mean outcome in the control group (<span class="math inline">\(\overline{Y}^{\text{obs}}_{c}\)</span>)</li>
+<li><span class="math inline">\(\hat{\beta}_1\)</span> is the difference in means (<span class="math inline">\(\overline{Y}^{\text{obs}}_{t} - \overline{Y}^{\text{obs}}_{c}\)</span>)</li>
+</ul>
+<p><strong>Fitting the Model</strong></p>
+<p>First, we need to ensure that “welfare” (control) is the reference category for our treatment variable. When <code>lm()</code> encounters a factor variable, it creates a dummy variable using the first level as the reference. By default, R orders factor levels alphabetically, which would make “assistance to the poor” the reference—the opposite of what we want.</p>
+<p>We use <code>fct_relevel()</code> from the <code>forcats</code> package to set “welfare” as the reference category.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a factor with "welfare" as the reference category</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>rasinski <span class="ot">&lt;-</span> rasinski <span class="sc">|&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">condition =</span> <span class="fu">fct_relevel</span>(desc, <span class="st">"welfare"</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># verify: "welfare" should be first</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(rasinski<span class="sc">$</span>condition)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "welfare"                "assistance to the poor"</code></pre>
+</div>
+</div>
+<p>Now we fit the linear model.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit the model</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(outcome <span class="sc">~</span> condition, <span class="at">data =</span> rasinski)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># extract the coefficients</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                    (Intercept) conditionassistance to the poor 
+                      1.4210526                      -0.2210526 </code></pre>
+</div>
+</div>
+<p>Let’s verify that these coefficients match our manual calculations.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the slope should equal the ATE estimate</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit)[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>conditionassistance to the poor 
+                     -0.2210526 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>ate_hat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.2210526</code></pre>
+</div>
+</div>
+<p>The values match exactly. <strong>Using <code>mean()</code></strong> makes the calculation transparent. You can see exactly what quantities are being computed: the mean in each group and their difference. This is valuable for understanding and teaching the concept. <strong>Using <code>lm()</code></strong> will be more valuable in applied work. We’ll use <code>lm()</code> moving forward.</p>
+</section>
+</section>
+<section id="key-terms" class="level2" data-number="2.9">
+<h2 data-number="2.9" class="anchored" data-anchor-id="key-terms"><span class="header-section-number">2.9</span> Key Terms</h2>
+<ul>
+<li>Completely randomized experiment</li>
+<li>Observed outcome</li>
+<li>Missing outcome</li>
+<li>Difference-in-means estimator</li>
+<li>Design-based inference</li>
+<li>Unbiasedness</li>
+</ul>
+</section>
+<section id="exercises" class="level2" data-number="2.10">
+<h2 data-number="2.10" class="anchored" data-anchor-id="exercises"><span class="header-section-number">2.10</span> Exercises</h2>
+<section id="conceptual-understanding" class="level3" data-number="2.10.1">
+<h3 data-number="2.10.1" class="anchored" data-anchor-id="conceptual-understanding"><span class="header-section-number">2.10.1</span> Conceptual Understanding</h3>
+<ol type="1">
+<li><strong>Observed vs.&nbsp;Missing Outcomes</strong>: In your own words, explain the difference between <span class="math inline">\(Y_i^{\text{obs}}\)</span> and <span class="math inline">\(Y_i^{\text{mis}}\)</span>. Why is one observable and the other not?</li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><span class="math inline">\(Y_i^{\text{obs}}\)</span> is the <strong>observed outcome</strong>—the potential outcome that corresponds to the treatment condition the individual actually received. If individual <span class="math inline">\(i\)</span> was assigned to treatment (<span class="math inline">\(D_i = 1\)</span>), then <span class="math inline">\(Y_i^{\text{obs}} = Y_i(1)\)</span>. If individual <span class="math inline">\(i\)</span> was assigned to control (<span class="math inline">\(D_i = 0\)</span>), then <span class="math inline">\(Y_i^{\text{obs}} = Y_i(0)\)</span>.</p>
+<p><span class="math inline">\(Y_i^{\text{mis}}\)</span> is the <strong>missing outcome</strong>—the potential outcome that corresponds to the treatment condition the individual did <em>not</em> receive. It is the counterfactual: what <em>would have happened</em> if the individual had been assigned to the other condition.</p>
+<p>We can observe <span class="math inline">\(Y_i^{\text{obs}}\)</span> because it is the outcome that actually occurred. Once we assign individual <span class="math inline">\(i\)</span> to treatment, we see how they respond to treatment. But we cannot observe <span class="math inline">\(Y_i^{\text{mis}}\)</span> because we cannot simultaneously assign the same individual to both treatment and control. The individual can only be in one condition at a time, so we only ever see one of the two potential outcomes.</p>
+<p>This is the fundamental problem of causal inference applied to the observed data.</p>
+</details>
+<ol start="2" type="1">
+<li><strong>Design-Based Inference</strong>: Explain what it means to say that inference in randomized experiments is “design-based” rather than “model-based.” What is the source of randomness in each approach?</li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>In <strong>design-based inference</strong>, the potential outcomes <span class="math inline">\(Y_i(0)\)</span> and <span class="math inline">\(Y_i(1)\)</span> are treated as <em>fixed</em> values—they are simply the outcomes each individual would experience under each condition. The only source of randomness comes from the treatment assignment <span class="math inline">\(D_i\)</span>. Because <em>we</em> designed the randomization mechanism, we know exactly how this randomness works.</p>
+<p>In <strong>model-based inference</strong>, the outcomes themselves are treated as random draws from some probability distribution. The randomness comes from imagining that the data could have been different if we had drawn a different sample from the population, or from random variation in how outcomes are generated.</p>
+<p>The key difference is <em>where the uncertainty comes from</em>:</p>
+<ul>
+<li><p>Design-based: Uncertainty comes from the <em>random assignment</em>. The potential outcomes are fixed; we just don’t know which ones we’ll observe because we don’t know the randomization in advance.</p></li>
+<li><p>Model-based: Uncertainty comes from the <em>data-generating process</em>. The outcomes themselves are random, drawn from some distribution with unknown parameters.</p></li>
+</ul>
+<p>Design-based inference is powerful because we don’t need to make assumptions about how outcomes are generated. We only rely on the randomization we controlled.</p>
+</details>
+<ol start="3" type="1">
+<li><strong>The Meaning of Unbiasedness</strong>: A student says, “Since <span class="math inline">\(\widehat{\text{ATE}}\)</span> is unbiased, my estimate must equal the true ATE.” Explain why this is incorrect. What does unbiasedness actually guarantee?</li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>The student’s statement is incorrect. Unbiasedness does <em>not</em> mean that any single estimate equals the true ATE.</p>
+<p>Unbiasedness is a property about <em>averages over repeated randomizations</em>. Specifically, <span class="math inline">\(\widehat{\text{ATE}}\)</span> is unbiased means:</p>
+<p><span class="math display">\[E_D[\widehat{\text{ATE}}] = \text{ATE}\]</span></p>
+<p>In plain language: if we could repeat the randomization infinitely many times and compute <span class="math inline">\(\widehat{\text{ATE}}\)</span> each time, the <em>average</em> of all those estimates would equal the true ATE.</p>
+<p>Any <em>particular</em> estimate will almost certainly differ from the true ATE. Some randomizations will, by chance, put more high-outcome individuals in the treatment group, leading to overestimates. Other randomizations will put more high-outcome individuals in control, leading to underestimates. Unbiasedness tells us that these over- and under-estimates balance out <em>on average</em>—there is no systematic tendency to err in one direction.</p>
+<p>The chapter example illustrates this: one randomization gave <span class="math inline">\(\widehat{\text{ATE}} = 2.6\)</span> (overestimate), another gave <span class="math inline">\(\widehat{\text{ATE}} = 0.4\)</span> (underestimate), but the true ATE was 1.5. Neither estimate equaled the truth, but they averaged out correctly.</p>
+</details>
+<ol start="4" type="1">
+<li><strong>Why Randomization Matters</strong>: Suppose instead of randomly assigning treatment, we let participants choose whether to receive treatment. Why would <span class="math inline">\(\widehat{\text{ATE}} = \overline{Y}^{\text{obs}}_{t} - \overline{Y}^{\text{obs}}_{c}\)</span> no longer be unbiased for the ATE?</li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>If participants choose whether to receive treatment, the people who select into treatment may be systematically different from those who select into control. This is called <strong>self-selection bias</strong>.</p>
+<p>For example, in a job training program where participants choose whether to enroll:</p>
+<ul>
+<li>People who are more motivated, more confident, or have better prospects might be more likely to enroll</li>
+<li>These same characteristics might also lead to better outcomes <em>regardless</em> of training</li>
+</ul>
+<p>In this case, the treatment group would have higher average outcomes than the control group even if the training itself had no effect. The difference in means would reflect both (1) any true effect of training and (2) pre-existing differences between the groups.</p>
+<p>Mathematically, the proof of unbiasedness relies on the fact that <span class="math inline">\(E_D[D_i] = N_t/N\)</span> for all individuals <span class="math inline">\(i\)</span>—every individual has the same probability of being treated. With self-selection, this no longer holds. Individuals with higher potential outcomes might have higher probabilities of selecting treatment, which means <span class="math inline">\(E_D[D_i]\)</span> would vary across individuals and would be correlated with potential outcomes.</p>
+<p>When treatment assignment is correlated with potential outcomes, the difference-in-means estimator captures both the treatment effect and the selection effect, making it biased for the ATE.</p>
+</details>
+</section>
+<section id="computational-practice" class="level3" data-number="2.10.2">
+<h3 data-number="2.10.2" class="anchored" data-anchor-id="computational-practice"><span class="header-section-number">2.10.2</span> Computational Practice</h3>
+<ol start="5" type="1">
+<li><p><strong>Computing the Estimate</strong>: Consider the following observed data from a randomized experiment:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Individual</th>
+<th><span class="math inline">\(D_i\)</span></th>
+<th><span class="math inline">\(Y_i^{\text{obs}}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1</td>
+<td>12</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>0</td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>1</td>
+<td>15</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>0</td>
+<td>7</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>0</td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>1</td>
+<td>11</td>
+</tr>
+</tbody>
+</table>
+<ol type="a">
+<li><p>What are <span class="math inline">\(N_t\)</span> and <span class="math inline">\(N_c\)</span>?</p></li>
+<li><p>Compute <span class="math inline">\(\overline{Y}^{\text{obs}}_{t}\)</span> and <span class="math inline">\(\overline{Y}^{\text{obs}}_{c}\)</span>.</p></li>
+<li><p>Compute <span class="math inline">\(\widehat{\text{ATE}}\)</span>.</p></li>
+</ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> Count the individuals in each group by looking at the <span class="math inline">\(D_i\)</span> column:</p>
+<ul>
+<li>Individuals with <span class="math inline">\(D_i = 1\)</span> (treatment): Individuals 1, 3, and 6</li>
+<li>Individuals with <span class="math inline">\(D_i = 0\)</span> (control): Individuals 2, 4, and 5</li>
+</ul>
+<p>So <span class="math inline">\(N_t = 3\)</span> and <span class="math inline">\(N_c = 3\)</span>.</p>
+<p><strong>Part b.</strong> Compute the mean outcome in each group.</p>
+<p>For the treatment group (individuals where <span class="math inline">\(D_i = 1\)</span>):</p>
+<p><span class="math display">\[
+\begin{align}
+\overline{Y}^{\text{obs}}_{t} &amp;= \frac{1}{N_t} \sum_{i:D_i=1} Y_i^{\text{obs}} \\
+&amp;= \frac{1}{3}(12 + 15 + 11) \\
+&amp;= \frac{38}{3} \\
+&amp;\approx 12.67
+\end{align}
+\]</span></p>
+<p>For the control group (individuals where <span class="math inline">\(D_i = 0\)</span>):</p>
+<p><span class="math display">\[
+\begin{align}
+\overline{Y}^{\text{obs}}_{c} &amp;= \frac{1}{N_c} \sum_{i:D_i=0} Y_i^{\text{obs}} \\
+&amp;= \frac{1}{3}(8 + 7 + 9) \\
+&amp;= \frac{24}{3} \\
+&amp;= 8
+\end{align}
+\]</span></p>
+<p><strong>Part c.</strong> The difference-in-means estimator is:</p>
+<p><span class="math display">\[
+\begin{align}
+\widehat{\text{ATE}} &amp;= \overline{Y}^{\text{obs}}_{t} - \overline{Y}^{\text{obs}}_{c} \\
+&amp;= 12.67 - 8 \\
+&amp;= 4.67
+\end{align}
+\]</span></p>
+<p>Our estimate is that treatment increases outcomes by about 4.67 units on average.</p>
+</details>
+<ol start="6" type="1">
+<li><p><strong>Different Randomizations</strong>: Suppose the true potential outcomes for 4 individuals are:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Individual</th>
+<th><span class="math inline">\(Y_i(0)\)</span></th>
+<th><span class="math inline">\(Y_i(1)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>2</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>4</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>5</td>
+<td>7</td>
+</tr>
+</tbody>
+</table>
+<ol type="a">
+<li><p>Compute the true ATE.</p></li>
+<li><p>If individuals 1 and 3 are assigned to treatment (<span class="math inline">\(D_1 = D_3 = 1\)</span>) and individuals 2 and 4 are assigned to control (<span class="math inline">\(D_2 = D_4 = 0\)</span>), compute <span class="math inline">\(\widehat{\text{ATE}}\)</span>.</p></li>
+<li><p>If individuals 2 and 4 are assigned to treatment and individuals 1 and 3 are assigned to control, compute <span class="math inline">\(\widehat{\text{ATE}}\)</span>.</p></li>
+<li><p>Average your two estimates from (b) and (c). How does this compare to the true ATE?</p></li>
+</ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> First, compute the individual treatment effects:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Individual</th>
+<th><span class="math inline">\(Y_i(0)\)</span></th>
+<th><span class="math inline">\(Y_i(1)\)</span></th>
+<th><span class="math inline">\(\tau_i = Y_i(1) - Y_i(0)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>2</td>
+<td>5</td>
+<td><span class="math inline">\(5 - 2 = 3\)</span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>4</td>
+<td>6</td>
+<td><span class="math inline">\(6 - 4 = 2\)</span></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>3</td>
+<td>4</td>
+<td><span class="math inline">\(4 - 3 = 1\)</span></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>5</td>
+<td>7</td>
+<td><span class="math inline">\(7 - 5 = 2\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>The true ATE is:</p>
+<p><span class="math display">\[
+\begin{align}
+\text{ATE} &amp;= \frac{1}{4} \sum_{i=1}^{4} \tau_i \\
+&amp;= \frac{1}{4}(3 + 2 + 1 + 2) \\
+&amp;= \frac{8}{4} \\
+&amp;= 2
+\end{align}
+\]</span></p>
+<p><strong>Part b.</strong> With individuals 1 and 3 treated, and individuals 2 and 4 in control:</p>
+<ul>
+<li>Treatment group observes: <span class="math inline">\(Y_1(1) = 5\)</span> and <span class="math inline">\(Y_3(1) = 4\)</span></li>
+<li>Control group observes: <span class="math inline">\(Y_2(0) = 4\)</span> and <span class="math inline">\(Y_4(0) = 5\)</span></li>
+</ul>
+<p><span class="math display">\[
+\begin{align}
+\overline{Y}^{\text{obs}}_{t} &amp;= \frac{1}{2}(5 + 4) = \frac{9}{2} = 4.5 \\
+\overline{Y}^{\text{obs}}_{c} &amp;= \frac{1}{2}(4 + 5) = \frac{9}{2} = 4.5 \\
+\widehat{\text{ATE}} &amp;= 4.5 - 4.5 = 0
+\end{align}
+\]</span></p>
+<p><strong>Part c.</strong> With individuals 2 and 4 treated, and individuals 1 and 3 in control:</p>
+<ul>
+<li>Treatment group observes: <span class="math inline">\(Y_2(1) = 6\)</span> and <span class="math inline">\(Y_4(1) = 7\)</span></li>
+<li>Control group observes: <span class="math inline">\(Y_1(0) = 2\)</span> and <span class="math inline">\(Y_3(0) = 3\)</span></li>
+</ul>
+<p><span class="math display">\[
+\begin{align}
+\overline{Y}^{\text{obs}}_{t} &amp;= \frac{1}{2}(6 + 7) = \frac{13}{2} = 6.5 \\
+\overline{Y}^{\text{obs}}_{c} &amp;= \frac{1}{2}(2 + 3) = \frac{5}{2} = 2.5 \\
+\widehat{\text{ATE}} &amp;= 6.5 - 2.5 = 4
+\end{align}
+\]</span></p>
+<p><strong>Part d.</strong> The average of the two estimates:</p>
+<p><span class="math display">\[
+\frac{0 + 4}{2} = 2
+\]</span></p>
+<p>This equals the true ATE exactly! The first randomization underestimated (0 vs.&nbsp;2), and the second overestimated (4 vs.&nbsp;2), but they balanced out. This illustrates unbiasedness: on average, the estimator gets it right.</p>
+</details>
+<ol start="7" type="1">
+<li><strong>Verifying Unbiasedness</strong>: Using the same potential outcomes from Exercise 6, list all possible ways to assign exactly 2 individuals to treatment and 2 to control. For each, compute <span class="math inline">\(\widehat{\text{ATE}}\)</span>. Then compute the average of all these estimates and verify that it equals the true ATE.</li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>With 4 individuals and 2 assigned to treatment, there are <span class="math inline">\(\binom{4}{2} = 6\)</span> possible randomizations. Let’s list each one and compute <span class="math inline">\(\widehat{\text{ATE}}\)</span>.</p>
+<p>Recall the potential outcomes:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Individual</th>
+<th><span class="math inline">\(Y_i(0)\)</span></th>
+<th><span class="math inline">\(Y_i(1)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>2</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>4</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>5</td>
+<td>7</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Randomization 1: Individuals 1, 2 treated; Individuals 3, 4 control</strong></p>
+<p><span class="math display">\[
+\begin{align}
+\overline{Y}^{\text{obs}}_{t} &amp;= \frac{1}{2}(5 + 6) = 5.5 \\
+\overline{Y}^{\text{obs}}_{c} &amp;= \frac{1}{2}(3 + 5) = 4 \\
+\widehat{\text{ATE}} &amp;= 5.5 - 4 = 1.5
+\end{align}
+\]</span></p>
+<p><strong>Randomization 2: Individuals 1, 3 treated; Individuals 2, 4 control</strong></p>
+<p><span class="math display">\[
+\begin{align}
+\overline{Y}^{\text{obs}}_{t} &amp;= \frac{1}{2}(5 + 4) = 4.5 \\
+\overline{Y}^{\text{obs}}_{c} &amp;= \frac{1}{2}(4 + 5) = 4.5 \\
+\widehat{\text{ATE}} &amp;= 4.5 - 4.5 = 0
+\end{align}
+\]</span></p>
+<p><strong>Randomization 3: Individuals 1, 4 treated; Individuals 2, 3 control</strong></p>
+<p><span class="math display">\[
+\begin{align}
+\overline{Y}^{\text{obs}}_{t} &amp;= \frac{1}{2}(5 + 7) = 6 \\
+\overline{Y}^{\text{obs}}_{c} &amp;= \frac{1}{2}(4 + 3) = 3.5 \\
+\widehat{\text{ATE}} &amp;= 6 - 3.5 = 2.5
+\end{align}
+\]</span></p>
+<p><strong>Randomization 4: Individuals 2, 3 treated; Individuals 1, 4 control</strong></p>
+<p><span class="math display">\[
+\begin{align}
+\overline{Y}^{\text{obs}}_{t} &amp;= \frac{1}{2}(6 + 4) = 5 \\
+\overline{Y}^{\text{obs}}_{c} &amp;= \frac{1}{2}(2 + 5) = 3.5 \\
+\widehat{\text{ATE}} &amp;= 5 - 3.5 = 1.5
+\end{align}
+\]</span></p>
+<p><strong>Randomization 5: Individuals 2, 4 treated; Individuals 1, 3 control</strong></p>
+<p><span class="math display">\[
+\begin{align}
+\overline{Y}^{\text{obs}}_{t} &amp;= \frac{1}{2}(6 + 7) = 6.5 \\
+\overline{Y}^{\text{obs}}_{c} &amp;= \frac{1}{2}(2 + 3) = 2.5 \\
+\widehat{\text{ATE}} &amp;= 6.5 - 2.5 = 4
+\end{align}
+\]</span></p>
+<p><strong>Randomization 6: Individuals 3, 4 treated; Individuals 1, 2 control</strong></p>
+<p><span class="math display">\[
+\begin{align}
+\overline{Y}^{\text{obs}}_{t} &amp;= \frac{1}{2}(4 + 7) = 5.5 \\
+\overline{Y}^{\text{obs}}_{c} &amp;= \frac{1}{2}(2 + 4) = 3 \\
+\widehat{\text{ATE}} &amp;= 5.5 - 3 = 2.5
+\end{align}
+\]</span></p>
+<p><strong>Summary of all estimates:</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Randomization</th>
+<th>Treated Individuals</th>
+<th><span class="math inline">\(\widehat{\text{ATE}}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1, 2</td>
+<td>1.5</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>1, 3</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>1, 4</td>
+<td>2.5</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>2, 3</td>
+<td>1.5</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>2, 4</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>3, 4</td>
+<td>2.5</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Average of all estimates:</strong></p>
+<p><span class="math display">\[
+\begin{align}
+E_D[\widehat{\text{ATE}}] &amp;= \frac{1}{6}(1.5 + 0 + 2.5 + 1.5 + 4 + 2.5) \\
+&amp;= \frac{12}{6} \\
+&amp;= 2
+\end{align}
+\]</span></p>
+<p>The average of all possible estimates equals 2, which is exactly the true ATE we computed in Exercise 6. This confirms that <span class="math inline">\(\widehat{\text{ATE}}\)</span> is unbiased: averaged across all possible randomizations, it equals the truth.</p>
+</details>
+</section>
+<section id="application-to-rasinskis-experiment" class="level3" data-number="2.10.3">
+<h3 data-number="2.10.3" class="anchored" data-anchor-id="application-to-rasinskis-experiment"><span class="header-section-number">2.10.3</span> Application to Rasinski’s Experiment</h3>
+<ol start="8" type="1">
+<li><p><strong>Rasinski’s Experiment Revisited</strong>: Return to the hypothetical Rasinski data from the previous chapter. Suppose we randomly assign 5 respondents to the “assistance to the poor” wording (treatment) and 5 to the “welfare” wording (control).</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Respondent</th>
+<th><span class="math inline">\(Y_i(0)\)</span> (“welfare”)</th>
+<th><span class="math inline">\(Y_i(1)\)</span> (“assistance”)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>3 (Too much)</td>
+<td>1 (Too little)</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>3 (Too much)</td>
+<td>2 (About right)</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>2 (About right)</td>
+<td>1 (Too little)</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>3 (Too much)</td>
+<td>1 (Too little)</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>2 (About right)</td>
+<td>1 (Too little)</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>3 (Too much)</td>
+<td>2 (About right)</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>2 (About right)</td>
+<td>1 (Too little)</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>3 (Too much)</td>
+<td>1 (Too little)</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>2 (About right)</td>
+<td>2 (About right)</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>3 (Too much)</td>
+<td>1 (Too little)</td>
+</tr>
+</tbody>
+</table>
+<ol type="a">
+<li><p>We know from the previous chapter that the true ATE is -1.3. If respondents 1, 3, 5, 7, and 9 are assigned to treatment, compute <span class="math inline">\(\widehat{\text{ATE}}\)</span>. How close is it to the true ATE?</p></li>
+<li><p>If respondents 2, 4, 6, 8, and 10 are assigned to treatment instead, compute <span class="math inline">\(\widehat{\text{ATE}}\)</span>. How close is it to the true ATE?</p></li>
+<li><p>Average your estimates from (a) and (b). What do you notice?</p></li>
+</ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> With respondents 1, 3, 5, 7, and 9 assigned to treatment:</p>
+<ul>
+<li>Treatment group (sees “assistance to the poor”): Respondents 1, 3, 5, 7, 9
+<ul>
+<li>Observed outcomes: <span class="math inline">\(Y_1(1) = 1\)</span>, <span class="math inline">\(Y_3(1) = 1\)</span>, <span class="math inline">\(Y_5(1) = 1\)</span>, <span class="math inline">\(Y_7(1) = 1\)</span>, <span class="math inline">\(Y_9(1) = 2\)</span></li>
+</ul></li>
+<li>Control group (sees “welfare”): Respondents 2, 4, 6, 8, 10
+<ul>
+<li>Observed outcomes: <span class="math inline">\(Y_2(0) = 3\)</span>, <span class="math inline">\(Y_4(0) = 3\)</span>, <span class="math inline">\(Y_6(0) = 3\)</span>, <span class="math inline">\(Y_8(0) = 3\)</span>, <span class="math inline">\(Y_{10}(0) = 3\)</span></li>
+</ul></li>
+</ul>
+<p>Computing the means:</p>
+<p><span class="math display">\[
+\begin{align}
+\overline{Y}^{\text{obs}}_{t} &amp;= \frac{1}{5}(1 + 1 + 1 + 1 + 2) = \frac{6}{5} = 1.2 \\
+\overline{Y}^{\text{obs}}_{c} &amp;= \frac{1}{5}(3 + 3 + 3 + 3 + 3) = \frac{15}{5} = 3 \\
+\widehat{\text{ATE}} &amp;= 1.2 - 3 = -1.8
+\end{align}
+\]</span></p>
+<p>This estimate of <span class="math inline">\(-1.8\)</span> is 0.5 units away from the true ATE of <span class="math inline">\(-1.3\)</span>. It overestimates the magnitude of the effect.</p>
+<p><strong>Part b.</strong> With respondents 2, 4, 6, 8, and 10 assigned to treatment:</p>
+<ul>
+<li>Treatment group: Respondents 2, 4, 6, 8, 10
+<ul>
+<li>Observed outcomes: <span class="math inline">\(Y_2(1) = 2\)</span>, <span class="math inline">\(Y_4(1) = 1\)</span>, <span class="math inline">\(Y_6(1) = 2\)</span>, <span class="math inline">\(Y_8(1) = 1\)</span>, <span class="math inline">\(Y_{10}(1) = 1\)</span></li>
+</ul></li>
+<li>Control group: Respondents 1, 3, 5, 7, 9
+<ul>
+<li>Observed outcomes: <span class="math inline">\(Y_1(0) = 3\)</span>, <span class="math inline">\(Y_3(0) = 2\)</span>, <span class="math inline">\(Y_5(0) = 2\)</span>, <span class="math inline">\(Y_7(0) = 2\)</span>, <span class="math inline">\(Y_9(0) = 2\)</span></li>
+</ul></li>
+</ul>
+<p>Computing the means:</p>
+<p><span class="math display">\[
+\begin{align}
+\overline{Y}^{\text{obs}}_{t} &amp;= \frac{1}{5}(2 + 1 + 2 + 1 + 1) = \frac{7}{5} = 1.4 \\
+\overline{Y}^{\text{obs}}_{c} &amp;= \frac{1}{5}(3 + 2 + 2 + 2 + 2) = \frac{11}{5} = 2.2 \\
+\widehat{\text{ATE}} &amp;= 1.4 - 2.2 = -0.8
+\end{align}
+\]</span></p>
+<p>This estimate of <span class="math inline">\(-0.8\)</span> is 0.5 units away from the true ATE of <span class="math inline">\(-1.3\)</span>. It underestimates the magnitude of the effect.</p>
+<p><strong>Part c.</strong> The average of the two estimates:</p>
+<p><span class="math display">\[
+\frac{-1.8 + (-0.8)}{2} = \frac{-2.6}{2} = -1.3
+\]</span></p>
+<p>The average equals the true ATE exactly! This is a concrete illustration of unbiasedness. The first randomization overestimated the effect (in magnitude), and the second underestimated it by the same amount. When we average them, we get exactly the truth.</p>
+<p>Note: These two randomizations are not the only possible ones—there are <span class="math inline">\(\binom{10}{5} = 252\)</span> ways to assign 5 of 10 respondents to treatment. If we computed <span class="math inline">\(\widehat{\text{ATE}}\)</span> for all 252 and averaged them, we would get exactly <span class="math inline">\(-1.3\)</span>.</p>
+</details>
+<ol start="9" type="1">
+<li><p><strong>What the Researcher Sees</strong>: In Rasinski’s actual experiment, the researcher does not observe the potential outcomes table—they only observe the outcomes under the assigned condition.</p>
+<ol type="a">
+<li><p>Using the randomization from Exercise 8a (respondents 1, 3, 5, 7, 9 assigned to treatment), write out the data table that the researcher would actually observe. Use “?” for unobserved potential outcomes.</p></li>
+<li><p>Can the researcher compute the true ATE from this observed data? Why or why not?</p></li>
+<li><p>What does the researcher compute instead, and why is this a reasonable substitute?</p></li>
+</ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> With respondents 1, 3, 5, 7, 9 assigned to treatment, the researcher observes:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Respondent</th>
+<th><span class="math inline">\(Y_i(0)\)</span></th>
+<th><span class="math inline">\(Y_i(1)\)</span></th>
+<th><span class="math inline">\(D_i\)</span></th>
+<th><span class="math inline">\(Y_i^{\text{obs}}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>?</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>3</td>
+<td>?</td>
+<td>0</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>?</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>3</td>
+<td>?</td>
+<td>0</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>?</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>3</td>
+<td>?</td>
+<td>0</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>?</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>3</td>
+<td>?</td>
+<td>0</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>?</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>3</td>
+<td>?</td>
+<td>0</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<p>For each respondent, the researcher sees only one potential outcome—the one corresponding to their assigned condition. The other potential outcome is forever unknown.</p>
+<p><strong>Part b.</strong> No, the researcher cannot compute the true ATE from this observed data.</p>
+<p>The true ATE requires knowing <em>all</em> potential outcomes:</p>
+<p><span class="math display">\[\text{ATE} = \frac{1}{N}\sum_{i=1}^{N} Y_i(1) - \frac{1}{N}\sum_{i=1}^{N} Y_i(0)\]</span></p>
+<p>But the researcher is missing <span class="math inline">\(Y_i(0)\)</span> for treated respondents (respondents 1, 3, 5, 7, 9) and <span class="math inline">\(Y_i(1)\)</span> for control respondents (respondents 2, 4, 6, 8, 10). Without these counterfactual outcomes, the true ATE cannot be calculated.</p>
+<p><strong>Part c.</strong> The researcher computes the difference-in-means estimator:</p>
+<p><span class="math display">\[\widehat{\text{ATE}} = \overline{Y}^{\text{obs}}_{t} - \overline{Y}^{\text{obs}}_{c}\]</span></p>
+<p>This is a reasonable substitute because:</p>
+<ol type="1">
+<li>It uses only observable quantities (no counterfactuals needed)</li>
+<li>Under random assignment, it is <em>unbiased</em> for the true ATE</li>
+<li>The average of <span class="math inline">\(Y_i^{\text{obs}}\)</span> among treated individuals estimates what the average of <span class="math inline">\(Y_i(1)\)</span> would be for everyone</li>
+<li>The average of <span class="math inline">\(Y_i^{\text{obs}}\)</span> among control individuals estimates what the average of <span class="math inline">\(Y_i(0)\)</span> would be for everyone</li>
+</ol>
+<p>Random assignment ensures that the treated and control groups are, on average, comparable samples from the same population. This allows us to use observed group means as stand-ins for the unobservable population means.</p>
+</details>
+<ol start="10" type="1">
+<li><p><strong>Interpreting the Estimate in Context</strong>: Using the estimate from Exercise 8a (<span class="math inline">\(\widehat{\text{ATE}} = -1.8\)</span>):</p>
+<ol type="a">
+<li><p>Write a one-sentence interpretation of this estimate in the context of Rasinski’s question-wording experiment. Be sure to explain what the negative sign means substantively.</p></li>
+<li><p>A colleague says, “A change of 1.8 points on a 3-point scale is huge!” Is this a fair characterization? What context would help evaluate the magnitude?</p></li>
+</ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> Based on this experiment, respondents gave answers that were on average 1.8 points lower on the 1-to-3 scale (where 1 = “Too little” and 3 = “Too much”) when asked about “assistance to the poor” compared to “welfare,” indicating that the “assistance to the poor” framing substantially increases expressed support for government spending.</p>
+<p><strong>Part b.</strong> The colleague’s characterization captures the right intuition—this is a large effect—but deserves more context:</p>
+<p><em>What makes this effect large:</em></p>
+<ul>
+<li>The outcome scale only has three categories (1, 2, 3), so the maximum possible effect is 2 points (from “Too much” to “Too little” or vice versa)</li>
+<li>An effect of 1.8 points is 90% of the maximum possible effect</li>
+<li>Many respondents are shifting by a full category or more based solely on word choice</li>
+</ul>
+<p><em>Context that helps evaluation:</em></p>
+<ul>
+<li>The treatment is minimal—just changing one phrase in a question. The fact that word choice alone produces such a large shift suggests question wording is extremely consequential for survey results.</li>
+<li>If this effect generalizes to the broader population, it means public opinion polls could show dramatically different levels of support for the same policy depending on how the question is worded.</li>
+<li>In political terms, this could mean the difference between a policy appearing popular or unpopular.</li>
+</ul>
+<p>So yes, the effect is substantively large, and the colleague’s reaction is warranted. Changing two words shifts responses by nearly the full width of the scale.</p>
+</details>
+</section>
+<section id="critical-thinking" class="level3" data-number="2.10.4">
+<h3 data-number="2.10.4" class="anchored" data-anchor-id="critical-thinking"><span class="header-section-number">2.10.4</span> Critical Thinking</h3>
+<ol start="11" type="1">
+<li><p><strong>Unbiasedness vs.&nbsp;Accuracy</strong>: An estimator can be unbiased but still give estimates that are far from the true value.</p>
+<ol type="a">
+<li><p>How is this possible? What determines how far individual estimates might be from the truth?</p></li>
+<li><p>What might make <span class="math inline">\(\widehat{\text{ATE}}\)</span> more or less variable across different randomizations?</p></li>
+</ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> Unbiasedness only guarantees that the estimator is correct <em>on average</em>—it says nothing about any single estimate.</p>
+<p>An unbiased estimator can produce estimates far from the truth because of <em>sampling variability</em>. Each randomization produces a different assignment of individuals to treatment and control. Some randomizations might, by chance, put individuals with unusually high potential outcomes into the treatment group, leading to overestimates. Other randomizations might do the opposite, leading to underestimates.</p>
+<p>Think of it like flipping a fair coin 10 times. On average, you get 5 heads. But any particular sequence might give you 3 heads, 7 heads, or even 0 heads. The “estimator” (count the heads) is unbiased, but individual realizations vary.</p>
+<p>What determines how far individual estimates might be from the truth:</p>
+<ul>
+<li>The variance of the estimator—how spread out the distribution of possible estimates is</li>
+<li>This variance depends on the sample size, the variability in potential outcomes, and the proportion assigned to treatment vs.&nbsp;control</li>
+</ul>
+<p><strong>Part b.</strong> Several factors affect how variable <span class="math inline">\(\widehat{\text{ATE}}\)</span> is across randomizations:</p>
+<p><em>Factors that increase variability:</em></p>
+<ul>
+<li>Smaller sample sizes (<span class="math inline">\(N\)</span>): Fewer individuals means each randomization can produce more extreme group compositions</li>
+<li>More heterogeneous potential outcomes: If individuals differ greatly in their outcomes, the groups can be quite different depending on which individuals land where</li>
+<li>Unbalanced designs: Having very few individuals in one group (e.g., <span class="math inline">\(N_t = 2\)</span> out of <span class="math inline">\(N = 100\)</span>) increases variability because the small group’s mean is very sensitive to which specific individuals are included</li>
+</ul>
+<p><em>Factors that decrease variability:</em></p>
+<ul>
+<li>Larger sample sizes: With many individuals, the law of large numbers kicks in—each group is more likely to be representative of the population</li>
+<li>More homogeneous potential outcomes: If all individuals have similar outcomes, it matters less which ones end up in which group</li>
+<li>Balanced designs: Having roughly equal numbers in treatment and control (<span class="math inline">\(N_t \approx N_c\)</span>) tends to minimize variance</li>
+</ul>
+</details>
+<ol start="12" type="1">
+<li><p><strong>Breaking Unbiasedness</strong>: The proof of unbiasedness relies on the fact that <span class="math inline">\(E_D[D_i] = N_t/N\)</span> for all individuals <span class="math inline">\(i\)</span>.</p>
+<ol type="a">
+<li><p>Give an example of an assignment mechanism where this would not hold.</p></li>
+<li><p>If we used such a biased assignment mechanism, would <span class="math inline">\(\widehat{\text{ATE}}\)</span> still be unbiased? Why or why not?</p></li>
+</ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> Here are examples of assignment mechanisms where <span class="math inline">\(E_D[D_i] = N_t/N\)</span> would not hold for all individuals:</p>
+<p><em>Example 1: Selection based on a characteristic</em></p>
+<p>A researcher assigns older participants to treatment with probability 0.8 and younger participants with probability 0.2. If age is associated with the outcome, <span class="math inline">\(E_D[D_i]\)</span> differs across individuals based on their age.</p>
+<p><em>Example 2: Self-selection</em></p>
+<p>Participants choose whether to receive treatment. Motivated participants might be more likely to choose treatment (<span class="math inline">\(E_D[D_i]\)</span> is higher for motivated people).</p>
+<p><em>Example 3: Researcher discretion</em></p>
+<p>A researcher “randomly” assigns treatment but subconsciously tends to assign sicker patients to the new treatment. Sicker patients have higher <span class="math inline">\(E_D[D_i]\)</span>.</p>
+<p><em>Example 4: Sequential assignment with learning</em></p>
+<p>A researcher stops assigning to treatment once they see a few bad outcomes, making later individuals less likely to be treated.</p>
+<p><strong>Part b.</strong> No, <span class="math inline">\(\widehat{\text{ATE}}\)</span> would generally not be unbiased under such mechanisms.</p>
+<p>The proof of unbiasedness relied on a key cancellation: the probability of treatment (<span class="math inline">\(E_D[D_i] = N_t/N\)</span>) canceled with the weighting in the estimator (dividing by <span class="math inline">\(N_t\)</span>). This worked because every individual had the <em>same</em> probability of treatment.</p>
+<p>When treatment probabilities vary across individuals, this cancellation breaks down. Individuals with higher probabilities of treatment contribute more to the treatment group mean, and individuals with lower probabilities contribute less. If these probabilities are correlated with potential outcomes, the estimator becomes biased.</p>
+<p>For example, if high-outcome individuals have higher treatment probabilities:</p>
+<ul>
+<li>The treatment group will be enriched with high-outcome individuals</li>
+<li>The control group will be enriched with low-outcome individuals</li>
+<li><span class="math inline">\(\overline{Y}^{\text{obs}}_{t} - \overline{Y}^{\text{obs}}_{c}\)</span> will overestimate the true ATE</li>
+</ul>
+<p>The estimator would be capturing both the treatment effect <em>and</em> the selection effect, leading to bias.</p>
+</details>
+<ol start="13" type="1">
+<li><p><strong>Sample Size Considerations</strong>: Consider two experiments estimating the same ATE. Experiment A has <span class="math inline">\(N = 10\)</span> with <span class="math inline">\(N_t = 5\)</span>. Experiment B has <span class="math inline">\(N = 1000\)</span> with <span class="math inline">\(N_t = 500\)</span>.</p>
+<ol type="a">
+<li><p>Are both estimates unbiased for the ATE?</p></li>
+<li><p>In which experiment would you expect <span class="math inline">\(\widehat{\text{ATE}}\)</span> to be closer to the true ATE? Why?</p></li>
+<li><p>What property of estimators (besides unbiasedness) captures this difference?</p></li>
+</ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> Yes, both estimates are unbiased for the ATE.</p>
+<p>Unbiasedness depends only on the <em>randomization procedure</em>, not on the sample size. As long as treatment is randomly assigned (with each individual having equal probability), the estimator is unbiased. This is true whether <span class="math inline">\(N = 10\)</span> or <span class="math inline">\(N = 1,000,000\)</span>.</p>
+<p>The proof of unbiasedness holds for any <span class="math inline">\(N &gt; 1\)</span> with <span class="math inline">\(1 &lt; N_t &lt; N\)</span>.</p>
+<p><strong>Part b.</strong> We would expect <span class="math inline">\(\widehat{\text{ATE}}\)</span> from Experiment B (the larger experiment) to be closer to the true ATE.</p>
+<p>With only 10 individuals, random chance can produce quite unrepresentative groups. Maybe by luck, 4 of the 5 highest-outcome individuals all end up in treatment, producing a large overestimate. With 1000 individuals, such extreme imbalances are far less likely. The law of large numbers ensures that with more individuals, each group’s mean converges toward the population mean of that potential outcome.</p>
+<p>To use a simple analogy: if you flip a coin 10 times, getting 8 heads (80%) wouldn’t be surprising. If you flip it 1000 times, getting 800 heads (80%) would be extremely unlikely. Larger samples are more stable.</p>
+<p><strong>Part c.</strong> The property that captures this difference is the <strong>variance</strong> (or equivalently, the <strong>standard error</strong>) of the estimator.</p>
+<p>Both estimators are unbiased, but the estimator from the larger experiment has smaller variance—its sampling distribution is more concentrated around the true ATE. We often describe this by saying the larger experiment is more <strong>precise</strong> or has more <strong>efficiency</strong>.</p>
+<p>Related concepts include:</p>
+<ul>
+<li>Standard error: The standard deviation of the sampling distribution of <span class="math inline">\(\widehat{\text{ATE}}\)</span></li>
+<li>Efficiency: An estimator with smaller variance is more efficient</li>
+<li>Consistency: As <span class="math inline">\(N \to \infty\)</span>, the estimator converges to the true value (related to variance shrinking to zero)</li>
+</ul>
+</details>
+</section>
+<section id="r-practice" class="level3" data-number="2.10.5">
+<h3 data-number="2.10.5" class="anchored" data-anchor-id="r-practice"><span class="header-section-number">2.10.5</span> R Practice</h3>
+<ol start="14" type="1">
+<li><p><strong>Computing <span class="math inline">\(\widehat{\text{ATE}}\)</span> with <code>mean()</code></strong>: Suppose you have a data frame called <code>experiment</code> with columns <code>treatment</code> (1 = treated, 0 = control) and <code>outcome</code> (a numeric outcome variable).</p>
+<ol type="a">
+<li><p>Write R code to compute <span class="math inline">\(\overline{Y}^{\text{obs}}_{t}\)</span> using logical indexing.</p></li>
+<li><p>Write R code to compute <span class="math inline">\(\overline{Y}^{\text{obs}}_{c}\)</span> using logical indexing.</p></li>
+<li><p>Write R code to compute <span class="math inline">\(\widehat{\text{ATE}}\)</span> as the difference.</p></li>
+</ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> To compute <span class="math inline">\(\overline{Y}^{\text{obs}}_{t}\)</span>, the mean outcome among treated individuals:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>mean_treated <span class="ot">&lt;-</span> <span class="fu">mean</span>(experiment<span class="sc">$</span>outcome[experiment<span class="sc">$</span>treatment <span class="sc">==</span> <span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This works by:</p>
+<ol type="1">
+<li><code>experiment$treatment == 1</code> creates a logical vector that is <code>TRUE</code> for treated individuals</li>
+<li><code>experiment$outcome[...]</code> subsets the outcome variable to only those rows</li>
+<li><code>mean(...)</code> computes the average of the subsetted outcomes</li>
+</ol>
+<p><strong>Part b.</strong> To compute <span class="math inline">\(\overline{Y}^{\text{obs}}_{c}\)</span>, the mean outcome among control individuals:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mean_control <span class="ot">&lt;-</span> <span class="fu">mean</span>(experiment<span class="sc">$</span>outcome[experiment<span class="sc">$</span>treatment <span class="sc">==</span> <span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The logic is identical, but we select rows where <code>treatment == 0</code>.</p>
+<p><strong>Part c.</strong> To compute <span class="math inline">\(\widehat{\text{ATE}}\)</span> as the difference:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>ate_hat <span class="ot">&lt;-</span> mean_treated <span class="sc">-</span> mean_control</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Or as a single line without intermediate variables:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>ate_hat <span class="ot">&lt;-</span> <span class="fu">mean</span>(experiment<span class="sc">$</span>outcome[experiment<span class="sc">$</span>treatment <span class="sc">==</span> <span class="dv">1</span>]) <span class="sc">-</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>           <span class="fu">mean</span>(experiment<span class="sc">$</span>outcome[experiment<span class="sc">$</span>treatment <span class="sc">==</span> <span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<ol start="15" type="1">
+<li><p><strong>Understanding <code>lm()</code> Output</strong>: A researcher fits the model <code>lm(outcome ~ treatment, data = experiment)</code> and gets the following output:</p>
+<pre><code>(Intercept)    treatment
+      4.200        1.350</code></pre>
+<ol type="a">
+<li><p>What is the mean outcome in the control group?</p></li>
+<li><p>What is <span class="math inline">\(\widehat{\text{ATE}}\)</span>?</p></li>
+<li><p>What is the mean outcome in the treatment group?</p></li>
+</ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> The mean outcome in the control group is <strong>4.200</strong>.</p>
+<p>The intercept represents the predicted outcome when <code>treatment = 0</code>. Since the treatment variable is binary (0 or 1), plugging in 0 gives:</p>
+<p><span class="math display">\[\hat{Y} = 4.200 + 1.350 \times 0 = 4.200\]</span></p>
+<p>This is <span class="math inline">\(\overline{Y}^{\text{obs}}_{c}\)</span>.</p>
+<p><strong>Part b.</strong> The <span class="math inline">\(\widehat{\text{ATE}}\)</span> is <strong>1.350</strong>.</p>
+<p>The coefficient on <code>treatment</code> represents how much the predicted outcome changes when treatment goes from 0 to 1. This is exactly the difference in means:</p>
+<p><span class="math display">\[\widehat{\text{ATE}} = \overline{Y}^{\text{obs}}_{t} - \overline{Y}^{\text{obs}}_{c} = 1.350\]</span></p>
+<p><strong>Part c.</strong> The mean outcome in the treatment group is <strong>5.550</strong>.</p>
+<p>This is the predicted outcome when <code>treatment = 1</code>:</p>
+<p><span class="math display">\[\hat{Y} = 4.200 + 1.350 \times 1 = 5.550\]</span></p>
+<p>This equals <span class="math inline">\(\overline{Y}^{\text{obs}}_{c} + \widehat{\text{ATE}} = 4.200 + 1.350 = 5.550\)</span>.</p>
+<p>We can verify: <span class="math inline">\(\overline{Y}^{\text{obs}}_{t} - \overline{Y}^{\text{obs}}_{c} = 5.550 - 4.200 = 1.350\)</span>, which matches the coefficient.</p>
+</details>
+<ol start="16" type="1">
+<li><strong>Reference Categories</strong>: Explain why we used <code>fct_relevel(desc, "welfare")</code> in the R code for the mock Rasinski data. What would happen if we had not done this? Would the <span class="math inline">\(\widehat{\text{ATE}}\)</span> computed using <code>mean()</code> and <code>lm()</code> still match?</li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>We used <code>fct_relevel(desc, "welfare")</code> to set “welfare” as the <strong>reference category</strong> for the factor variable.</p>
+<p><strong>Why this matters for <code>lm()</code>:</strong></p>
+<p>When <code>lm()</code> encounters a factor variable, it creates dummy (indicator) variables. R uses the first level of the factor as the reference category—the category that gets coded as 0. By default, R orders factor levels alphabetically. Since “assistance to the poor” comes before “welfare” alphabetically, it would be the reference category by default.</p>
+<p>With “assistance to the poor” as reference:</p>
+<ul>
+<li>The intercept would be the mean for “assistance to the poor” (the treatment group)</li>
+<li>The coefficient would be the change when moving to “welfare” (the control group)</li>
+<li>The coefficient would be <span class="math inline">\(\overline{Y}^{\text{obs}}_{c} - \overline{Y}^{\text{obs}}_{t}\)</span>, which is the <em>negative</em> of our usual definition</li>
+</ul>
+<p>By using <code>fct_relevel(desc, "welfare")</code>, we make “welfare” the reference:</p>
+<ul>
+<li>The intercept is the mean for “welfare” (control group)</li>
+<li>The coefficient is the change when moving to “assistance to the poor” (treatment)</li>
+<li>The coefficient equals <span class="math inline">\(\overline{Y}^{\text{obs}}_{t} - \overline{Y}^{\text{obs}}_{c}\)</span>, matching our definition</li>
+</ul>
+<p><strong>Would <code>mean()</code> and <code>lm()</code> still match?</strong></p>
+<p>The magnitudes would still match, but the signs might differ depending on how we set up the calculation:</p>
+<ul>
+<li>If we compute <code>mean()</code> as treatment minus control and <code>lm()</code> uses the alphabetical default, the coefficient would have the <em>opposite sign</em> of our <code>mean()</code> calculation</li>
+<li>The numerical values would still be correct in absolute value</li>
+</ul>
+<p>In practice, for the two approaches to give the same number (not just the same magnitude), we need to ensure the reference category in <code>lm()</code> matches which group we subtract in the <code>mean()</code> calculation.</p>
+</details>
+<ol start="17" type="1">
+<li><strong>Connecting <code>mean()</code> and <code>lm()</code></strong>: In your own words, explain why regressing the outcome on a binary treatment indicator produces a coefficient that equals the difference in means. What role does the intercept play in this relationship?</li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>When we regress outcome on a binary treatment indicator, OLS (ordinary least squares) finds the coefficients that minimize the sum of squared residuals—the differences between observed outcomes and predicted outcomes.</p>
+<p><strong>The key insight:</strong></p>
+<p>For a binary predictor, the predictions can only take two values:</p>
+<ul>
+<li>When <span class="math inline">\(D_i = 0\)</span>: <span class="math inline">\(\hat{Y}_i = \hat{\beta}_0\)</span></li>
+<li>When <span class="math inline">\(D_i = 1\)</span>: <span class="math inline">\(\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1\)</span></li>
+</ul>
+<p>OLS chooses <span class="math inline">\(\hat{\beta}_0\)</span> and <span class="math inline">\(\hat{\beta}_1\)</span> to make predicted values as close as possible to observed values. The best prediction for a group of observations is their mean (this minimizes squared errors within that group).</p>
+<p>Therefore:</p>
+<ul>
+<li><span class="math inline">\(\hat{\beta}_0\)</span> is set to the mean outcome in the control group, because that’s the best prediction for control individuals</li>
+<li><span class="math inline">\(\hat{\beta}_0 + \hat{\beta}_1\)</span> is set to the mean outcome in the treatment group, because that’s the best prediction for treated individuals</li>
+</ul>
+<p><strong>Solving for the coefficient:</strong></p>
+<p><span class="math display">\[\hat{\beta}_0 = \overline{Y}^{\text{obs}}_{c}\]</span> <span class="math display">\[\hat{\beta}_0 + \hat{\beta}_1 = \overline{Y}^{\text{obs}}_{t}\]</span></p>
+<p>Subtracting the first equation from the second:</p>
+<p><span class="math display">\[\hat{\beta}_1 = \overline{Y}^{\text{obs}}_{t} - \overline{Y}^{\text{obs}}_{c}\]</span></p>
+<p>This is exactly the difference in means—our <span class="math inline">\(\widehat{\text{ATE}}\)</span>.</p>
+<p><strong>The role of the intercept:</strong></p>
+<p>The intercept (<span class="math inline">\(\hat{\beta}_0\)</span>) serves as the “baseline”—the predicted outcome for the reference group (control). It anchors the predictions. The coefficient (<span class="math inline">\(\hat{\beta}_1\)</span>) then represents how much we add or subtract from this baseline when an individual is treated. This additive structure means the coefficient must equal the difference between the two group means.</p>
+</details>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../ch/ate.html" class="pagination-link" aria-label="ATE">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">ATE</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
