@@ -17,6 +17,11 @@ book:
     - index.qmd
     - ch/ate.qmd
     - ch/ate-hat.qmd
+    - ch/var.qmd
+    #- ch/var-est.qmd
+    - part: "Appendices"
+      chapters:
+        - appendices/var-proof.qmd
 
 bibliography: references.bib
 
@@ -25,7 +30,7 @@ format:
     theme:
       - journal
       - brand
-    css: _styles.css  
+    css: _styles.css
     citation-location: margin
     reference-location: margin
 

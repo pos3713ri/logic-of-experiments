@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3&nbsp; The Variance of \widehat{\text{ATE}} – The Logic of Experiments</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../appendices/var-proof.html" rel="next">
+<link href="../ch/ate-hat.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-2db5a64a0f9238d29502e24e892d8c52.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../_styles.css">
+</head>
+
+<body class="nav-sidebar floating slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ch/var.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The Variance of <span class="math inline">\(\widehat{\text{ATE}}\)</span></span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">The Logic of Experiments</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch/ate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">ATE</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch/ate-hat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Estimating the ATE</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch/var.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The Variance of <span class="math inline">\(\widehat{\text{ATE}}\)</span></span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/var-proof.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Appendix A: Proof of the Variance Formula</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#the-variance-operator-textvarcdot" id="toc-the-variance-operator-textvarcdot" class="nav-link active" data-scroll-target="#the-variance-operator-textvarcdot"><span class="header-section-number">3.1</span> The Variance Operator <span class="math inline">\(\text{Var}[\cdot]\)</span></a></li>
+  <li><a href="#the-main-theorem" id="toc-the-main-theorem" class="nav-link" data-scroll-target="#the-main-theorem"><span class="header-section-number">3.2</span> The Main Theorem</a>
+  <ul class="collapse">
+  <li><a href="#understanding-the-variance-formula" id="toc-understanding-the-variance-formula" class="nav-link" data-scroll-target="#understanding-the-variance-formula"><span class="header-section-number">3.2.1</span> Understanding the Variance Formula</a></li>
+  <li><a href="#the-special-case-of-constant-treatment-effects" id="toc-the-special-case-of-constant-treatment-effects" class="nav-link" data-scroll-target="#the-special-case-of-constant-treatment-effects"><span class="header-section-number">3.2.2</span> The Special Case of Constant Treatment Effects</a></li>
+  </ul></li>
+  <li><a href="#intuition" id="toc-intuition" class="nav-link" data-scroll-target="#intuition"><span class="header-section-number">3.3</span> Intuition</a>
+  <ul class="collapse">
+  <li><a href="#two-obvious-sources-of-variation" id="toc-two-obvious-sources-of-variation" class="nav-link" data-scroll-target="#two-obvious-sources-of-variation"><span class="header-section-number">3.3.1</span> Two Obvious Sources of Variation</a></li>
+  <li><a href="#why-the-third-term-matters" id="toc-why-the-third-term-matters" class="nav-link" data-scroll-target="#why-the-third-term-matters"><span class="header-section-number">3.3.2</span> Why the Third Term Matters</a></li>
+  </ul></li>
+  <li><a href="#numerical-illustration" id="toc-numerical-illustration" class="nav-link" data-scroll-target="#numerical-illustration"><span class="header-section-number">3.4</span> Numerical Illustration</a>
+  <ul class="collapse">
+  <li><a href="#step-1-create-the-potential-outcomes" id="toc-step-1-create-the-potential-outcomes" class="nav-link" data-scroll-target="#step-1-create-the-potential-outcomes"><span class="header-section-number">3.4.1</span> Step 1: Create the Potential Outcomes</a></li>
+  <li><a href="#step-2-compute-the-true-ate-and-variance-components" id="toc-step-2-compute-the-true-ate-and-variance-components" class="nav-link" data-scroll-target="#step-2-compute-the-true-ate-and-variance-components"><span class="header-section-number">3.4.2</span> Step 2: Compute the True ATE and Variance Components</a></li>
+  <li><a href="#step-3-compute-the-theoretical-variance" id="toc-step-3-compute-the-theoretical-variance" class="nav-link" data-scroll-target="#step-3-compute-the-theoretical-variance"><span class="header-section-number">3.4.3</span> Step 3: Compute the Theoretical Variance</a></li>
+  <li><a href="#step-4-simulate-many-randomizations" id="toc-step-4-simulate-many-randomizations" class="nav-link" data-scroll-target="#step-4-simulate-many-randomizations"><span class="header-section-number">3.4.4</span> Step 4: Simulate Many Randomizations</a></li>
+  <li><a href="#step-5-compare-theoretical-and-simulated-variance" id="toc-step-5-compare-theoretical-and-simulated-variance" class="nav-link" data-scroll-target="#step-5-compare-theoretical-and-simulated-variance"><span class="header-section-number">3.4.5</span> Step 5: Compare Theoretical and Simulated Variance</a></li>
+  </ul></li>
+  <li><a href="#key-terms" id="toc-key-terms" class="nav-link" data-scroll-target="#key-terms"><span class="header-section-number">3.5</span> Key Terms</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">3.6</span> Exercises</a>
+  <ul class="collapse">
+  <li><a href="#conceptual-understanding" id="toc-conceptual-understanding" class="nav-link" data-scroll-target="#conceptual-understanding"><span class="header-section-number">3.6.1</span> Conceptual Understanding</a></li>
+  <li><a href="#computational-practice" id="toc-computational-practice" class="nav-link" data-scroll-target="#computational-practice"><span class="header-section-number">3.6.2</span> Computational Practice</a></li>
+  <li><a href="#application-to-rasinskis-experiment" id="toc-application-to-rasinskis-experiment" class="nav-link" data-scroll-target="#application-to-rasinskis-experiment"><span class="header-section-number">3.6.3</span> Application to Rasinski’s Experiment</a></li>
+  <li><a href="#critical-thinking" id="toc-critical-thinking" class="nav-link" data-scroll-target="#critical-thinking"><span class="header-section-number">3.6.4</span> Critical Thinking</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The Variance of <span class="math inline">\(\widehat{\text{ATE}}\)</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>In the previous chapter, we showed that the difference-in-means estimator <span class="math inline">\(\widehat{\text{ATE}} = \overline{Y}^{\text{obs}}_{t} - \overline{Y}^{\text{obs}}_{c}\)</span> is an unbiased estimator of the average treatment effect. Unbiasedness tells us that our estimator gets it right <em>on average</em> in the long-run.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Remember that “long run” means that we are repeatedly re-randomizing many, many times. Each randomization gives us a different collection of observed outcomes (i.e., one per respondent).</p></div></div><p>But unbiasedness is only part of the story. An estimator can be unbiased yet still produce estimates that are far from the true value in any given experiment. What we need to understand is <em>how much</em> our estimate varies from one randomization to another. We want our procedure to produce an estimate that is <em>right on average</em> AND <em>usually close</em> to the ATE. The <strong>variance</strong> of the estimator tells us <em>how close</em> the estimate falls to the ATE in the long run.</p>
+<p>In this chapter, we state the variance formula for <span class="math inline">\(\widehat{\text{ATE}}\)</span> under completely randomized experiments and explain what it means. The proof, which involves very tedious algebra (but <em>only</em> tedious algebra), appears in Appendix A.</p>
+<p>Understanding this variance formula will help us understand the noisiness of our estimates and think carefully about how to design experiments.</p>
+<section id="the-variance-operator-textvarcdot" class="level2 page-columns page-full" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="the-variance-operator-textvarcdot"><span class="header-section-number">3.1</span> The Variance Operator <span class="math inline">\(\text{Var}[\cdot]\)</span></h2>
+<p>The variance operator <span class="math inline">\(\text{Var}[\cdot]\)</span> is a way of measuring “how spread out” a random variable is around its average value. The variance of a random variable measures its typical <em>squared</em> distance from the mean.</p>
+<p><strong>Rule: Variance is defined as the expected squared deviation from the mean.</strong></p>
+<p>If <span class="math inline">\(X\)</span> is random, then</p>
+<p><span class="math display">\[
+\text{Var}(X) = E\left[(X - E[X])^2\right].
+\]</span></p>
+<p>Notice the logic. We’re just computing the long-run average of <span class="math inline">\((X - E[X])^2\)</span>, which is the <em>squared</em> difference between <span class="math inline">\(X\)</span> and its own long-run average.</p>
+
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
+<p>It also turns out that</p>
+<p><span class="math display">\[
+\text{Var}(X) = E\left[X^2 \right] - \left(E[X]\right)^2,
+\]</span></p>
+<p>which can be a little easier to work with, but is somewhat harder to conceptualize.</p>
+</div></div><p>A simulation helps illustrate. Suppose we sample once from the collection -2, -1, 0, 1, 2. This single sample is random—it might be -2, -1, 0, 1, or 2 with equal probability.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a collection of numbers (that we'll sample from below)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>collection <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># take one sample from the collection</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(collection, <span class="at">size =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+</div>
+<p><em>What’s the variance of this sample?</em></p>
+<p>We can take 100,000 samples <code>x</code> from this collection and compute <code>mean((x - mean(x))^2)</code>. In this case, 100,000 is <em>long enough</em> approximate the “long run.”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># take and store many (approximating long-run) samples from the collection (with replacement)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">sample</span>(collection, <span class="at">size =</span> <span class="dv">100000</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># compute variance in several steps </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>avg <span class="ot">&lt;-</span> <span class="fu">mean</span>(x)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>sq_dev <span class="ot">&lt;-</span> (x <span class="sc">-</span> avg)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(sq_dev)  <span class="co"># avg squared deviation</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.992016</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute in one step</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((x <span class="sc">-</span> <span class="fu">mean</span>(x))<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.992016</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+We don’t need a computer to find this, though!
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>We don’t need a computer to approximate the variance; we can use our knowledge of expected values to find it exactly. We can compute it most easily using the definition <span class="math inline">\(\text{Var}(X) = E\left[X^2 \right] - \left(E[X]\right)^2\)</span> mentioned in the aside above.</p>
+<p>Let <span class="math inline">\(X\)</span> be a random variable that takes values in <span class="math inline">\(\{-2,-1,0,1,2\}\)</span> with equal probability <span class="math inline">\(1/5\)</span>. This is what the code is doing when it samples <code>x</code>.</p>
+<p>We need to compute both <span class="math inline">\(E\left[X^2 \right]\)</span> and <span class="math inline">\(\left(E[X]\right)^2\)</span>. Let’s start with the second, because it’s easier.</p>
+<p>First compute <span class="math inline">\(E[X]\)</span>. This is easy.</p>
+<p><span class="math display">\[
+E[X] = \frac{1}{5}(-2 - 1 + 0 + 1 + 2) = 0.
+\]</span></p>
+<p>Since <span class="math inline">\(E[X] = 0\)</span>, <span class="math inline">\(E[X]^2 = 0\)</span> and the second term on the right-hand side drops out.</p>
+<p>Next, compute <span class="math inline">\(E\left[X^2 \right]\)</span>.</p>
+<p><span class="math display">\[
+E[X^2]
+= \frac{1}{5}\left( (-2)^2 + (-1)^2 + 0^2 + 1^2 + 2^2 \right)
+= \frac{10}{5}
+= 2.
+\]</span></p>
+<p>Therefore, <span class="math display">\[
+\text{Var}(X) = E\left[X^2 \right] - \left(E[X]\right)^2 = 2 - 0 = 2.
+\]</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="the-main-theorem" class="level2 page-columns page-full" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="the-main-theorem"><span class="header-section-number">3.2</span> The Main Theorem</h2>
+<p>Now that we understand how variance measures the spread of a random variable, we can state the variance of our estimator <span class="math inline">\(\widehat{\text{ATE}}\)</span>. Remember, because we are choosing to <em>randomly</em> assign participants to treatment and control, our procedure produces a <em>random</em> estimate.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Theorem: Variance of the Difference-in-Means Estimator
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Under completely randomized assignment, the variance of <span class="math inline">\(\widehat{\text{ATE}}\)</span> is</p>
+<p><span class="math display">\[
+\text{Var}_D \left(\widehat{\text{ATE}}\right) = \frac{S_t^2}{N_t} + \frac{S_c^2}{N_c} - \frac{S_{tc}^2}{N},
+\]</span></p>
+<p>where <span class="math inline">\(S_t^2\)</span> is defined as</p>
+<p><span class="math display">\[
+S_t^2 = \frac{1}{N - 1} \sum_{i=1}^{N} (Y_i(1) - \overline{Y}(1))^2 \quad \text{and},
+\]</span></p>
+<p><span class="math inline">\(S_c^2\)</span> is defined as</p>
+<p><span class="math display">\[
+S_c^2 = \frac{1}{N - 1} \sum_{i=1}^{N} (Y_i(0) - \overline{Y}(0))^2,
+\]</span></p>
+<p>and <span class="math inline">\(S_{tc}^2\)</span> is defined as</p>
+<p><span class="math display">\[
+S_{tc}^2 = \frac{1}{N - 1} \sum_{i=1}^{N} \left(\tau_i - \text{ATE}\right)^2.
+\]</span></p>
+
+</div>
+</div>
+<div class="no-row-height column-margin column-container"><div class="margin-aside callout-2-contents callout-collapse collapse callout-margin-content">
+<p>Somewhat (or perhaps <em>very</em>) confusingly, <span class="math inline">\(S_t^2\)</span>, <span class="math inline">\(S_c^2\)</span>, and <span class="math inline">\(S_{tc}^2\)</span> are also called “variance.” We use the variance <span class="math inline">\(\text{Var}(X) = E\left[(X - E[X])^2\right]\)</span> to describe the spread of random numbers (like noisy estimates) and the variances <span class="math inline">\(S_t^2\)</span>, <span class="math inline">\(S_c^2\)</span>, and <span class="math inline">\(S_{tc}^2\)</span> to describe the spread of a fixed collection of numbers (like potential outcomes under treatment). Statisticians sometimes call the latter <strong>finite population variances</strong> to distinguish them.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+On the <span class="math inline">\(1/(N-1)\)</span> Convention
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>You may notice that <span class="math inline">\(S_t^2\)</span>, <span class="math inline">\(S_c^2\)</span>, and <span class="math inline">\(S_{tc}^2\)</span> are defined with <span class="math inline">\(1/(N-1)\)</span> in the denominator rather than <span class="math inline">\(1/N\)</span>. This follows the convention used by Cochran (1977) and later adopted by Imbens and Rubin (2015).</p>
+<p>This choice differs from the arguably more “elementary” variance</p>
+<p><span class="math display">\[
+V_N = \frac{1}{N} \sum_{i=1}^N (x_i - \bar{x})^2,
+\]</span></p>
+<p>which is often introduced in introductory texts and interpretable as the average squared deviation from the mean.</p>
+<p>The <span class="math inline">\(1/(N-1)\)</span> convention has a key advantage: it aligns the definition of the population variance with the sample variance estimator, so that sample variances are unbiased estimators of population variances. This simplifies the algebra of variance estimation in randomized experiments. While readers accustomed to the <span class="math inline">\(1/N\)</span> normalization may find this convention unfamiliar, for design-based inference—where randomness arises from treatment assignment—the <span class="math inline">\(1/(N-1)\)</span> normalization offers conceptual and algebraic advantages.</p>
+</div>
+</div>
+</div>
+</div></div><p>Let’s unpack this formula.</p>
+<section id="understanding-the-variance-formula" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="understanding-the-variance-formula"><span class="header-section-number">3.2.1</span> Understanding the Variance Formula</h3>
+<p>Before interpreting the formula, let’s understand what each quantity measures. <span class="math inline">\(S_t^2\)</span> measures how spread out the potential outcomes under treatment are across individuals. <span class="math inline">\(S_c^2\)</span> measures the same for control. And <span class="math inline">\(S_{tc}^2\)</span> measures how spread out the individual treatment effects are—that is, how much the treatment effect varies from person to person.</p>
+<p>The variance formula has three terms.</p>
+<p><strong>Term 1: <span class="math inline">\(\frac{S_t^2}{N_t}\)</span></strong> This is the variance of the treatment group mean. If potential outcomes under treatment vary a lot across individuals (large <span class="math inline">\(S_t^2\)</span>), our estimate of the treatment group mean will be more variable. Dividing by <span class="math inline">\(N_t\)</span> reflects that larger treatment groups give us more precise estimates.</p>
+<p><strong>Term 2: <span class="math inline">\(\frac{S_c^2}{N_c}\)</span></strong> Similarly, this is the variance of the control group mean. More variability in control potential outcomes or fewer control individuals increases variance.</p>
+<p><strong>Term 3: <span class="math inline">\(-\frac{S_{tc}^2}{N}\)</span></strong> This is the interesting (and difficult) term. Importantly, it <em>shrinks</em> the variance. The quantity <span class="math inline">\(S_{tc}^2\)</span> measures how variable the individual treatment effects are. If everyone has the same treatment effect (constant effects), then <span class="math inline">\(S_{tc}^2 = 0\)</span> and this term disappears.</p>
+</section>
+<section id="the-special-case-of-constant-treatment-effects" class="level3 page-columns page-full" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="the-special-case-of-constant-treatment-effects"><span class="header-section-number">3.2.2</span> The Special Case of Constant Treatment Effects</h3>
+<p>When treatment effects are constant (every individual experiences the same effect <span class="math inline">\(\tau\)</span>), we have <span class="math inline">\(\tau_i = \tau\)</span> for all <span class="math inline">\(i\)</span>. In this case, something remarkable happens: <span class="math inline">\(S_{tc}^2 = 0\)</span>. In this case, the variance simplifies to</p>
+<p><span class="math display">\[
+\text{Var}_D \left(\widehat{\text{ATE}}\right) = \frac{S_t^2}{N_t} + \frac{S_c^2}{N_c}.
+\]</span></p>
+
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
+<p>Moreover, when effects are constant, <span class="math inline">\(S_t^2 = S_c^2 = S^2\)</span> (the variance of potential outcomes is the same under treatment and control), so</p>
+<p><span class="math display">\[
+\text{Var}_D \left(\widehat{\text{ATE}}\right) = S^2 \left(\frac{1}{N_t} + \frac{1}{N_c}\right).
+\]</span></p>
+<p>This is the familiar variance formula you might have seen in an introductory statistics course for the difference of two means.</p>
+</div></div></section>
+</section>
+<section id="intuition" class="level2 page-columns page-full" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="intuition"><span class="header-section-number">3.3</span> Intuition</h2>
+<p>The algebraic proof of the variance formula is long, but the intuition of the result is straightforward.</p>
+<p>The variance of <span class="math inline">\(\widehat{\text{ATE}}\)</span> reflects how much our estimate would change if we repeated the <em>same</em> experiment many times.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Remember all that changes across these many repetitions is <em>who is assigned to treatment and control</em>. Every randomization produces a slightly different treatment group and a slightly different control group, and therefore a slightly different estimate of the ATE.</p></div></div><section id="two-obvious-sources-of-variation" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="two-obvious-sources-of-variation"><span class="header-section-number">3.3.1</span> Two Obvious Sources of Variation</h3>
+<p>There are two obvious reasons why <span class="math inline">\(\widehat{\text{ATE}}\)</span> varies across repetitions.</p>
+<ol type="1">
+<li><p><strong>Randomness in the treatment-group mean.</strong> Different randomizations place different individuals into the treatment group. Since individuals have different potential outcomes under treatment, the treatment-group mean <span class="math inline">\(\overline{Y}^{\text{obs}}_t\)</span> will not be exactly the same every time. The amount it varies depends on the spread of the potential outcomes (<span class="math inline">\(S_t^2\)</span>) and the number of individuals assigned to treatment (<span class="math inline">\(N_t\)</span>). This produces the term <span class="math inline">\(\frac{S_t^2}{N_t}\)</span>.</p></li>
+<li><p><strong>Randomness in the control-group mean.</strong> The same logic applies to the control group. Different randomizations create different control groups, so the control-group mean also varies in the same way as the treatment group.</p></li>
+</ol>
+<p>If these two sources of variation were unrelated, the variance of <span class="math inline">\(\widehat{\text{ATE}}\)</span> would simply be the sum of these two terms. However, they are not unrelated. They are related in a subtle, interesting, and important way.</p>
+</section>
+<section id="why-the-third-term-matters" class="level3 page-columns page-full" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="why-the-third-term-matters"><span class="header-section-number">3.3.2</span> Why the Third Term Matters</h3>
+<p>Each individual can be in <strong>only one</strong> group. If someone is assigned to treatment, they cannot be assigned to control. This creates a link between the two group means.</p>
+<p>To understand why this matters, focus on an individual with an <strong>unusually large treatment effect</strong>. For this person, the difference between their treated outcome <span class="math inline">\(Y_i(1)\)</span> and their control outcome <span class="math inline">\(Y_i(0)\)</span> is especially large.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;To make this even more concrete, we might imagine this person’s potential outcomes are among the largest under treatment and among the smallest under control.</p></div></div><p>Now consider what happens when this individual is assigned to the treatment group. Their treated outcome <span class="math inline">\(Y_i(1)\)</span> is relatively high, so their presence pushes the treatment-group mean upward.</p>
+<p>But assigning them to treatment also means they are <em>missing</em> from the control group. Because their treatment effect is unusually large, their control outcome <span class="math inline">\(Y_i(0)\)</span> is relatively low. Had they been assigned to control, their low outcome would have pulled the mean of the control-group downward. Since they are not in the control group, that downward pull doesn’t happen.</p>
+<p>As a result, two things happen.</p>
+<ul>
+<li>The treatment-group mean is <strong>higher than usual</strong>, because this individual is included.</li>
+<li>The control-group mean is <strong>also higher than usual</strong>, because this individual is missing.</li>
+</ul>
+<p>These effects partially cancel out when we take the difference between the treatment and control group.</p>
+<p>This stabilizing effect comes specifically from individuals with <strong>unusually large (or unusually small) treatment effects</strong>. Individuals with “typical” treatment effects do not create this cancelling dynamic. The more treatment effects vary across people, the stronger this stabilizing effect becomes. That variation is exactly what <span class="math inline">\(S_{tc}^2\)</span> measures.</p>
+<p>This is why the variance formula includes the negative term <span class="math inline">\(-\frac{S_{tc}^2}{N}\)</span>.</p>
+<p>And then, if treatment effects are constant, then no one has unusually large (or unusually small) treatment effect and the cancelling dynamic is absent.</p>
+</section>
+</section>
+<section id="numerical-illustration" class="level2 page-columns page-full" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="numerical-illustration"><span class="header-section-number">3.4</span> Numerical Illustration</h2>
+<p>Let’s verify the variance formula with a simulation. We’ll create a small population of 10 individuals with known potential outcomes, compute the theoretical variance using the formula, and then simulate 1,000 randomizations to see if the simulated variance matches.</p>
+<section id="step-1-create-the-potential-outcomes" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="step-1-create-the-potential-outcomes"><span class="header-section-number">3.4.1</span> Step 1: Create the Potential Outcomes</h3>
+<p>First, we create potential outcomes for 10 individuals. We’ll use the same hypothetical data from the previous chapters.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># create potential outcomes for 10 individuals</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>po <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Y0 =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">4</span>),  <span class="co"># potential outcome under control</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Y1 =</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">4</span>, <span class="dv">8</span>, <span class="dv">7</span>, <span class="dv">3</span>, <span class="dv">6</span>)  <span class="co"># potential outcome under treatment</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># compute individual treatment effects</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>po <span class="ot">&lt;-</span> po <span class="sc">|&gt;</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">tau =</span> Y1 <span class="sc">-</span> Y0)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co"># view the data</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>po</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 4
+       i    Y0    Y1   tau
+   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1     1     4     7     3
+ 2     2     6     5    -1
+ 3     3     5     5     0
+ 4     4     3     9     6
+ 5     5     7    10     3
+ 6     6     5     4    -1
+ 7     7     4     8     4
+ 8     8     6     7     1
+ 9     9     5     3    -2
+10    10     4     6     2</code></pre>
+</div>
+</div>
+</section>
+<section id="step-2-compute-the-true-ate-and-variance-components" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="step-2-compute-the-true-ate-and-variance-components"><span class="header-section-number">3.4.2</span> Step 2: Compute the True ATE and Variance Components</h3>
+<p>Now we compute the quantities we need for the variance formula.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sample size and group sizes</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>N_t <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>N_c <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># compute means of potential outcomes</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>Y1_bar <span class="ot">&lt;-</span> <span class="fu">mean</span>(po<span class="sc">$</span>Y1)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>Y0_bar <span class="ot">&lt;-</span> <span class="fu">mean</span>(po<span class="sc">$</span>Y0)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># compute the true ATE</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>ATE <span class="ot">&lt;-</span> Y1_bar <span class="sc">-</span> Y0_bar</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>ATE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.5</code></pre>
+</div>
+</div>
+<p>Next, we compute <span class="math inline">\(S_t^2\)</span>, <span class="math inline">\(S_c^2\)</span>, and <span class="math inline">\(S_{tc}^2\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># variance of Y(1)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>S_t_sq <span class="ot">&lt;-</span> <span class="fu">var</span>(po<span class="sc">$</span>Y1)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>S_t_sq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4.933333</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># variance of Y(0)</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>S_c_sq <span class="ot">&lt;-</span> <span class="fu">var</span>(po<span class="sc">$</span>Y0)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>S_c_sq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.433333</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># variance of treatment effects</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>S_tc_sq <span class="ot">&lt;-</span> <span class="fu">var</span>(po<span class="sc">$</span>tau)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>S_tc_sq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6.5</code></pre>
+</div>
+</div>
+</section>
+<section id="step-3-compute-the-theoretical-variance" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="step-3-compute-the-theoretical-variance"><span class="header-section-number">3.4.3</span> Step 3: Compute the Theoretical Variance</h3>
+<p>Using the variance formula, we compute the theoretical variance of <span class="math inline">\(\widehat{\text{ATE}}\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># theoretical variance using the formula</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>theoretical_var <span class="ot">&lt;-</span> S_t_sq <span class="sc">/</span> N_t <span class="sc">+</span> S_c_sq <span class="sc">/</span> N_c <span class="sc">-</span> S_tc_sq <span class="sc">/</span> N</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>theoretical_var</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6233333</code></pre>
+</div>
+</div>
+</section>
+<section id="step-4-simulate-many-randomizations" class="level3" data-number="3.4.4">
+<h3 data-number="3.4.4" class="anchored" data-anchor-id="step-4-simulate-many-randomizations"><span class="header-section-number">3.4.4</span> Step 4: Simulate Many Randomizations</h3>
+<p>Now we simulate 1,000 randomizations and compute <span class="math inline">\(\widehat{\text{ATE}}\)</span> for each one. We use a simple for-loop to make the logic clear.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set seed for reproducibility</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># number of simulations</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>n_sims <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># create a vector to store the estimates</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>ate_estimates <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_sims)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co"># run the simulation</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (sim <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_sims) {</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a> <span class="co"># randomly assign 5 individuals to treatment</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  treated <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>N, <span class="at">size =</span> N_t, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># compute observed outcomes</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  Y_obs_t <span class="ot">&lt;-</span> po<span class="sc">$</span>Y1[treated]       <span class="co"># treated individuals show Y(1)</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  Y_obs_c <span class="ot">&lt;-</span> po<span class="sc">$</span>Y0[<span class="sc">-</span>treated]      <span class="co"># control individuals show Y(0)</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># compute the estimate for this randomization</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>  ate_estimates[sim] <span class="ot">&lt;-</span> <span class="fu">mean</span>(Y_obs_t) <span class="sc">-</span> <span class="fu">mean</span>(Y_obs_c)</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="step-5-compare-theoretical-and-simulated-variance" class="level3 page-columns page-full" data-number="3.4.5">
+<h3 data-number="3.4.5" class="anchored" data-anchor-id="step-5-compare-theoretical-and-simulated-variance"><span class="header-section-number">3.4.5</span> Step 5: Compare Theoretical and Simulated Variance</h3>
+<p>Finally, we compare the theoretical variance to the variance of our simulated estimates.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># simulated variance</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>simulated_var <span class="ot">&lt;-</span> <span class="fu">var</span>(ate_estimates)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># compare the two</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">theoretical_variance =</span> theoretical_var,</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">simulated_variance =</span> simulated_var,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  theoretical_variance simulated_variance
+                 &lt;dbl&gt;              &lt;dbl&gt;
+1                0.623              0.552</code></pre>
+</div>
+</div>
+<p>The simulated variance is very close to the theoretical variance. The small difference is due to simulation error. With more simulations, the two values would converge.</p>
+
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
+<p>We can also visualize the distribution of estimates.</p>
+<div class="cell" data-fit-asp="0.67">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">tibble</span>(<span class="at">ate =</span> ate_estimates), <span class="fu">aes</span>(<span class="at">x =</span> ate)) <span class="sc">+</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.25</span>, <span class="at">fill =</span> <span class="st">"grey80"</span>) <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> ATE) <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="var_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Distribution of <span class="math inline">\(\widehat{\text{ATE}}\)</span> across 1,000 randomizations. The vertical dashed line shows the true ATE. The histogram shows that the estimates are centered around the true ATE (confirming unbiasedness) and spread out according to the variance we computed. Some randomizations produce estimates close to the true ATE, while others are further away. But on average, we get it right.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div></div></section>
+</section>
+<section id="key-terms" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="key-terms"><span class="header-section-number">3.5</span> Key Terms</h2>
+<ul>
+<li>Variance operator (<span class="math inline">\(\text{Var}[\cdot]\)</span>)</li>
+<li>Variance of an estimator</li>
+<li>Finite population variance</li>
+<li>Variance of potential outcomes (<span class="math inline">\(S_t^2\)</span>, <span class="math inline">\(S_c^2\)</span>)</li>
+<li>Variance of treatment effects (<span class="math inline">\(S_{tc}^2\)</span>)</li>
+<li>Heterogeneous treatment effects</li>
+</ul>
+</section>
+<section id="exercises" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="exercises"><span class="header-section-number">3.6</span> Exercises</h2>
+<section id="conceptual-understanding" class="level3" data-number="3.6.1">
+<h3 data-number="3.6.1" class="anchored" data-anchor-id="conceptual-understanding"><span class="header-section-number">3.6.1</span> Conceptual Understanding</h3>
+<ol type="1">
+<li><strong>Variance vs.&nbsp;Bias.</strong> In your own words, explain the difference between an estimator being unbiased and an estimator having low variance. Can an estimator be unbiased but still give poor estimates in practice?</li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Unbiasedness</strong> means that the estimator is correct <em>on average</em>. If we could repeat the experiment many times with different randomizations, the average of all our estimates would equal the true ATE. But any single estimate might be far from the truth.</p>
+<p><strong>Low variance</strong> means that the estimates are tightly clustered around their average value. Different randomizations produce similar estimates.</p>
+<p>Yes, an estimator can be unbiased but still give poor estimates in practice. Imagine an estimator that, across many randomizations, produces estimates of <span class="math inline">\(-100\)</span> half the time and <span class="math inline">\(+102\)</span> half the time (when the true ATE is 1). This estimator is unbiased (the average is 1), but any single estimate is wildly wrong.</p>
+<p>In practice, we want both properties: an estimator that is unbiased <em>and</em> has low variance. The ideal estimator hits close to the target on average (unbiased) and doesn’t scatter too much around that average (low variance).</p>
+</details>
+<ol start="2" type="1">
+<li><strong>The Three Terms.</strong> The variance formula has three terms: <span class="math inline">\(S_t^2/N_t\)</span>, <span class="math inline">\(S_c^2/N_c\)</span>, and <span class="math inline">\(-S_{tc}^2/N\)</span>. Explain in plain language what each term represents and why the third term is negative.</li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>First term (<span class="math inline">\(S_t^2/N_t\)</span>)</strong>: This represents the uncertainty in estimating the average treatment group outcome. <span class="math inline">\(S_t^2\)</span> measures how much the potential outcomes under treatment vary across individuals. When there’s more variation, the particular individuals who happen to land in the treatment group could have very different outcomes from another randomization. Dividing by <span class="math inline">\(N_t\)</span> reflects that larger treatment groups give more stable estimates.</p>
+<p><strong>Second term (<span class="math inline">\(S_c^2/N_c\)</span>)</strong>: Similarly, this represents the uncertainty in estimating the average control group outcome. It depends on how variable the control potential outcomes are and how many individuals are in the control group.</p>
+<p><strong>Third term (<span class="math inline">\(-S_{tc}^2/N\)</span>)</strong>: This term <em>reduces</em> the variance, which seems surprising at first. Here <span class="math inline">\(S_{tc}^2\)</span> is the variance of the individual-level treatment effects <span class="math inline">\(\tau_i = Y_i(1) - Y_i(0)\)</span>. It measures how much treatment effects vary across individuals. Formally,</p>
+<p><span class="math display">\[
+S_{tc}^2 = \frac{1}{N-1} \sum_{i=1}^{N} (\tau_i - \text{ATE})^2.
+\]</span></p>
+<p>The third term captures the fact that treatment and control group assignments are not independent. They are negatively correlated. If one individual goes to treatment, another must go to control.</p>
+<p>The negative sign arises because treatment and control assignments are linked. When a high-treatment-effect individual is assigned to treatment, they are necessarily <em>missing</em> from control. This creates a stabilizing dynamic: the treatment mean goes up (because they have high <span class="math inline">\(Y(1)\)</span>), but so does the control mean (because their low <span class="math inline">\(Y(0)\)</span> is absent). The difference between the means is more stable than either mean alone. This stabilizing effect is stronger when treatment effects are more heterogeneous (larger <span class="math inline">\(S_{tc}^2\)</span>). When treatment effects are constant (<span class="math inline">\(S_{tc}^2 = 0\)</span>), this stabilizing effect disappears entirely.</p>
+</details>
+<ol start="3" type="1">
+<li><strong>Constant Treatment Effects.</strong> Suppose the treatment effect is the same for every individual (<span class="math inline">\(\tau_i = \tau\)</span> for all <span class="math inline">\(i\)</span>). Explain what happens to <span class="math inline">\(S_{tc}^2\)</span>. What does the variance formula simplify to?</li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>If the treatment effect is constant, meaning <span class="math inline">\(\tau_i = \tau\)</span> for all individuals, then every individual’s treatment effect equals the ATE. The deviations <span class="math inline">\(\tau_i - \text{ATE}\)</span> are all zero, so</p>
+<p><span class="math display">\[
+S_{tc}^2 = \frac{1}{N-1} \sum_{i=1}^{N} (\tau_i - \text{ATE})^2 = \frac{1}{N-1} \sum_{i=1}^{N} 0 = 0.
+\]</span></p>
+<p>The variance formula simplifies to</p>
+<p><span class="math display">\[
+\text{Var}_D(\widehat{\text{ATE}}) = \frac{S_t^2}{N_t} + \frac{S_c^2}{N_c}.
+\]</span></p>
+<p>Moreover, when treatment effects are constant, the variance of potential outcomes under treatment equals the variance under control: <span class="math inline">\(S_t^2 = S_c^2 = S^2\)</span>. This is because <span class="math inline">\(Y_i(1) = Y_i(0) + \tau\)</span>, so both sets of potential outcomes are just shifted versions of each other, with the same spread.</p>
+<p>In this case, the formula further simplifies to</p>
+<p><span class="math display">\[
+\text{Var}_D(\widehat{\text{ATE}}) = S^2 \left(\frac{1}{N_t} + \frac{1}{N_c}\right),
+\]</span></p>
+<p>which is the familiar formula for the variance of a difference of two sample means.</p>
+</details>
+</section>
+<section id="computational-practice" class="level3" data-number="3.6.2">
+<h3 data-number="3.6.2" class="anchored" data-anchor-id="computational-practice"><span class="header-section-number">3.6.2</span> Computational Practice</h3>
+<ol start="4" type="1">
+<li><p><strong>Computing <span class="math inline">\(S_t^2\)</span>, <span class="math inline">\(S_c^2\)</span>, and <span class="math inline">\(S_{tc}^2\)</span>.</strong> Consider the following potential outcomes for 4 individuals.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Individual</th>
+<th><span class="math inline">\(Y_i(0)\)</span></th>
+<th><span class="math inline">\(Y_i(1)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>2</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>4</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>5</td>
+<td>7</td>
+</tr>
+</tbody>
+</table>
+<ol type="a">
+<li><p>Compute <span class="math inline">\(\overline{Y}(0)\)</span> and <span class="math inline">\(\overline{Y}(1)\)</span>.</p></li>
+<li><p>Compute <span class="math inline">\(S_c^2\)</span>, the variance of <span class="math inline">\(Y_i(0)\)</span>.</p></li>
+<li><p>Compute <span class="math inline">\(S_t^2\)</span>, the variance of <span class="math inline">\(Y_i(1)\)</span>.</p></li>
+<li><p>Compute the individual treatment effects <span class="math inline">\(\tau_i\)</span> and the ATE.</p></li>
+<li><p>Compute <span class="math inline">\(S_{tc}^2\)</span>, the variance of the treatment effects.</p></li>
+</ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> The means of the potential outcomes are</p>
+<p><span class="math display">\[
+\begin{align}
+\overline{Y}(0) &amp;= \frac{1}{4}(2 + 4 + 3 + 5) = \frac{14}{4} = 3.5 \\
+\overline{Y}(1) &amp;= \frac{1}{4}(5 + 6 + 4 + 7) = \frac{22}{4} = 5.5
+\end{align}
+\]</span></p>
+<p><strong>Part b.</strong> To compute <span class="math inline">\(S_c^2\)</span>, we first find the squared deviations from the mean <span class="math inline">\(\overline{Y}(0) = 3.5\)</span>.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 12%">
+<col style="width: 33%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Individual</th>
+<th><span class="math inline">\(Y_i(0)\)</span></th>
+<th><span class="math inline">\(Y_i(0) - \overline{Y}(0)\)</span></th>
+<th><span class="math inline">\((Y_i(0) - \overline{Y}(0))^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>2</td>
+<td><span class="math inline">\(-1.5\)</span></td>
+<td><span class="math inline">\(2.25\)</span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>4</td>
+<td><span class="math inline">\(0.5\)</span></td>
+<td><span class="math inline">\(0.25\)</span></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>3</td>
+<td><span class="math inline">\(-0.5\)</span></td>
+<td><span class="math inline">\(0.25\)</span></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>5</td>
+<td><span class="math inline">\(1.5\)</span></td>
+<td><span class="math inline">\(2.25\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><span class="math display">\[
+S_c^2 = \frac{1}{4-1}(2.25 + 0.25 + 0.25 + 2.25) = \frac{5}{3} \approx 1.67
+\]</span></p>
+<p><strong>Part c.</strong> Similarly, for <span class="math inline">\(S_t^2\)</span> using <span class="math inline">\(\overline{Y}(1) = 5.5\)</span>.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 12%">
+<col style="width: 33%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Individual</th>
+<th><span class="math inline">\(Y_i(1)\)</span></th>
+<th><span class="math inline">\(Y_i(1) - \overline{Y}(1)\)</span></th>
+<th><span class="math inline">\((Y_i(1) - \overline{Y}(1))^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>5</td>
+<td><span class="math inline">\(-0.5\)</span></td>
+<td><span class="math inline">\(0.25\)</span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>6</td>
+<td><span class="math inline">\(0.5\)</span></td>
+<td><span class="math inline">\(0.25\)</span></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>4</td>
+<td><span class="math inline">\(-1.5\)</span></td>
+<td><span class="math inline">\(2.25\)</span></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>7</td>
+<td><span class="math inline">\(1.5\)</span></td>
+<td><span class="math inline">\(2.25\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><span class="math display">\[
+S_t^2 = \frac{1}{3}(0.25 + 0.25 + 2.25 + 2.25) = \frac{5}{3} \approx 1.67
+\]</span></p>
+<p><strong>Part d.</strong> The individual treatment effects are shown in the following table.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Individual</th>
+<th><span class="math inline">\(Y_i(0)\)</span></th>
+<th><span class="math inline">\(Y_i(1)\)</span></th>
+<th><span class="math inline">\(\tau_i = Y_i(1) - Y_i(0)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>2</td>
+<td>5</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>4</td>
+<td>6</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>3</td>
+<td>4</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>5</td>
+<td>7</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p><span class="math display">\[
+\text{ATE} = \frac{1}{4}(3 + 2 + 1 + 2) = \frac{8}{4} = 2
+\]</span></p>
+<p><strong>Part e.</strong> For <span class="math inline">\(S_{tc}^2\)</span>, we compute deviations from <span class="math inline">\(\text{ATE} = 2\)</span>.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 13%">
+<col style="width: 31%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Individual</th>
+<th><span class="math inline">\(\tau_i\)</span></th>
+<th><span class="math inline">\(\tau_i - \text{ATE}\)</span></th>
+<th><span class="math inline">\((\tau_i - \text{ATE})^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>1</td>
+<td><span class="math inline">\(-1\)</span></td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><span class="math display">\[
+S_{tc}^2 = \frac{1}{3}(1 + 0 + 1 + 0) = \frac{2}{3} \approx 0.67
+\]</span></p>
+</details>
+<ol start="5" type="1">
+<li><p><strong>Computing the Variance.</strong> Using the values you computed in Exercise 4, suppose we conduct an experiment with <span class="math inline">\(N_t = 2\)</span> and <span class="math inline">\(N_c = 2\)</span>.</p>
+<ol type="a">
+<li><p>Compute the variance of <span class="math inline">\(\widehat{\text{ATE}}\)</span> using the formula.</p></li>
+<li><p>In Exercise 7 of the previous chapter, you computed <span class="math inline">\(\widehat{\text{ATE}}\)</span> for all 6 possible randomizations. Verify that the variance of those 6 estimates matches your answer to part (a).</p></li>
+</ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> Using the variance formula with <span class="math inline">\(N = 4\)</span>, <span class="math inline">\(N_t = 2\)</span>, <span class="math inline">\(N_c = 2\)</span>, we have</p>
+<p><span class="math display">\[
+\begin{align}
+\text{Var}_D(\widehat{\text{ATE}}) &amp;= \frac{S_t^2}{N_t} + \frac{S_c^2}{N_c} - \frac{S_{tc}^2}{N} \\
+&amp;= \frac{5/3}{2} + \frac{5/3}{2} - \frac{2/3}{4} \\
+&amp;= \frac{5}{6} + \frac{5}{6} - \frac{2}{12} \\
+&amp;= \frac{10}{6} - \frac{1}{6} \\
+&amp;= \frac{9}{6} = 1.5
+\end{align}
+\]</span></p>
+<p><strong>Part b.</strong> From Exercise 7 of the previous chapter, the 6 possible estimates were as follows.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Randomization</th>
+<th><span class="math inline">\(\widehat{\text{ATE}}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1, 2 treated</td>
+<td>1.5</td>
+</tr>
+<tr class="even">
+<td>1, 3 treated</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>1, 4 treated</td>
+<td>2.5</td>
+</tr>
+<tr class="even">
+<td>2, 3 treated</td>
+<td>1.5</td>
+</tr>
+<tr class="odd">
+<td>2, 4 treated</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>3, 4 treated</td>
+<td>2.5</td>
+</tr>
+</tbody>
+</table>
+<p>The mean of these estimates is <span class="math inline">\(\frac{1.5 + 0 + 2.5 + 1.5 + 4 + 2.5}{6} = \frac{12}{6} = 2\)</span>, which equals the true ATE (confirming unbiasedness).</p>
+<p>The variance is</p>
+<p><span class="math display">\[
+\begin{align}
+\text{Var} &amp;= \frac{1}{6}\left[(1.5-2)^2 + (0-2)^2 + (2.5-2)^2 + (1.5-2)^2 + (4-2)^2 + (2.5-2)^2\right] \\
+&amp;= \frac{1}{6}\left[0.25 + 4 + 0.25 + 0.25 + 4 + 0.25\right] \\
+&amp;= \frac{9}{6} = 1.5
+\end{align}
+\]</span></p>
+<p>This matches our answer from part (a).</p>
+</details>
+</section>
+<section id="application-to-rasinskis-experiment" class="level3" data-number="3.6.3">
+<h3 data-number="3.6.3" class="anchored" data-anchor-id="application-to-rasinskis-experiment"><span class="header-section-number">3.6.3</span> Application to Rasinski’s Experiment</h3>
+<ol start="6" type="1">
+<li><p><strong>Variance in the Rasinski Context.</strong> Return to the hypothetical Rasinski data from the previous chapters.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Respondent</th>
+<th><span class="math inline">\(Y_i(0)\)</span></th>
+<th><span class="math inline">\(Y_i(1)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>3</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>3</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>2</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>3</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>2</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>3</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>2</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>3</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>3</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<ol type="a">
+<li><p>Use R to compute <span class="math inline">\(S_c^2\)</span>, <span class="math inline">\(S_t^2\)</span>, and <span class="math inline">\(S_{tc}^2\)</span> for this population.</p></li>
+<li><p>Suppose we run an experiment with <span class="math inline">\(N_t = 5\)</span> and <span class="math inline">\(N_c = 5\)</span>. Use R to compute the variance of <span class="math inline">\(\widehat{\text{ATE}}\)</span>.</p></li>
+<li><p>How would the variance change if we instead used <span class="math inline">\(N_t = 3\)</span> and <span class="math inline">\(N_c = 7\)</span>?</p></li>
+</ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> First, we create the data and compute the variance components using R.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create the potential outcomes</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>Y0 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>Y1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>tau <span class="ot">&lt;-</span> Y1 <span class="sc">-</span> Y0</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co"># compute the variances</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>S_c_sq <span class="ot">&lt;-</span> <span class="fu">var</span>(Y0)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>S_t_sq <span class="ot">&lt;-</span> <span class="fu">var</span>(Y1)</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>S_tc_sq <span class="ot">&lt;-</span> <span class="fu">var</span>(tau)</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="co"># display the results</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>S_c_sq   <span class="co"># approximately 0.267</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>S_t_sq   <span class="co"># approximately 0.233</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>S_tc_sq  <span class="co"># approximately 0.456</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Part b.</strong> With <span class="math inline">\(N = 10\)</span>, <span class="math inline">\(N_t = 5\)</span>, <span class="math inline">\(N_c = 5\)</span>, we compute the variance using the formula.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>N_t <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>N_c <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># compute variance using the formula</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>variance_balanced <span class="ot">&lt;-</span> S_t_sq <span class="sc">/</span> N_t <span class="sc">+</span> S_c_sq <span class="sc">/</span> N_c <span class="sc">-</span> S_tc_sq <span class="sc">/</span> N</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>variance_balanced  <span class="co"># approximately 0.0544</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Part c.</strong> With <span class="math inline">\(N_t = 3\)</span> and <span class="math inline">\(N_c = 7\)</span>, we have</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>N_t <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>N_c <span class="ot">&lt;-</span> <span class="dv">7</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># compute variance with unbalanced design</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>variance_unbalanced <span class="ot">&lt;-</span> S_t_sq <span class="sc">/</span> N_t <span class="sc">+</span> S_c_sq <span class="sc">/</span> N_c <span class="sc">-</span> S_tc_sq <span class="sc">/</span> N</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>variance_unbalanced  <span class="co"># approximately 0.0703</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The variance is higher (0.0703 vs.&nbsp;0.0544) with the unbalanced design. Balanced designs (<span class="math inline">\(N_t = N_c\)</span>) generally minimize variance for a given total sample size.</p>
+</details>
+<ol start="7" type="1">
+<li><p><strong>Interpreting the Variance.</strong> Based on your calculations in Exercise 6, answer the following.</p>
+<ol type="a">
+<li><p>The standard deviation is the square root of the variance. The variance with the balanced design (<span class="math inline">\(N_t = N_c = 5\)</span>) is about 0.055. What is the standard deviation of <span class="math inline">\(\widehat{\text{ATE}}\)</span>?</p></li>
+<li><p>If the true ATE is <span class="math inline">\(-1.3\)</span>, and the standard deviation is about 0.24, roughly what range of estimates would you expect to see across different randomizations? (Hint: remember the normal table.)</p></li>
+<li><p>How does this compare to the estimates we computed in the previous chapter (one randomization gave <span class="math inline">\(-1.8\)</span>, another gave <span class="math inline">\(-0.8\)</span>)?</p></li>
+</ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> The standard deviation is the square root of the variance.</p>
+<p><span class="math display">\[
+\text{SD}(\widehat{\text{ATE}}) = \sqrt{0.0544} \approx 0.233
+\]</span></p>
+<p><strong>Part b.</strong> A common rule of thumb is that most estimates (roughly 95%) fall within about 2 standard deviations of the mean. With the true ATE of <span class="math inline">\(-1.3\)</span> and standard deviation of about 0.24, we can compute the following.</p>
+<ul>
+<li>Most estimates would fall between <span class="math inline">\(-1.3 - 2(0.24) = -1.78\)</span> and <span class="math inline">\(-1.3 + 2(0.24) = -0.82\)</span></li>
+<li>The typical estimate would be within about 0.24 units of the true value</li>
+</ul>
+<p><strong>Part c.</strong> In the previous chapter, we computed the following estimates.</p>
+<ul>
+<li>One randomization: <span class="math inline">\(\widehat{\text{ATE}} = -1.8\)</span> (deviation of <span class="math inline">\(-0.5\)</span> from truth)</li>
+<li>Another randomization: <span class="math inline">\(\widehat{\text{ATE}} = -0.8\)</span> (deviation of <span class="math inline">\(+0.5\)</span> from truth)</li>
+</ul>
+<p>Both of these estimates fall within 2 standard deviations of the true ATE, which is exactly what we’d expect. The estimate of <span class="math inline">\(-1.8\)</span> is about 2 standard deviations below the true value, and <span class="math inline">\(-0.8\)</span> is about 2 standard deviations above. These are at the edges of the typical range but not implausible.</p>
+<p>This illustrates how the variance formula helps us understand and calibrate our expectations for how far estimates might be from the truth.</p>
+</details>
+</section>
+<section id="critical-thinking" class="level3" data-number="3.6.4">
+<h3 data-number="3.6.4" class="anchored" data-anchor-id="critical-thinking"><span class="header-section-number">3.6.4</span> Critical Thinking</h3>
+<ol start="8" type="1">
+<li><strong>The Negative Term.</strong> A colleague claims, “More heterogeneous treatment effects lead to higher variance in our estimates.” Based on the variance formula, explain why this claim needs to be stated more carefully.</li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>The colleague’s claim is not quite right. The variance formula is given by</p>
+<p><span class="math display">\[
+\text{Var}_D(\widehat{\text{ATE}}) = \frac{S_t^2}{N_t} + \frac{S_c^2}{N_c} - \frac{S_{tc}^2}{N}.
+\]</span></p>
+<p>More heterogeneous treatment effects means larger <span class="math inline">\(S_{tc}^2\)</span>. But <span class="math inline">\(S_{tc}^2\)</span> enters with a <em>negative</em> sign! So increasing <span class="math inline">\(S_{tc}^2\)</span> actually <em>decreases</em> the variance, all else equal.</p>
+<p>However, “all else equal” is the key caveat. Treatment effect heterogeneity is linked to the variances of potential outcomes. Specifically, we have</p>
+<p><span class="math display">\[
+S_{tc}^2 = S_t^2 + S_c^2 - 2\text{Cov}(Y_i(1), Y_i(0))
+\]</span></p>
+<p>If treatment effects become more heterogeneous because the potential outcomes become more variable (larger <span class="math inline">\(S_t^2\)</span> and <span class="math inline">\(S_c^2\)</span>), the first two terms of the variance formula increase, which could outweigh the reduction from the third term.</p>
+<p>A more careful statement would be the following. “Holding the variances of potential outcomes fixed, more heterogeneous treatment effects lead to <em>lower</em> variance in our estimates, because of the negative term in the variance formula. But if treatment effect heterogeneity arises because potential outcomes themselves are more variable, the net effect on variance is ambiguous.”</p>
+</details>
+<ol start="9" type="1">
+<li><p><strong>Design Choices.</strong> Suppose you are designing an experiment with a fixed budget that allows you to include <span class="math inline">\(N = 100\)</span> individuals. You can choose how many to assign to treatment (<span class="math inline">\(N_t\)</span>) and how many to control (<span class="math inline">\(N_c = 100 - N_t\)</span>).</p>
+<ol type="a">
+<li><p>If you knew that <span class="math inline">\(S_t^2 = S_c^2\)</span>, what allocation would minimize variance?</p></li>
+<li><p>If you knew that <span class="math inline">\(S_t^2 = 4\)</span> and <span class="math inline">\(S_c^2 = 1\)</span>, would you still use the same allocation? Why or why not?</p></li>
+<li><p>In practice, you don’t know <span class="math inline">\(S_t^2\)</span> and <span class="math inline">\(S_c^2\)</span> before running the experiment. What allocation would you recommend, and why?</p></li>
+</ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> If <span class="math inline">\(S_t^2 = S_c^2 = S^2\)</span>, the variance (ignoring the <span class="math inline">\(S_{tc}^2\)</span> term for simplicity) is</p>
+<p><span class="math display">\[
+\text{Var} \approx S^2 \left(\frac{1}{N_t} + \frac{1}{N_c}\right) = S^2 \left(\frac{1}{N_t} + \frac{1}{100 - N_t}\right)
+\]</span></p>
+<p>Taking the derivative with respect to <span class="math inline">\(N_t\)</span> and setting it to zero:</p>
+<p><span class="math display">\[
+\frac{d}{dN_t}\left(\frac{1}{N_t} + \frac{1}{100 - N_t}\right) = -\frac{1}{N_t^2} + \frac{1}{(100-N_t)^2} = 0
+\]</span></p>
+<p>This gives <span class="math inline">\(N_t = 100 - N_t\)</span>, so <span class="math inline">\(N_t = 50\)</span>. A balanced design minimizes variance when variances are equal.</p>
+<p><strong>Part b.</strong> If <span class="math inline">\(S_t^2 = 4\)</span> and <span class="math inline">\(S_c^2 = 1\)</span>, we would want to allocate more individuals to the group with higher variance (treatment). The optimal allocation satisfies:</p>
+<p><span class="math display">\[
+\frac{N_t}{N_c} = \sqrt{\frac{S_t^2}{S_c^2}} = \sqrt{\frac{4}{1}} = 2
+\]</span></p>
+<p>So we’d want <span class="math inline">\(N_t = 2 N_c\)</span>, which with <span class="math inline">\(N = 100\)</span> gives <span class="math inline">\(N_t \approx 67\)</span> and <span class="math inline">\(N_c \approx 33\)</span>.</p>
+<p>The intuition is that we need more observations from the noisier group to get the same precision in estimating that group’s mean.</p>
+<p><strong>Part c.</strong> In practice, I would recommend a balanced design (<span class="math inline">\(N_t = N_c = 50\)</span>) for several reasons.</p>
+<ol type="1">
+<li><p><strong>Robustness.</strong> Without knowing the true variances, a balanced design is a safe choice that performs well across many scenarios.</p></li>
+<li><p><strong>Near-optimal.</strong> Even when variances differ, the balanced design is often close to optimal unless the variance ratio is extreme.</p></li>
+<li><p><strong>Simplicity.</strong> A balanced design is easier to implement and explain.</p></li>
+</ol>
+<p>If there’s strong prior information suggesting very different variances, one could consider an unbalanced design, but for most applications a 50-50 split is a sensible default.</p>
+</details>
+
+
+</section>
+</section>
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../ch/ate-hat.html" class="pagination-link" aria-label="Estimating the ATE">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Estimating the ATE</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../appendices/var-proof.html" class="pagination-link" aria-label="Appendix A: Proof of the Variance Formula">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Appendix A: Proof of the Variance Formula</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
