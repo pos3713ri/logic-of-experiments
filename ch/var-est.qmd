@@ -1,0 +1,1018 @@
+# Estimating the Variance
+
+In the previous chapter, we derived the variance of $\widehat{\text{ATE}}$ under completely randomized experiments. We showed that
+
+$$
+\text{Var}_D \left(\widehat{\text{ATE}}\right) = \frac{S_t^2}{N_t} + \frac{S_c^2}{N_c} - \frac{S_{tc}^2}{N},
+$$
+
+where $S_t^2$ and $S_c^2$ are the variances of the potential outcomes and $S_{tc}^2$ is the variance of the individual treatment effects. Remember, we defined these as
+
+$$
+S_t^2 = \frac{1}{N-1} \sum_{i=1}^{N} [Y_i(1) - \overline{Y}(1)]^2,
+$$
+
+$$
+ S_c^2 = \frac{1}{N-1} \sum_{i=1}^{N} [Y_i(0) - \overline{Y}(0)]^2,
+$$
+
+and
+
+$$
+S_{tc}^2 = \frac{1}{N-1} \sum_{i=1}^{N} (\tau_i - \text{ATE})^2.
+$$
+
+But there's a problem. This formula depends on quantities we cannot observe. 
+
+- We defined $S_t^2$ as the variance of *all* individuals' potential outcomes under treatment, but we only observe $Y_i(1)$ for the treated individuals. 
+- Similarly, we only observe $Y_i(0)$ for the control individuals. 
+- And $S_{tc}^2$ depends on the individual treatment effects $\tau_i = Y_i(1) - Y_i(0)$, which we can never observe for any individual.
+
+To make inferences about the ATE, we need to *estimate* the variance using only the observed data. This chapter addresses that challenge.
+
+## The Problem: We Can't Observe What We Need
+
+Let's be explicit about what we can and cannot observe. Recall our running example with 10 respondents. Here are the full potential outcomes (which only we, as omniscient author and reader, can see).
+
+| Respondent | $Y_i(0)$ | $Y_i(1)$ | $\tau_i$ |
+|------|----------|----------|----------|
+| 1    | 4        | 7        | 3        |
+| 2    | 6        | 5        | -1       |
+| 3    | 5        | 5        | 0        |
+| 4    | 3        | 9        | 6        |
+| 5    | 7        | 10       | 3        |
+| 6    | 5        | 4        | -1       |
+| 7    | 4        | 8        | 4        |
+| 8    | 6        | 7        | 1        |
+| 9    | 5        | 3        | -2       |
+| 10   | 4        | 6        | 2        |
+
+From this complete table, we can compute $S_t^2 \approx 4.93$, $S_c^2 \approx 1.43$, and $S_{tc}^2 = 6.5$. With $N_t = N_c = 5$, the true variance of the estimator is
+
+$$
+\text{Var}_D(\widehat{\text{ATE}}) = \frac{4.93}{5} + \frac{1.43}{5} - \frac{6.5}{10} \approx 0.99 + 0.29 - 0.65 = 0.62.
+$$
+
+But in practice, after running the experiment, we only see the observed outcomes. Suppose respondents 1, 4, 5, 7, and 10 are assigned to treatment. Here's what we actually observe.
+
+| Respondent | $Y_i(0)$ | $Y_i(1)$ | $\tau_i$ | $D_i$ | $Y_i^{\text{obs}}$ |
+|------|----------|----------|----------|-------|---------------------|
+| 1    | <span class="qs">?</span> | 7        | <span class="qs">?</span> | 1     | 7                   |
+| 2    | 6        | <span class="qs">?</span> | <span class="qs">?</span> | 0     | 6                   |
+| 3    | 5        | <span class="qs">?</span> | <span class="qs">?</span> | 0     | 5                   |
+| 4    | <span class="qs">?</span> | 9        | <span class="qs">?</span> | 1     | 9                   |
+| 5    | <span class="qs">?</span> | 10       | <span class="qs">?</span> | 1     | 10                  |
+| 6    | 5        | <span class="qs">?</span> | <span class="qs">?</span> | 0     | 5                   |
+| 7    | <span class="qs">?</span> | 8        | <span class="qs">?</span> | 1     | 8                   |
+| 8    | 6        | <span class="qs">?</span> | <span class="qs">?</span> | 0     | 6                   |
+| 9    | 5        | <span class="qs">?</span> | <span class="qs">?</span> | 0     | 5                   |
+| 10   | <span class="qs">?</span> | 6        | <span class="qs">?</span> | 1     | 6                   |
+
+The question marks represent counterfactual outcomes we cannot observe. We have no way to compute $S_t^2$, $S_c^2$, or $S_{tc}^2$ from this data because we don't observe all the potential outcomes.
+
+## Estimating $S_t^2$ and $S_c^2$
+
+Even though we cannot compute $S_t^2$ exactly, we can *estimate* it using the observed outcomes in the treatment group. Similarly, we can estimate $S_c^2$ using the observed outcomes in the control group.
+
+### The Sample Variance in the Treatment Group
+
+We define the **sample variance in the treatment group** as
+
+$$
+s_t^2 = \frac{1}{N_t - 1} \sum_{i:D_i=1} \left( Y^{\text{obs}}_i - \overline{Y}^{\text{obs}}_t \right)^2.
+$$
+
+This is just the ordinary sample variance formula applied to the observed outcomes of treated individuals.
+
+::: {.callout-note collapse="true"}
+## Understanding This Formula
+
+The formula computes the variance of the observed outcomes among treated individuals. The subscript $i:D_i=1$ means "only sum over individuals with $D_i = 1$" (i.e., the treated individuals).
+
+It's exactly analogous to teh formatula for $S_t^2$, except here we only use the *observed* values in the treatment group.
+
+**Example.** In our experiment, the treated individuals (1, 4, 5, 7, 10) have observed outcomes 7, 9, 10, 8, 6. The treatment group mean is
+
+$$
+\overline{Y}^{\text{obs}}_t = \frac{7 + 9 + 10 + 8 + 6}{5} = \frac{40}{5} = 8.
+$$
+
+The sample variance is
+
+$$
+\begin{align}
+s_t^2 &= \frac{1}{5-1}\left[(7-8)^2 + (9-8)^2 + (10-8)^2 + (8-8)^2 + (6-8)^2\right] \\
+&= \frac{1 + 1 + 4 + 0 + 4}{4} \\
+&= \frac{10}{4} = 2.5.
+\end{align}
+$$
+
+:::
+
+### The Sample Variance in the Control Group
+
+Similarly, we define the **sample variance in the control group** as
+
+$$
+s_c^2 = \frac{1}{N_c - 1} \sum_{i:D_i=0} \left( Y^{\text{obs}}_i - \overline{Y}^{\text{obs}}_c \right)^2.
+$$
+
+::: {.callout-note collapse="true"}
+## Understanding This Formula
+
+This is the same idea, applied to the control group. We compute the variance of the observed outcomes among control individuals.
+
+**Example.** The control individuals (2, 3, 6, 8, 9) have observed outcomes 6, 5, 5, 6, 5. The control group mean is
+
+$$
+\overline{Y}^{\text{obs}}_c = \frac{6 + 5 + 5 + 6 + 5}{5} = \frac{27}{5} = 5.4.
+$$
+
+The sample variance is
+
+$$
+\begin{align}
+s_c^2 &= \frac{1}{4}\left[(6-5.4)^2 + (5-5.4)^2 + (5-5.4)^2 + (6-5.4)^2 + (5-5.4)^2\right] \\
+&= \frac{0.36 + 0.16 + 0.16 + 0.36 + 0.16}{4} \\
+&= \frac{1.2}{4} = 0.3.
+\end{align}
+$$
+
+:::
+
+### Are These Good Estimates?
+
+A natural question is whether $s_t^2$ and $s_c^2$ are good estimates of $S_t^2$ and $S_c^2$. They are! Under random assignment, these variances of the *observed* outcomes equals the variance of *all* the potential outcomes.
+
+::: {.callout-tip}
+## Unbiasedness of Sample Variances
+
+Under completely randomized assignment, we have
+
+$$
+E_D[s_t^2] = S_t^2 \quad \text{and} \quad E_D[s_c^2] = S_c^2.
+$$
+
+That is, on average across all possible randomizations, the variances of the *observed* outcomes equals the variances of *all* the potential outcomes.
+
+The intuition is straightforward. Random assignment ensures that the treated individuals are a representative sample of the full population. So the variance of the observed outcomes among treated individuals should, on average, equal the variance of potential outcomes under treatment for the full population. The same logic applies to the control group.
+
+:::
+
+## The Problem with $S_{tc}^2$
+
+We can estimate $S_t^2$ and $S_c^2$ from observed data. But what about $S_{tc}^2$, the variance of the individual treatment effects?
+
+Here's a **big problem**. Recall that $S_{tc}^2$ is defined as
+
+$$
+S_{tc}^2 = \frac{1}{N-1} \sum_{i=1}^{N} (\tau_i - \text{ATE})^2,
+$$
+
+where $\tau_i = Y_i(1) - Y_i(0)$. This requires knowing *both* potential outcomes for every individual. But we only observe one potential outcome per individual. We can never compute $\tau_i$ for **any** individual, let alone its variance across individuals.
+
+This is a fundamental limitation. The quantity $S_{tc}^2$ is inherently unobservable. **We cannot even *estimate* it from the observed data.**
+
+## Neyman's Variance Estimator
+
+In 1923, Jerzy Neyman proposed a solution to this problem [@Neyman1923]. Rather than trying to estimate $S_{tc}^2$, we simply **drop the third term** from the variance formula. 
+
+::: {.aside}
+Let that sink in: in the last chapter, we took a deep dive into this third term. Now we just drop it?!? How can that be right?
+:::
+
+This gives what we call **Neyman's variance estimator**.
+
+$$
+\widehat{\text{Var}}(\widehat{\text{ATE}}) = \frac{s_t^2}{N_t} + \frac{s_c^2}{N_c}.
+$$
+
+This estimator uses only observable quantities: the sample variances in the treatment and control groups.
+
+::: {.callout-note collapse="true"}
+## Understanding This Estimator
+
+Neyman's variance estimator replaces the population variances $S_t^2$ and $S_c^2$ with their sample counterparts $s_t^2$ and $s_c^2$, and ignores the $-S_{tc}^2/N$ term entirely.
+
+**Example.** Using our earlier calculations where $s_t^2 = 2.5$ and $s_c^2 = 0.3$ with $N_t = N_c = 5$, Neyman's variance estimator is
+
+$$
+\widehat{\text{Var}}(\widehat{\text{ATE}}) = \frac{2.5}{5} + \frac{0.3}{5} = 0.5 + 0.06 = 0.56.
+$$
+
+Recall that the true variance (computed from the full potential outcomes) was 0.62. Our estimate of 0.56 is reasonably close.
+
+:::
+
+But why is it safe to drop this third term? Let's consider three scenarios.
+
+### Case 1: The Sharp Null Hypothesis
+
+Under the **sharp null hypothesis**, the treatment has no effect on any individual. That is, $Y_i(1) = Y_i(0)$ for all $i$, which means $\tau_i = 0$ for all $i$.
+
+If all treatment effects are zero, then the variance of the treatment effects is also zero. We have $S_{tc}^2 = 0$. What happens to the true variance formula? The third term vanishes, and the formula simplifies to
+
+$$
+\text{Var}_D(\widehat{\text{ATE}}) = \frac{S_t^2}{N_t} + \frac{S_c^2}{N_c}.
+$$
+
+But this is exactly what Neyman's estimator estimates! This leads to a nice result: *Under the sharp null, Neyman's estimator is unbiased.*
+
+### Case 2: Constant Treatment Effects
+
+Under **constant treatment effects**, every individual experiences the same treatment effect. That is, $\tau_i = \tau$ for some constant $\tau$ and all individuals $i$.
+
+If treatment effects are constant, then there is no variance in the treatment effects. Every $\tau_i$ equals $\tau$, which equals the ATE. So $S_{tc}^2 = 0$. Once again, the third term vanishes, and the true variance formula simplifies to
+
+$$
+\text{Var}_D(\widehat{\text{ATE}}) = \frac{S_t^2}{N_t} + \frac{S_c^2}{N_c}.
+$$
+
+And we have another nice result: *Under constant treatment effects, Neyman's estimator is unbiased.*
+
+### A Simulation Under Constant Effects
+
+Let's verify this claim with a simulation. We'll create a population where treatment effects are constant, then repeatedly randomize and compute both $\widehat{\text{ATE}}$ and $\widehat{\text{Var}}(\widehat{\text{ATE}})$. If Neyman's variance estimator is unbiased, the long-run average of our variance estimates should equal the true variance.
+
+What does it mean for a variance estimator to be "unbiased"? The idea is subtle. Just as $\widehat{\text{ATE}}$ is unbiased if its long-run average equals the true ATE, the variance estimator $\widehat{\text{Var}}(\widehat{\text{ATE}})$ is unbiased if its long-run average equals the true variance $\text{Var}_D(\widehat{\text{ATE}})$. If we could repeat the experiment many times and compute Neyman's variance estimate each time, the average of all those variance estimates would equal the true variance of the estimator.
+
+```{r}
+# load packages
+library(tidyverse)
+
+# create potential outcomes with CONSTANT treatment effect of 2
+po_data <- tibble(
+  respondent = 1:10,
+  Y0 = c(4, 6, 5, 3, 7, 5, 4, 6, 5, 4),  # control potential outcomes
+  Y1 = Y0 + 2  # treatment potential outcomes (constant effect = 2)
+)
+
+po_data
+```
+
+With constant treatment effects, every $\tau_i = 2$, so the ATE is also 2. We can verify that $S_{tc}^2 = 0$.
+
+```{r}
+# compute the true ATE
+true_ate <- mean(po_data$Y1 - po_data$Y0)
+true_ate
+
+# verify S_tc^2 = 0 (variance of treatment effects)
+tau <- po_data$Y1 - po_data$Y0
+var(tau) 
+```
+
+Now we simulate many randomizations. For each randomization, we compute $\widehat{\text{ATE}}$ and $\widehat{\text{Var}}(\widehat{\text{ATE}})$.
+
+```{r}
+# set seed for reproducibility
+set.seed(1234)
+
+# number of simulations
+n_sims <- 100000
+
+# group sizes
+N_t <- 5
+N_c <- 5
+
+# storage for results
+ate_estimates <- numeric(n_sims)
+var_estimates <- numeric(n_sims)
+
+# run the simulation
+for (i in 1:n_sims) {
+  # randomly assign 5 of 10 respondents to treatment
+  treated <- sample(1:10, size = 5)
+
+  # compute observed outcomes
+  Y_obs <- ifelse(1:10 %in% treated, po_data$Y1, po_data$Y0)
+
+  # compute ATE estimate
+  Y_bar_t <- mean(Y_obs[1:10 %in% treated])
+  Y_bar_c <- mean(Y_obs[!(1:10 %in% treated)])
+  ate_estimates[i] <- Y_bar_t - Y_bar_c
+
+  # compute Neyman's variance estimate
+  s_t_sq <- var(Y_obs[1:10 %in% treated])
+  s_c_sq <- var(Y_obs[!(1:10 %in% treated)])
+  var_estimates[i] <- s_t_sq / N_t + s_c_sq / N_c
+}
+```
+
+Now let's compare our variance estimates to the actual variance of the ATE estimates across simulations.
+
+```{r}
+# compare average of variance estimates to variance of ATE estimates
+mean(var_estimates)  # average of estimated variances
+var(ate_estimates)   # variance of ATE estimates across simulations
+```
+
+The average of our variance estimates (`r round(mean(var_estimates), 3)`) is very close to the actual variance of the ATE estimates (`r round(var(ate_estimates), 3)`). This confirms that under constant treatment effects, Neyman's variance estimator is unbiased. In the long run, our variance estimates correctly capture how much $\widehat{\text{ATE}}$ varies across randomizations.
+
+### Case 3: Non-Constant Treatment Effects
+
+What if treatment effects are neither zero nor constant? What if they vary across individuals, as they almost certainly do in practice?
+
+This is where things get interesting. Recall the true variance formula
+
+$$
+\text{Var}_D(\widehat{\text{ATE}}) = \frac{S_t^2}{N_t} + \frac{S_c^2}{N_c} - \frac{S_{tc}^2}{N}.
+$$
+
+When treatment effects vary, $S_{tc}^2 > 0$. Critically, the third term is *always negative*. It *shrinks* the variance. So what happens when Neyman's estimator drops this term?
+
+The estimator becomes too large. It overestimates the true variance.
+
+More formally, since $S_{tc}^2 \geq 0$, we have
+
+$$
+\frac{S_t^2}{N_t} + \frac{S_c^2}{N_c} \geq \frac{S_t^2}{N_t} + \frac{S_c^2}{N_c} - \frac{S_{tc}^2}{N} = \text{Var}_D(\widehat{\text{ATE}}).
+$$
+
+And since $E_D[s_t^2] = S_t^2$ and $E_D[s_c^2] = S_c^2$, the expected value of Neyman's estimator is
+
+$$
+E_D\left[\widehat{\text{Var}}(\widehat{\text{ATE}})\right] = \frac{S_t^2}{N_t} + \frac{S_c^2}{N_c} \geq \text{Var}_D(\widehat{\text{ATE}}).
+$$
+
+Here is the surprising result. We might have worried that dropping an unobservable term would cause serious problems. Instead, it makes our variance estimate *conservative*. We err on the side of overestimating uncertainty rather than underestimating it.
+
+In practice, having a conservative variance estimator is often acceptable. If we use an overestimated variance to construct confidence intervals or conduct hypothesis tests, our inferences will be conservative.
+
+- Confidence intervals will be wider than necessary, so they will cover the true ATE *at least as often as advertised* (95% *or more*).
+- Hypothesis tests will reject the null hypothesis less often than they "should," so the actual Type I error rate will be *at most* the nominal level (5% or less).
+
+### A Simulation Under Non-Constant Effects
+
+Let's verify this with a simulation, using the same structure as before. This time, we'll create a population where treatment effects vary across individuals, so $S_{tc}^2 > 0$.
+
+```{r}
+# create potential outcomes with NON-CONSTANT treatment effects
+po_data <- tibble(
+  respondent = 1:10,
+  Y0 = c(4, 6, 5, 3, 7, 5, 4, 6, 5, 4),  # control potential outcomes (same as before)
+  Y1 = c(7, 5, 5, 9, 10, 4, 8, 7, 3, 6)   # treatment potential outcomes (varying effects)
+)
+
+# compute individual treatment effects
+po_data <- po_data |>
+  mutate(tau = Y1 - Y0)
+
+po_data
+```
+
+::: {.aside}
+
+```{r}
+#| fig-height: 2
+#| fig-width: 3
+
+cor(po_data$Y0, po_data$Y1)
+
+ggplot(po_data, aes(x = Y0, y = Y1)) +
+  geom_point()
+```
+
+:::
+
+
+Notice that the treatment effects vary across individuals, ranging from `r min(po_data$tau)` to `r max(po_data$tau)`.
+
+```{r}
+# compute S_tc^2 (variance of treatment effects)
+S_tc_sq <- var(po_data$tau)
+S_tc_sq
+```
+
+With $S_{tc}^2 = `r round(S_tc_sq, 2)`$, the third term in the variance formula is no longer zero. Now we simulate many randomizations, just as before.
+
+```{r}
+# set seed for reproducibility
+set.seed(1234)
+
+# number of simulations
+n_sims <- 100000
+
+# group sizes
+N_t <- 5
+N_c <- 5
+
+# storage for results
+ate_estimates <- numeric(n_sims)
+var_estimates <- numeric(n_sims)
+
+# run the simulation
+for (i in 1:n_sims) {
+  # randomly assign 5 of 10 respondents to treatment
+  treated <- sample(1:10, size = 5)
+
+  # compute observed outcomes
+  Y_obs <- ifelse(1:10 %in% treated, po_data$Y1, po_data$Y0)
+
+  # compute ATE estimate
+  Y_bar_t <- mean(Y_obs[1:10 %in% treated])
+  Y_bar_c <- mean(Y_obs[!(1:10 %in% treated)])
+  ate_estimates[i] <- Y_bar_t - Y_bar_c
+
+  # compute Neyman's variance estimate
+  s_t_sq <- var(Y_obs[1:10 %in% treated])
+  s_c_sq <- var(Y_obs[!(1:10 %in% treated)])
+  var_estimates[i] <- s_t_sq / N_t + s_c_sq / N_c
+}
+```
+
+Now let's compare our variance estimates to the actual variance of the ATE estimates across simulations.
+
+```{r}
+# compare average of variance estimates to variance of ATE estimates
+mean(var_estimates)  # average of estimated variances
+var(ate_estimates)   # variance of ATE estimates across simulations
+```
+
+The average of our variance estimates (`r round(mean(var_estimates), 3)`) is larger than the actual variance of the ATE estimates (`r round(var(ate_estimates), 3)`). This confirms that under non-constant treatment effects, Neyman's variance estimator is conservative. It systematically *overestimates* how much $\widehat{\text{ATE}}$ varies across randomizations.
+
+::: {.callout-note}
+## The Overestimate Doesn't Shrink with Sample Size
+
+You might hope that the conservative bias becomes negligible as the sample size grows. Unfortunately, the *percent* overestimate does not diminish with $N$.
+
+To see why, suppose we split the sample evenly so that $N_t = N_c = N/2$. Then the true variance is
+
+$$
+\text{Var}_D(\widehat{\text{ATE}}) = \frac{2S_t^2}{N} + \frac{2S_c^2}{N} - \frac{S_{tc}^2}{N} = \frac{2S_t^2 + 2S_c^2 - S_{tc}^2}{N},
+$$
+
+and Neyman's estimator targets
+
+$$
+\frac{2S_t^2 + 2S_c^2}{N}.
+$$
+
+The percent overestimate is
+
+$$
+\frac{S_{tc}^2 / N}{(2S_t^2 + 2S_c^2 - S_{tc}^2)/N} = \frac{S_{tc}^2}{2S_t^2 + 2S_c^2 - S_{tc}^2}.
+$$
+
+Notice that $N$ cancels out entirely. The percent overestimate depends only on the population variances $S_t^2$, $S_c^2$, and $S_{tc}^2$, not on the sample size. If treatment effects are heterogeneous, Neyman's variance estimator will overestimate by the same percentage whether you have 10 respondents or 1,000.
+
+:::
+
+## Computing the Variance Estimate in R
+
+Let's compute Neyman's variance estimator using R. We'll use the same hypothetical experiment from above.
+
+```{r}
+# load packages
+library(tidyverse)
+
+# create the observed data
+obs_data <- tibble(
+  respondent = 1:10,
+  D = c(1, 0, 0, 1, 1, 0, 1, 0, 0, 1),  # treatment assignment
+  Y_obs = c(7, 6, 5, 9, 10, 5, 8, 6, 5, 6)  # observed outcomes
+)
+
+obs_data
+```
+
+### Computing the Sample Variances
+
+We compute the sample variances in each group.
+
+```{r}
+# sample variance in treatment group
+s_t_sq <- obs_data |>
+  filter(D == 1) |>
+  pull(Y_obs) |>
+  var()
+
+s_t_sq
+
+# sample variance in control group
+s_c_sq <- obs_data |>
+  filter(D == 0) |>
+  pull(Y_obs) |>
+  var()
+
+s_c_sq
+```
+
+### Computing Neyman's Variance Estimator
+
+Now we can compute Neyman's variance estimator.
+
+```{r}
+# group sizes
+N_t <- sum(obs_data$D)
+N_c <- sum(1 - obs_data$D)
+
+# Neyman's variance estimator
+var_hat <- s_t_sq / N_t + s_c_sq / N_c
+var_hat
+
+# standard error is a common conversion (square root of variance)
+se_hat <- sqrt(var_hat)
+se_hat
+```
+
+The estimated variance is `r round(var_hat, 3)` and the estimated standard error is `r round(se_hat, 3)`.
+
+### Using OLS with HC2 Standard Errors
+
+We can also compute Neyman's variance estimator in R using `lm()`. As we showed in an earlier chapter, the difference-in-means estimator equals the coefficient from a regression of $Y_i^{\text{obs}}$ on $D_i$. But the default standard errors from `lm()` (as reported by `summary()` for example) assume homoscedasticity, which is not appropriate here.
+
+@SamiiAronow2012 show that **HC2 robust standard errors** are exactly equivalent to Neyman's variance estimator for completely randomized experiments. The HC2 estimator is one of several "heteroscedasticity-consistent" variance estimators developed in econometrics. Samii and Aronow's result means we can obtain the Neyman standard error directly from regression output by requesting HC2 standard errors.
+
+```{r}
+# load the sandwich package for robust standard errors
+library(sandwich)
+library(lmtest)
+
+# fit the regression
+fit <- lm(Y_obs ~ D, data = obs_data)
+
+# print estimates and HC2 SEs
+var_hat_hc2 <- vcovHC(fit, type = "HC2")
+coeftest(fit, vcov. = var_hat_hc2)
+
+# extract variance estimates using HC2
+diag(var_hat_hc2)[2] # variance
+sqrt(diag(var_hat_hc2)[2]) # SE
+```
+
+The coefficient on `D` is `r round(coef(fit)[2], 1)`, which is our $\widehat{\text{ATE}}$. The HC2 standard error is `r round(sqrt(diag(vcovHC(fit, type = "HC2")))[2], 3)`, which matches the Neyman standard error we computed by hand (`r round(se_hat, 3)`).
+
+## @clifford2021
+
+As part of an important paper we'll return to later, @clifford2021 conducted a question-wording experiment similar to the Rasinski experiment we've been using as an example.
+
+Their Study 1 replicates the canonical welfare question-wording experiment examining whether public support for government spending differs when the policy is described as **"welfare"** versus **"assistance to the poor"**. 
+
+Respondents were randomly assigned to one of two question wordings: "Generally speaking, do you think we're spending too much, too little or about the right amount on...""
+
+- "assistance to the poor?" (control)^[In the original Rasinski example, we treated "welfare" as the control.]
+- "welfare?" (treatment)
+
+Both versions of the question used the same three-point response scale below.
+
+- Too much  (1)
+- About the right amount  (2)
+- Too little  (3 $\rightarrow$ higher = more liberal response)
+
+The R code below loads their data. Their experiment has other things going on, but the R code below wrangles it into the simple treatment-control portion that is analogous to our running Rasinski example (except they have over 400 real respondents!).^[We'll return to the other portions later.]
+
+```{r}
+# load the study 1 data directly from Harvard Dataverse
+# https://dataverse.harvard.edu/file.xhtml?fileId=4459780&version=1.0
+
+library(tidyverse)
+
+# read tab-delimited file from the Dataverse API
+study1 <- read_tsv("https://dataverse.harvard.edu/api/access/datafile/4459780") |>
+  filter(design == 0) |>
+  select(response = postdv, 
+         treatment_indicator = treat) |>  # 1 if "welfare"; 0 if "assistance..."
+  glimpse()
+
+# fit regression
+fit <- lm(response ~ treatment_indicator, data = study1)
+var_hat <- vcovHC(fit, type = "HC2")
+coeftest(fit, vcov. = var_hat)
+```
+
+## Key Terms
+
+- Sample variance ($s_t^2$, $s_c^2$)
+- Neyman's variance estimator
+- Conservative variance estimation
+- Relationship between `vcovHC(fit, type = "HC2")` and Neyman's variance estimation
+- Standard error (and relationship to variance)
+
+## Exercises
+
+### Conceptual Understanding
+
+1. **Observable vs. Unobservable.** Explain why we can estimate $S_t^2$ and $S_c^2$ from observed data, but we cannot estimate $S_{tc}^2$. What fundamental feature of experiments makes $S_{tc}^2$ unobservable?
+
+<details>
+<summary>Solution</summary>
+
+We can estimate $S_t^2$ because random assignment ensures that the treated individuals are a representative sample of the full population. The observed outcomes $Y_i^{\text{obs}}$ for treated individuals are a random sample of all the potential outcomes $Y_i(1)$. So the sample variance of observed outcomes in the treatment group is an unbiased estimate of the population variance of potential outcomes under treatment. The same logic applies to $S_c^2$ and the control group.
+
+We cannot estimate $S_{tc}^2$ because it measures the variance of $\tau_i = Y_i(1) - Y_i(0)$, the individual-level treatment effect. To compute $\tau_i$ for any individual, we would need to observe *both* $Y_i(1)$ and $Y_i(0)$. But the fundamental problem of causal inference is that we can only observe one potential outcome per individual. Since we can never observe $\tau_i$ for any individual, we cannot compute its variance across individuals.
+
+This is a fundamental limitation of experiments. We can learn about average effects, but the individual-level effects remain hidden.
+
+</details>
+
+2. **Why Conservative?** Explain in plain language why Neyman's variance estimator is conservative (i.e., why it tends to overestimate the true variance). Under what conditions is it exactly unbiased?
+
+<details>
+<summary>Solution</summary>
+
+The true variance of $\widehat{\text{ATE}}$ is
+
+$$
+\text{Var}_D(\widehat{\text{ATE}}) = \frac{S_t^2}{N_t} + \frac{S_c^2}{N_c} - \frac{S_{tc}^2}{N}.
+$$
+
+Neyman's variance estimator only uses the first two terms. It ignores the third term, $-S_{tc}^2/N$, which is negative (or zero). By ignoring a negative term, we end up with a larger estimate than the true value.
+
+Intuitively, the negative term reflects the fact that treatment and control assignments are negatively correlated. When an individual with a large $Y_i(1)$ ends up in treatment, they're not in control, which partially offsets the effect on the estimate. Neyman's estimator ignores this offsetting effect, so it overestimates how much the estimate varies.
+
+Neyman's estimator is exactly unbiased when $S_{tc}^2 = 0$. This happens in two cases:
+
+1. **Sharp null.** If the treatment has no effect on anyone ($\tau_i = 0$ for all $i$), then all treatment effects are zero, and their variance is zero.
+
+2. **Constant effects.** If everyone experiences the same treatment effect ($\tau_i = \tau$ for all $i$), then there's no variation in treatment effects, and their variance is zero.
+
+In any other case, where treatment effects vary across individuals, Neyman's estimator overestimates the true variance.
+
+</details>
+
+3. **Conservative Inference.** If you use a conservative variance estimator to construct a 95% confidence interval, will the actual coverage probability be greater than, less than, or equal to 95%? Explain.
+
+<details>
+<summary>Solution</summary>
+
+The actual coverage probability will be **greater than** 95%.
+
+A conservative variance estimator overestimates the variance, which means it also overestimates the standard error (the square root of the variance). When we construct a confidence interval, we compute
+
+$$
+\widehat{\text{ATE}} \pm 1.96 \times \widehat{\text{SE}}.
+$$
+
+If $\widehat{\text{SE}}$ is too large, the confidence interval will be wider than necessary. A wider interval is more likely to contain the true ATE, so the actual coverage probability exceeds the nominal 95%.
+
+This is why we call it "conservative." The inference errs on the side of caution. We're more likely to say "we're uncertain" than to make a confident but wrong claim.
+
+</details>
+
+4. **Sharp Null and Constant Effects.** The sharp null hypothesis states that $\tau_i = 0$ for all individuals, while constant effects means $\tau_i = \tau$ for some constant $\tau$. Explain why both assumptions lead to $S_{tc}^2 = 0$, even though they seem quite different.
+
+<details>
+<summary>Solution</summary>
+
+Both assumptions lead to $S_{tc}^2 = 0$ because both eliminate *variation* in the treatment effects, even though they imply different average treatment effects.
+
+$S_{tc}^2$ measures how much the individual treatment effects vary around their mean (the ATE). The formula is
+
+$$
+S_{tc}^2 = \frac{1}{N-1} \sum_{i=1}^{N} (\tau_i - \text{ATE})^2.
+$$
+
+Under the **sharp null**, every $\tau_i = 0$, so the ATE is also 0. Every deviation $\tau_i - \text{ATE} = 0 - 0 = 0$, so $S_{tc}^2 = 0$.
+
+Under **constant effects**, every $\tau_i = \tau$, so the ATE is also $\tau$. Every deviation $\tau_i - \text{ATE} = \tau - \tau = 0$, so $S_{tc}^2 = 0$.
+
+The key insight is that $S_{tc}^2$ measures *heterogeneity* in treatment effects, not the level of the effect. Both the sharp null (zero effects for everyone) and constant effects (the same nonzero effect for everyone) eliminate heterogeneity, just in different ways.
+
+</details>
+
+### Computational Practice
+
+5. **Computing Sample Variances.** Consider an experiment with 6 individuals. After randomization, you observe the following.
+
+   | Individual | $D_i$ | $Y_i^{\text{obs}}$ |
+   |------------|-------|---------------------|
+   | 1          | 1     | 8                   |
+   | 2          | 0     | 4                   |
+   | 3          | 1     | 6                   |
+   | 4          | 0     | 5                   |
+   | 5          | 1     | 10                  |
+   | 6          | 0     | 3                   |
+
+   Use R for these computations. Start by creating vectors `D` and `Y_obs` to hold the data, then use `mean()` and `var()` along with logical indexing (e.g., `Y_obs[D == 1]`) as needed.
+
+   a. Compute the treatment group mean $\overline{Y}^{\text{obs}}_t$ and control group mean $\overline{Y}^{\text{obs}}_c$.
+
+   b. Compute the sample variance in the treatment group, $s_t^2$.
+
+   c. Compute the sample variance in the control group, $s_c^2$.
+
+   d. Compute Neyman's variance estimator $\widehat{\text{Var}}(\widehat{\text{ATE}})$.
+
+   e. Compute the estimated standard error of $\widehat{\text{ATE}}$.
+
+<details>
+<summary>Solution</summary>
+
+First, we create the data vectors.
+
+```{r}
+# create data vectors
+D <- c(1, 0, 1, 0, 1, 0)
+Y_obs <- c(8, 4, 6, 5, 10, 3)
+```
+
+**Part a.** The treatment group mean and control group mean are
+
+```{r}
+# treatment group mean
+Y_bar_t <- mean(Y_obs[D == 1])
+Y_bar_t
+
+# control group mean
+Y_bar_c <- mean(Y_obs[D == 0])
+Y_bar_c
+```
+
+So $\overline{Y}^{\text{obs}}_t = 8$ and $\overline{Y}^{\text{obs}}_c = 4$.
+
+**Part b.** The sample variance in the treatment group is
+
+```{r}
+# sample variance in treatment group
+s_t_sq <- var(Y_obs[D == 1])
+s_t_sq
+```
+
+So $s_t^2 = 4$.
+
+**Part c.** The sample variance in the control group is
+
+```{r}
+# sample variance in control group
+s_c_sq <- var(Y_obs[D == 0])
+s_c_sq
+```
+
+So $s_c^2 = 1$.
+
+**Part d.** With $N_t = 3$ and $N_c = 3$, Neyman's variance estimator is
+
+```{r}
+# group sizes
+N_t <- sum(D == 1)
+N_c <- sum(D == 0)
+
+# Neyman's variance estimator
+var_hat <- s_t_sq / N_t + s_c_sq / N_c
+var_hat
+```
+
+So $\widehat{\text{Var}}(\widehat{\text{ATE}}) \approx 1.67$.
+
+**Part e.** The estimated standard error is
+
+```{r}
+# standard error
+se_hat <- sqrt(var_hat)
+se_hat
+```
+
+So $\widehat{\text{SE}}(\widehat{\text{ATE}}) \approx 1.29$.
+
+</details>
+
+6. **True vs. Estimated Variance.** Suppose the full potential outcomes for the 6 individuals in Exercise 5 are as follows.
+
+   | Individual | $Y_i(0)$ | $Y_i(1)$ | $\tau_i$ |
+   |------------|----------|----------|----------|
+   | 1          | 5        | 8        | 3        |
+   | 2          | 4        | 7        | 3        |
+   | 3          | 4        | 6        | 2        |
+   | 4          | 5        | 9        | 4        |
+   | 5          | 6        | 10       | 4        |
+   | 6          | 3        | 5        | 2        |
+
+   Use R for these computations. Start by creating vectors `Y0`, `Y1`, and `tau` to hold the potential outcomes and treatment effects, then use `var()` as needed.
+
+   a. Compute $S_t^2$, $S_c^2$, and $S_{tc}^2$ using the full potential outcomes.
+
+   b. Compute the true variance of $\widehat{\text{ATE}}$ using the formula with $N_t = N_c = 3$.
+
+   c. Compare the true variance to Neyman's estimate from Exercise 5. Is Neyman's estimate conservative, as expected?
+
+<details>
+<summary>Solution</summary>
+
+First, we create the data vectors.
+
+```{r}
+# create potential outcome vectors
+Y0 <- c(5, 4, 4, 5, 6, 3)
+Y1 <- c(8, 7, 6, 9, 10, 5)
+tau <- Y1 - Y0
+```
+
+**Part a.** The finite population variances are computed using `var()`.
+
+```{r}
+# finite population variances
+S_t_sq <- var(Y1)
+S_c_sq <- var(Y0)
+S_tc_sq <- var(tau)
+
+S_t_sq
+S_c_sq
+S_tc_sq
+```
+
+So $S_t^2 = 3.5$, $S_c^2 = 1.1$, and $S_{tc}^2 = 0.8$.
+
+**Part b.** The true variance is
+
+```{r}
+# group sizes
+N_t <- 3
+N_c <- 3
+N <- 6
+
+# true variance formula
+true_var <- S_t_sq / N_t + S_c_sq / N_c - S_tc_sq / N
+true_var
+```
+
+So $\text{Var}_D(\widehat{\text{ATE}}) = 1.4$.
+
+**Part c.** Neyman's estimate from Exercise 5 was approximately 1.67. The true variance is 1.4. Since 1.67 > 1.4, Neyman's estimate is indeed conservative, as expected. It overestimates the true variance by about 0.27 (or about 19%).
+
+```{r}
+# Neyman's estimate from Exercise 5
+neyman_est <- 5/3  # approximately 1.67
+
+# difference
+neyman_est - true_var
+```
+
+The difference is the dropped term $S_{tc}^2/N = 0.8/6 \approx 0.133$. Since we drop a positive quantity that's being subtracted, we end up with a larger estimate.
+
+</details>
+
+### Critical Thinking
+
+7. **Heterogeneous Effects and Standard Errors.** Suppose you run an experiment and find that $\widehat{\text{ATE}} = 5$ with Neyman's standard error of 2. A colleague points out that treatment effects might be heterogeneous, meaning $S_{tc}^2 > 0$.
+
+    a. Does the possibility of heterogeneous effects change your point estimate of the ATE? Why or why not?
+
+    b. The standard error has a "give-or-take" interpretation: if we repeated the experiment many times, the estimates would typically fall within one or two standard errors of the true ATE. Does heterogeneity affect this interpretation?
+
+    c. What would you say to your colleague about how heterogeneous effects impact the reliability of your findings?
+
+<details>
+<summary>Solution</summary>
+
+**Part a.** No, the possibility of heterogeneous effects does not change the point estimate. The difference-in-means estimator $\widehat{\text{ATE}}$ is unbiased regardless of whether treatment effects are homogeneous or heterogeneous. The estimate of 5 is our best guess of the average treatment effect either way.
+
+**Part b.** Heterogeneity affects the *accuracy* of the estimated standard error, but in a conservative direction. The true variance is
+
+$$
+\text{Var}_D(\widehat{\text{ATE}}) = \frac{S_t^2}{N_t} + \frac{S_c^2}{N_c} - \frac{S_{tc}^2}{N}.
+$$
+
+If $S_{tc}^2 > 0$, then the true variance is smaller than what Neyman's estimator suggests. Our standard error of 2 is an overestimate of the true standard deviation of $\widehat{\text{ATE}}$. This means the "give-or-take" range is actually smaller than we think. Our estimates are more precise than the standard error suggests.
+
+**Part c.** I would tell my colleague the following. "Good point! If treatment effects are heterogeneous, then our standard error is conservative, meaning we're overstating how much our estimate might vary across different randomizations. The true give-or-take range is actually smaller than $\pm 2$.
+
+The key point is that heterogeneous effects don't threaten the validity of our inference. They just make it more cautious. We can trust our estimate of 5, and we can trust that the true ATE is probably within a couple of standard errors of that estimate. If anything, the true uncertainty is smaller than what we're reporting, not larger."
+
+</details>
+
+### R Practice
+
+8. **Rasinski Data.** In earlier chapters, we used mock data from Rasinski's question-wording experiment. Here is the full dataset as a `tribble()`.
+
+    ```r
+    rasinski <- tribble(
+      ~desc,                     ~response,
+      "assistance to the poor",  "Too little",
+      "welfare",                 "Too little",
+      "assistance to the poor",  "Too little",
+      "assistance to the poor",  "Too little",
+      "welfare",                 "Too little",
+      "welfare",                 "Too little",
+      "assistance to the poor",  "Too little",
+      "assistance to the poor",  "Too little",
+      "welfare",                 "Too little",
+      "assistance to the poor",  "About right",
+      "assistance to the poor",  "Too little",
+      "assistance to the poor",  "About right",
+      "welfare",                 "Too little",
+      "welfare",                 "Too little",
+      "assistance to the poor",  "Too little",
+      "assistance to the poor",  "Too little",
+      "welfare",                 "About right",
+      "welfare",                 "About right",
+      "assistance to the poor",  "Too little",
+      "welfare",                 "Too little",
+      "welfare",                 "Too much",
+      "welfare",                 "About right",
+      "assistance to the poor",  "Too little",
+      "assistance to the poor",  "Too little",
+      "assistance to the poor",  "Too much",
+      "welfare",                 "Too little",
+      "welfare",                 "About right",
+      "welfare",                 "About right",
+      "welfare",                 "About right",
+      "assistance to the poor",  "Too little",
+      "assistance to the poor",  "Too little",
+      "welfare",                 "Too little",
+      "assistance to the poor",  "Too little",
+      "assistance to the poor",  "Too little",
+      "welfare",                 "Too little",
+      "assistance to the poor",  "Too little",
+      "welfare",                 "Too little",
+      "assistance to the poor",  "Too little",
+      "welfare",                 "Too little"
+    )
+    ```
+
+    a. Prepare the data for analysis by creating a numeric outcome variable (1 = "Too little", 2 = "About right", 3 = "Too much") and a treatment indicator (1 = "assistance to the poor", 0 = "welfare").
+
+    b. Use `lm()` to regress the outcome on the treatment indicator.
+
+    c. Use the `sandwich` and `lmtest` packages to compute HC2 standard errors.
+
+    d. Report the estimated ATE, its standard error, and interpret the results in one sentence.
+
+<details>
+<summary>Solution</summary>
+
+**Part a.** We create the numeric outcome and treatment indicator.
+
+```{r}
+# load packages
+library(tidyverse)
+library(sandwich)
+library(lmtest)
+
+# create the data
+rasinski <- tribble(
+  ~desc,                     ~response,
+  "assistance to the poor",  "Too little",
+  "welfare",                 "Too little",
+  "assistance to the poor",  "Too little",
+  "assistance to the poor",  "Too little",
+  "welfare",                 "Too little",
+  "welfare",                 "Too little",
+  "assistance to the poor",  "Too little",
+  "assistance to the poor",  "Too little",
+  "welfare",                 "Too little",
+  "assistance to the poor",  "About right",
+  "assistance to the poor",  "Too little",
+  "assistance to the poor",  "About right",
+  "welfare",                 "Too little",
+  "welfare",                 "Too little",
+  "assistance to the poor",  "Too little",
+  "assistance to the poor",  "Too little",
+  "welfare",                 "About right",
+  "welfare",                 "About right",
+  "assistance to the poor",  "Too little",
+  "welfare",                 "Too little",
+  "welfare",                 "Too much",
+  "welfare",                 "About right",
+  "assistance to the poor",  "Too little",
+  "assistance to the poor",  "Too little",
+  "assistance to the poor",  "Too much",
+  "welfare",                 "Too little",
+  "welfare",                 "About right",
+  "welfare",                 "About right",
+  "welfare",                 "About right",
+  "assistance to the poor",  "Too little",
+  "assistance to the poor",  "Too little",
+  "welfare",                 "Too little",
+  "assistance to the poor",  "Too little",
+  "assistance to the poor",  "Too little",
+  "welfare",                 "Too little",
+  "assistance to the poor",  "Too little",
+  "welfare",                 "Too little",
+  "assistance to the poor",  "Too little",
+  "welfare",                 "Too little"
+)
+
+# create numeric outcome (1 = Too little, 2 = About right, 3 = Too much)
+rasinski <- rasinski |>
+  mutate(
+    outcome = case_when(
+      response == "Too little" ~ 1,
+      response == "About right" ~ 2,
+      response == "Too much" ~ 3
+    ),
+    treatment = if_else(desc == "assistance to the poor", 1, 0)
+  )
+
+# check the data
+rasinski |> glimpse()
+```
+
+**Part b.** We fit the regression.
+
+```{r}
+# fit regression
+fit <- lm(outcome ~ treatment, data = rasinski)
+summary(fit)
+```
+
+**Part c.** We compute HC2 standard errors.
+
+```{r}
+# compute HC2 standard errors
+coeftest(fit, vcov. = vcovHC(fit, type = "HC2"))
+```
+
+**Part d.** The estimated ATE is approximately $-0.22$ with a standard error of approximately $0.18$. Using the "give-or-take" interpretation, we might say that the estimate is $-0.22$ give or take $0.18$ or so. This means that describing government spending as "assistance to the poor" rather than "welfare" shifts responses by about 0.22 points toward more support for spending (since lower values indicate "too little" spending). However, the the standard error is almost as large as the estimate so we can't be confident that this difference isn't just noise. We'll describe a formal hypothesis test in the next chapter.
+
+</details>

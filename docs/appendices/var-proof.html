@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>4&nbsp; Appendix A: Proof of the Variance Formula – The Logic of Experiments</title>
+<title>5&nbsp; Appendix A: Proof of the Variance Formula – The Logic of Experiments</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,7 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../ch/var.html" rel="prev">
+<link href="../ch/var-est.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -110,7 +110,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/var-proof.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/var-proof.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Appendix A: Proof of the Variance Formula</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/var-proof.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/var-proof.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Appendix A: Proof of the Variance Formula</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -159,6 +159,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The Variance of <span class="math inline">\(\widehat{\text{ATE}}\)</span></span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch/var-est.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Estimating the Variance</span></span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
@@ -171,7 +177,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/var-proof.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Appendix A: Proof of the Variance Formula</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Appendix A: Proof of the Variance Formula</span></span></a>
   </div>
 </li>
       </ul>
@@ -186,29 +192,29 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#setting-up-the-problem" id="toc-setting-up-the-problem" class="nav-link active" data-scroll-target="#setting-up-the-problem"><span class="header-section-number">4.1</span> Setting Up the Problem</a></li>
-  <li><a href="#the-variance-operator-textvarcdot" id="toc-the-variance-operator-textvarcdot" class="nav-link" data-scroll-target="#the-variance-operator-textvarcdot"><span class="header-section-number">4.2</span> The Variance Operator <span class="math inline">\(\text{Var}[\cdot]\)</span></a></li>
-  <li><a href="#some-preliminary-results" id="toc-some-preliminary-results" class="nav-link" data-scroll-target="#some-preliminary-results"><span class="header-section-number">4.3</span> Some Preliminary Results</a>
+  <li><a href="#setting-up-the-problem" id="toc-setting-up-the-problem" class="nav-link active" data-scroll-target="#setting-up-the-problem"><span class="header-section-number">5.1</span> Setting Up the Problem</a></li>
+  <li><a href="#the-variance-operator-textvarcdot" id="toc-the-variance-operator-textvarcdot" class="nav-link" data-scroll-target="#the-variance-operator-textvarcdot"><span class="header-section-number">5.2</span> The Variance Operator <span class="math inline">\(\text{Var}[\cdot]\)</span></a></li>
+  <li><a href="#some-preliminary-results" id="toc-some-preliminary-results" class="nav-link" data-scroll-target="#some-preliminary-results"><span class="header-section-number">5.3</span> Some Preliminary Results</a>
   <ul class="collapse">
-  <li><a href="#facts-about-d_i" id="toc-facts-about-d_i" class="nav-link" data-scroll-target="#facts-about-d_i"><span class="header-section-number">4.3.1</span> Facts About <span class="math inline">\(D_i\)</span></a></li>
-  <li><a href="#the-correlation-between-treatment-assignments" id="toc-the-correlation-between-treatment-assignments" class="nav-link" data-scroll-target="#the-correlation-between-treatment-assignments"><span class="header-section-number">4.3.2</span> The Correlation Between Treatment Assignments</a></li>
+  <li><a href="#facts-about-d_i" id="toc-facts-about-d_i" class="nav-link" data-scroll-target="#facts-about-d_i"><span class="header-section-number">5.3.1</span> Facts About <span class="math inline">\(D_i\)</span></a></li>
+  <li><a href="#the-correlation-between-treatment-assignments" id="toc-the-correlation-between-treatment-assignments" class="nav-link" data-scroll-target="#the-correlation-between-treatment-assignments"><span class="header-section-number">5.3.2</span> The Correlation Between Treatment Assignments</a></li>
   </ul></li>
-  <li><a href="#a-helpful-transformation" id="toc-a-helpful-transformation" class="nav-link" data-scroll-target="#a-helpful-transformation"><span class="header-section-number">4.4</span> A Helpful Transformation</a>
+  <li><a href="#a-helpful-transformation" id="toc-a-helpful-transformation" class="nav-link" data-scroll-target="#a-helpful-transformation"><span class="header-section-number">5.4</span> A Helpful Transformation</a>
   <ul class="collapse">
-  <li><a href="#properties-of-tilded_i" id="toc-properties-of-tilded_i" class="nav-link" data-scroll-target="#properties-of-tilded_i"><span class="header-section-number">4.4.1</span> Properties of <span class="math inline">\(\tilde{D}_i\)</span></a></li>
-  <li><a href="#the-cross-product-tilded_i-cdot-tilded_j" id="toc-the-cross-product-tilded_i-cdot-tilded_j" class="nav-link" data-scroll-target="#the-cross-product-tilded_i-cdot-tilded_j"><span class="header-section-number">4.4.2</span> The Cross-Product <span class="math inline">\(\tilde{D}_i \cdot \tilde{D}_j\)</span></a></li>
+  <li><a href="#properties-of-tilded_i" id="toc-properties-of-tilded_i" class="nav-link" data-scroll-target="#properties-of-tilded_i"><span class="header-section-number">5.4.1</span> Properties of <span class="math inline">\(\tilde{D}_i\)</span></a></li>
+  <li><a href="#the-cross-product-tilded_i-cdot-tilded_j" id="toc-the-cross-product-tilded_i-cdot-tilded_j" class="nav-link" data-scroll-target="#the-cross-product-tilded_i-cdot-tilded_j"><span class="header-section-number">5.4.2</span> The Cross-Product <span class="math inline">\(\tilde{D}_i \cdot \tilde{D}_j\)</span></a></li>
   </ul></li>
-  <li><a href="#rewriting-the-estimator" id="toc-rewriting-the-estimator" class="nav-link" data-scroll-target="#rewriting-the-estimator"><span class="header-section-number">4.5</span> Rewriting the Estimator</a></li>
-  <li><a href="#the-proof" id="toc-the-proof" class="nav-link" data-scroll-target="#the-proof"><span class="header-section-number">4.6</span> The Proof</a></li>
+  <li><a href="#rewriting-the-estimator" id="toc-rewriting-the-estimator" class="nav-link" data-scroll-target="#rewriting-the-estimator"><span class="header-section-number">5.5</span> Rewriting the Estimator</a></li>
+  <li><a href="#the-proof" id="toc-the-proof" class="nav-link" data-scroll-target="#the-proof"><span class="header-section-number">5.6</span> The Proof</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/var-proof.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/var-proof.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Appendix A: Proof of the Variance Formula</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/var-proof.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/var-proof.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Appendix A: Proof of the Variance Formula</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Appendix A: Proof of the Variance Formula</span></h1>
+<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Appendix A: Proof of the Variance Formula</span></h1>
 </div>
 
 
@@ -226,8 +232,8 @@ window.Quarto = {
 
 
 <p>This appendix provides a complete proof of the variance formula for the difference-in-means estimator, stated in the chapter on the variance of <span class="math inline">\(\widehat{\text{ATE}}\)</span>. The proof involves only algebra, but there are many steps and some tricks are helpful.</p>
-<section id="setting-up-the-problem" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="setting-up-the-problem"><span class="header-section-number">4.1</span> Setting Up the Problem</h2>
+<section id="setting-up-the-problem" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="setting-up-the-problem"><span class="header-section-number">5.1</span> Setting Up the Problem</h2>
 <p>Recall from the previous chapter that we can write the difference-in-means estimator as</p>
 <p><span class="math display">\[
 \widehat{\text{ATE}} = \frac{1}{N_t} \sum_{i=1}^{N} D_i \cdot Y^{\text{obs}}_i - \frac{1}{N_c} \sum_{i=1}^{N} (1 - D_i) \cdot Y^{\text{obs}}_i,
@@ -235,8 +241,8 @@ window.Quarto = {
 <p>where <span class="math inline">\(D_i\)</span> is the treatment assignment indicator for individual <span class="math inline">\(i\)</span> (1 if treated, 0 if control).</p>
 <p>To compute the variance, we need to understand how this estimator behaves across all possible randomizations. The subscript <span class="math inline">\(D\)</span> in <span class="math inline">\(\text{Var}_D(\cdot)\)</span> and <span class="math inline">\(E_D[\cdot]\)</span> reminds us that the randomness comes entirely from the treatment assignment <span class="math inline">\(D_i\)</span>.</p>
 </section>
-<section id="the-variance-operator-textvarcdot" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="the-variance-operator-textvarcdot"><span class="header-section-number">4.2</span> The Variance Operator <span class="math inline">\(\text{Var}[\cdot]\)</span></h2>
+<section id="the-variance-operator-textvarcdot" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="the-variance-operator-textvarcdot"><span class="header-section-number">5.2</span> The Variance Operator <span class="math inline">\(\text{Var}[\cdot]\)</span></h2>
 <p>The variance operator <span class="math inline">\(\text{Var}[\cdot]\)</span> is a way of measuring “how spread out” a random variable is around its average value. The variance of a random variable measures its typical <em>squared</em> distance from the mean. You can think of <span class="math inline">\(\text{Var}(X)\)</span> as asking: “If I could repeat this random process infinitely many times, how far would <span class="math inline">\(X\)</span> typically be from its average?”</p>
 <p>For our purposes, we need five rules about variance. These rules play the same role that the expectation rules played in the previous chapter. They tell us which algebraic moves are allowed.</p>
 <p><strong>Rule 1: Variance is defined as the expected squared deviation from the mean.</strong></p>
@@ -325,11 +331,11 @@ E\left[(X - E[X])^2\right]
 <p>This rule is a useful shortcut. By definition, <span class="math inline">\(\text{Var}(X) = E[X^2] - (E[X])^2\)</span>. If <span class="math inline">\(E[X] = 0\)</span>, the second term vanishes, and we are left with just <span class="math inline">\(E[X^2]\)</span>.</p>
 <p>We will use this simplification later by rewriting expressions so that they have mean zero.</p>
 </section>
-<section id="some-preliminary-results" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="some-preliminary-results"><span class="header-section-number">4.3</span> Some Preliminary Results</h2>
+<section id="some-preliminary-results" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="some-preliminary-results"><span class="header-section-number">5.3</span> Some Preliminary Results</h2>
 <p>Before tackling the variance formula, we need to establish some basic facts about the treatment indicators <span class="math inline">\(D_i\)</span> under completely randomized assignment.</p>
-<section id="facts-about-d_i" class="level3" data-number="4.3.1">
-<h3 data-number="4.3.1" class="anchored" data-anchor-id="facts-about-d_i"><span class="header-section-number">4.3.1</span> Facts About <span class="math inline">\(D_i\)</span></h3>
+<section id="facts-about-d_i" class="level3" data-number="5.3.1">
+<h3 data-number="5.3.1" class="anchored" data-anchor-id="facts-about-d_i"><span class="header-section-number">5.3.1</span> Facts About <span class="math inline">\(D_i\)</span></h3>
 <p>In a completely randomized experiment with <span class="math inline">\(N\)</span> individuals where <span class="math inline">\(N_t\)</span> are assigned to treatment, each individual has the same probability of being treated. We have</p>
 <p><span class="math display">\[
 E_D[D_i] = \Pr(D_i = 1) = \frac{N_t}{N}.
@@ -364,8 +370,8 @@ Understanding This Calculation
 </div>
 </div>
 </section>
-<section id="the-correlation-between-treatment-assignments" class="level3" data-number="4.3.2">
-<h3 data-number="4.3.2" class="anchored" data-anchor-id="the-correlation-between-treatment-assignments"><span class="header-section-number">4.3.2</span> The Correlation Between Treatment Assignments</h3>
+<section id="the-correlation-between-treatment-assignments" class="level3" data-number="5.3.2">
+<h3 data-number="5.3.2" class="anchored" data-anchor-id="the-correlation-between-treatment-assignments"><span class="header-section-number">5.3.2</span> The Correlation Between Treatment Assignments</h3>
 <p>Here’s where things get interesting. In a completely randomized experiment, the treatment assignments <span class="math inline">\(D_i\)</span> and <span class="math inline">\(D_j\)</span> for different individuals are <em>not</em> independent. If one individual is assigned to treatment, that makes it slightly less likely that another individual is assigned to treatment (because there are only <span class="math inline">\(N_t\)</span> treatment slots to fill).</p>
 <p>For <span class="math inline">\(i \neq j\)</span>, we need to compute <span class="math inline">\(E_D[D_i \cdot D_j]\)</span>. This equals the probability that <em>both</em> individuals <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> are assigned to treatment.</p>
 <p>We can compute this using conditional probability, so that</p>
@@ -395,8 +401,8 @@ Understanding This Calculation
 </div>
 </section>
 </section>
-<section id="a-helpful-transformation" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="a-helpful-transformation"><span class="header-section-number">4.4</span> A Helpful Transformation</h2>
+<section id="a-helpful-transformation" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="a-helpful-transformation"><span class="header-section-number">5.4</span> A Helpful Transformation</h2>
 <p>The algebra becomes cleaner if we transform our treatment indicator. Instead of working directly with <span class="math inline">\(D_i\)</span>, we define a <strong>centered treatment indicator</strong> <span class="math inline">\(\tilde{D}_i\)</span>, so that</p>
 <p><span class="math display">\[
 \tilde{D}_i = D_i - \frac{N_t}{N}.
@@ -409,8 +415,8 @@ Understanding This Calculation
 -\frac{N_t}{N} &amp; \text{if } D_i = 0 \text{ (control)}.
 \end{cases}
 \]</span></p>
-<section id="properties-of-tilded_i" class="level3" data-number="4.4.1">
-<h3 data-number="4.4.1" class="anchored" data-anchor-id="properties-of-tilded_i"><span class="header-section-number">4.4.1</span> Properties of <span class="math inline">\(\tilde{D}_i\)</span></h3>
+<section id="properties-of-tilded_i" class="level3" data-number="5.4.1">
+<h3 data-number="5.4.1" class="anchored" data-anchor-id="properties-of-tilded_i"><span class="header-section-number">5.4.1</span> Properties of <span class="math inline">\(\tilde{D}_i\)</span></h3>
 <p>The centered indicator <span class="math inline">\(\tilde{D}_i\)</span> has two key properties that make it useful.</p>
 <p><strong>Property 1: Zero mean.</strong> By construction, <span class="math inline">\(E_D[\tilde{D}_i] = E_D[D_i] - N_t/N = N_t/N - N_t/N = 0\)</span>.</p>
 <p><strong>Property 2: Known variance.</strong> Since <span class="math inline">\(\tilde{D}_i\)</span> is just a shifted version of <span class="math inline">\(D_i\)</span>, its variance is the same, so that</p>
@@ -419,8 +425,8 @@ Understanding This Calculation
 \]</span></p>
 <p>And because <span class="math inline">\(E_D[\tilde{D}_i] = 0\)</span>, we have <span class="math inline">\(E_D[\tilde{D}_i^2] = \text{Var}_D(\tilde{D}_i) = \frac{N_t \cdot N_c}{N^2}\)</span>.</p>
 </section>
-<section id="the-cross-product-tilded_i-cdot-tilded_j" class="level3" data-number="4.4.2">
-<h3 data-number="4.4.2" class="anchored" data-anchor-id="the-cross-product-tilded_i-cdot-tilded_j"><span class="header-section-number">4.4.2</span> The Cross-Product <span class="math inline">\(\tilde{D}_i \cdot \tilde{D}_j\)</span></h3>
+<section id="the-cross-product-tilded_i-cdot-tilded_j" class="level3" data-number="5.4.2">
+<h3 data-number="5.4.2" class="anchored" data-anchor-id="the-cross-product-tilded_i-cdot-tilded_j"><span class="header-section-number">5.4.2</span> The Cross-Product <span class="math inline">\(\tilde{D}_i \cdot \tilde{D}_j\)</span></h3>
 <p>For the variance calculation, we also need <span class="math inline">\(E_D[\tilde{D}_i \cdot \tilde{D}_j]\)</span> when <span class="math inline">\(i \neq j\)</span>. The product <span class="math inline">\(\tilde{D}_i \cdot \tilde{D}_j\)</span> can take three possible values depending on whether both individuals are treated, both are in control, or one of each.</p>
 <table class="caption-top table">
 <colgroup>
@@ -483,8 +489,8 @@ E_D[\tilde{D}_i \cdot \tilde{D}_j] = -\frac{N_t \cdot N_c}{N^2 \cdot (N - 1)} \q
 <p>Notice this is <em>negative</em>. This reflects the negative correlation between treatment assignments: if individual <span class="math inline">\(i\)</span> is more likely to be treated (higher <span class="math inline">\(\tilde{D}_i\)</span>), individual <span class="math inline">\(j\)</span> is slightly less likely to be treated (lower <span class="math inline">\(\tilde{D}_j\)</span>).</p>
 </section>
 </section>
-<section id="rewriting-the-estimator" class="level2" data-number="4.5">
-<h2 data-number="4.5" class="anchored" data-anchor-id="rewriting-the-estimator"><span class="header-section-number">4.5</span> Rewriting the Estimator</h2>
+<section id="rewriting-the-estimator" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="rewriting-the-estimator"><span class="header-section-number">5.5</span> Rewriting the Estimator</h2>
 <p>Using the centered indicator <span class="math inline">\(\tilde{D}_i\)</span>, we can rewrite the estimator in a form that separates the fixed and random components. After algebraic manipulation (shown in the proof below), we obtain</p>
 <p><span class="math display">\[
 \widehat{\text{ATE}} = \underbrace{\frac{1}{N} \sum_{i=1}^{N} (Y_i(1) - Y_i(0))}_{\text{fixed: the true ATE}} + \underbrace{\frac{1}{N} \sum_{i=1}^{N} \tilde{D}_i \cdot Y_i^+}_{\text{random: depends on } \tilde{D}_i},
@@ -522,8 +528,8 @@ Understanding This Decomposition
 E_D[\widehat{\text{ATE}}] = \frac{1}{N} \sum_{i=1}^{N} (Y_i(1) - Y_i(0)) + 0 = \text{ATE}.
 \]</span></p>
 </section>
-<section id="the-proof" class="level2" data-number="4.6">
-<h2 data-number="4.6" class="anchored" data-anchor-id="the-proof"><span class="header-section-number">4.6</span> The Proof</h2>
+<section id="the-proof" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="the-proof"><span class="header-section-number">5.6</span> The Proof</h2>
 <p>The proof involves careful algebraic manipulation. We break it into labeled steps.</p>
 <p><strong>Step 1: Start with the decomposition.</strong></p>
 <p>We established that</p>
@@ -1009,8 +1015,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../ch/var.html" class="pagination-link" aria-label="The Variance of $\widehat{\text{ATE}}$">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The Variance of <span class="math inline">\(\widehat{\text{ATE}}\)</span></span></span>
+      <a href="../ch/var-est.html" class="pagination-link" aria-label="Estimating the Variance">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Estimating the Variance</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

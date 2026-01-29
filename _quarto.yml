@@ -18,7 +18,7 @@ book:
     - ch/ate.qmd
     - ch/ate-hat.qmd
     - ch/var.qmd
-    #- ch/var-est.qmd
+    - ch/var-est.qmd
     - part: "Appendices"
       chapters:
         - appendices/var-proof.qmd

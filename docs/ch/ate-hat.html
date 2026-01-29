@@ -194,6 +194,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The Variance of <span class="math inline">\(\widehat{\text{ATE}}\)</span></span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch/var-est.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Estimating the Variance</span></span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
@@ -206,7 +212,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/var-proof.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Appendix A: Proof of the Variance Formula</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Appendix A: Proof of the Variance Formula</span></span></a>
   </div>
 </li>
       </ul>
@@ -285,9 +291,9 @@ window.Quarto = {
 </header>
 
 
-<p>In the previous chapter, we defined the average treatment effect (ATE) as the difference in average potential outcomes under treatment and control. This is simply the <em>hypothetical</em> difference between the average outcome if we assigned everyone to treatment and the average outcome if we assigned everyone to contrl.</p>
+<p>In the previous chapter, we defined the average treatment effect (ATE) as the difference in average potential outcomes under treatment and control. This is simply the <em>hypothetical</em> difference between the average outcome if we assigned everyone to treatment and the average outcome if we assigned everyone to control.</p>
 <p>But we also acknowledged a fundamental problem: we can never observe both potential outcomes for the same individual. So how can we design a procedure to <em>estimate</em> the ATE from data?</p>
-<p>In this chapter, we develop a a simple and intuitive procedure and estimator.</p>
+<p>In this chapter, we develop a simple and intuitive procedure and estimator.</p>
 <ol type="1">
 <li>First, randomly assign individuals to treatment or control.</li>
 <li>Second, compute the difference in average outcomes between the treatment and control groups</li>
@@ -563,6 +569,13 @@ Understanding This Notation
 <p>We computed in the previous chapter that <span class="math inline">\(\text{ATE} = 1.5\)</span> for these data.</p>
 <p>Now suppose we run an experiment with <span class="math inline">\(N_t = 5\)</span> and <span class="math inline">\(N_c = 5\)</span>. After randomization, respondents 1, 4, 5, 7, and 10 are assigned to treatment, while respondents 2, 3, 6, 8, and 9 are assigned to control. What do we actually observe?</p>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 12%">
+<col style="width: 38%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Respondent</th>
@@ -575,7 +588,7 @@ Understanding This Notation
 <tbody>
 <tr class="odd">
 <td>1</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>7</td>
 <td>1</td>
 <td>7</td>
@@ -583,27 +596,27 @@ Understanding This Notation
 <tr class="even">
 <td>2</td>
 <td>6</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>0</td>
 <td>6</td>
 </tr>
 <tr class="odd">
 <td>3</td>
 <td>5</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>0</td>
 <td>5</td>
 </tr>
 <tr class="even">
 <td>4</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>9</td>
 <td>1</td>
 <td>9</td>
 </tr>
 <tr class="odd">
 <td>5</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>10</td>
 <td>1</td>
 <td>10</td>
@@ -611,13 +624,13 @@ Understanding This Notation
 <tr class="even">
 <td>6</td>
 <td>5</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>0</td>
 <td>5</td>
 </tr>
 <tr class="odd">
 <td>7</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>8</td>
 <td>1</td>
 <td>8</td>
@@ -625,20 +638,20 @@ Understanding This Notation
 <tr class="even">
 <td>8</td>
 <td>6</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>0</td>
 <td>6</td>
 </tr>
 <tr class="odd">
 <td>9</td>
 <td>5</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>0</td>
 <td>5</td>
 </tr>
 <tr class="even">
 <td>10</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>6</td>
 <td>1</td>
 <td>6</td>
@@ -819,7 +832,7 @@ Understanding This Notation
 <h2 data-number="2.5" class="anchored" data-anchor-id="design-based-inference"><span class="header-section-number">2.5</span> Design-Based Inference</h2>
 <p>Before proving that the estimator <span class="math inline">\(\widehat{\text{ATE}}\)</span> is unbiased, we need to understand</p>
 <ol type="1">
-<li><em>that</em> the estimate $ is a noisy and random estimate and<br>
+<li><em>that</em> the estimate <span class="math inline">\(\widehat{\text{ATE}}\)</span> is a noisy and random estimate and<br>
 </li>
 <li><em>what</em> makes this estimate random in the first place.</li>
 </ol>
@@ -1024,7 +1037,7 @@ E_D\!\left[
 -
 \frac{(1 - D_i)\, Y_i(0)}{N_c/N}
 \right]
-\qquad \text{(expectation of asum; Rule 3)} \\[6pt]
+\qquad \text{(expectation of a sum; Rule 3)} \\[6pt]
 
 &amp;= \frac{1}{N}
 \sum_{i=1}^{N}
@@ -1034,7 +1047,7 @@ E_D\!\left[
 \frac{Y_i(0)}{N_c/N} \, E_D[1 - D_i]
 \right)
 \qquad \text{(only $D_i$ is random; Rule 2)}.
-\end{align}\]</span> }</p>
+\end{align}\]</span></p>
 <p><strong>Step 4: Compute the expectation of <span class="math inline">\(D_i\)</span>.</strong></p>
 <p>Now we need to find <span class="math inline">\(E_D[D_i]\)</span>. Remember that <span class="math inline">\(D_i\)</span> is a binary variable that equals 1 if individual <span class="math inline">\(i\)</span> is assigned to treatment, and 0 if individual <span class="math inline">\(i\)</span> is assigned to control. By Rule 4, the expectation of a binary variable equals its probability of being 1, so that</p>
 <p><span class="math display">\[
@@ -1103,6 +1116,13 @@ Tip
 <h2 data-number="2.7" class="anchored" data-anchor-id="a-different-randomization"><span class="header-section-number">2.7</span> A Different Randomization</h2>
 <p>To reinforce that <span class="math inline">\(\widehat{\text{ATE}}\)</span> depends on the randomization, consider what happens with a different random assignment. Suppose instead that individuals 2, 3, 6, 8, and 9 are assigned to treatment, while individuals 1, 4, 5, 7, and 10 are assigned to control.</p>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 12%">
+<col style="width: 38%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Respondent</th>
@@ -1116,20 +1136,20 @@ Tip
 <tr class="odd">
 <td>1</td>
 <td>4</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>0</td>
 <td>4</td>
 </tr>
 <tr class="even">
 <td>2</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>5</td>
 <td>1</td>
 <td>5</td>
 </tr>
 <tr class="odd">
 <td>3</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>5</td>
 <td>1</td>
 <td>5</td>
@@ -1137,20 +1157,20 @@ Tip
 <tr class="even">
 <td>4</td>
 <td>3</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>0</td>
 <td>3</td>
 </tr>
 <tr class="odd">
 <td>5</td>
 <td>7</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>0</td>
 <td>7</td>
 </tr>
 <tr class="even">
 <td>6</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>4</td>
 <td>1</td>
 <td>4</td>
@@ -1158,20 +1178,20 @@ Tip
 <tr class="odd">
 <td>7</td>
 <td>4</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>0</td>
 <td>4</td>
 </tr>
 <tr class="even">
 <td>8</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>7</td>
 <td>1</td>
 <td>7</td>
 </tr>
 <tr class="odd">
 <td>9</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>3</td>
 <td>1</td>
 <td>3</td>
@@ -1179,7 +1199,7 @@ Tip
 <tr class="even">
 <td>10</td>
 <td>4</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>0</td>
 <td>4</td>
 </tr>
@@ -1424,7 +1444,7 @@ Y_i = \beta_0 + \beta_1 D_i + \epsilon_i,
 <section id="conceptual-understanding" class="level3" data-number="2.10.1">
 <h3 data-number="2.10.1" class="anchored" data-anchor-id="conceptual-understanding"><span class="header-section-number">2.10.1</span> Conceptual Understanding</h3>
 <ol type="1">
-<li><strong>Observed vs.&nbsp;Missing Outcomes</strong>: In your own words, explain the difference between <span class="math inline">\(Y_i^{\text{obs}}\)</span> and <span class="math inline">\(Y_i^{\text{mis}}\)</span>. Why is one observable and the other not?</li>
+<li><strong>Observed vs.&nbsp;Missing Outcomes.</strong> In your own words, explain the difference between <span class="math inline">\(Y_i^{\text{obs}}\)</span> and <span class="math inline">\(Y_i^{\text{mis}}\)</span>. Why is one observable and the other not?</li>
 </ol>
 <details>
 <summary>
@@ -1436,7 +1456,7 @@ Solution
 <p>This is the fundamental problem of causal inference applied to the observed data.</p>
 </details>
 <ol start="2" type="1">
-<li><strong>Design-Based Inference</strong>: Explain what it means to say that inference in randomized experiments is “design-based” rather than “model-based.” What is the source of randomness in each approach?</li>
+<li><strong>Design-Based Inference.</strong> Explain what it means to say that inference in randomized experiments is “design-based” rather than “model-based.” What is the source of randomness in each approach?</li>
 </ol>
 <details>
 <summary>
@@ -1452,7 +1472,7 @@ Solution
 <p>Design-based inference is powerful because we don’t need to make assumptions about how outcomes are generated. We only rely on the randomization we controlled.</p>
 </details>
 <ol start="3" type="1">
-<li><strong>The Meaning of Unbiasedness</strong>: A student says, “Since <span class="math inline">\(\widehat{\text{ATE}}\)</span> is unbiased, my estimate must equal the true ATE.” Explain why this is incorrect. What does unbiasedness actually guarantee?</li>
+<li><strong>The Meaning of Unbiasedness.</strong> A student says, “Since <span class="math inline">\(\widehat{\text{ATE}}\)</span> is unbiased, my estimate must equal the true ATE.” Explain why this is incorrect. What does unbiasedness actually guarantee?</li>
 </ol>
 <details>
 <summary>
@@ -1466,7 +1486,7 @@ Solution
 <p>The chapter example illustrates this: one randomization gave <span class="math inline">\(\widehat{\text{ATE}} = 2.6\)</span> (overestimate), another gave <span class="math inline">\(\widehat{\text{ATE}} = 0.4\)</span> (underestimate), but the true ATE was 1.5. Neither estimate equaled the truth, but they averaged out correctly.</p>
 </details>
 <ol start="4" type="1">
-<li><strong>Why Randomization Matters</strong>: Suppose instead of randomly assigning treatment, we let participants choose whether to receive treatment. Why would <span class="math inline">\(\widehat{\text{ATE}} = \overline{Y}^{\text{obs}}_{t} - \overline{Y}^{\text{obs}}_{c}\)</span> no longer be unbiased for the ATE?</li>
+<li><strong>Why Randomization Matters.</strong> Suppose instead of randomly assigning treatment, we let participants choose whether to receive treatment. Why would <span class="math inline">\(\widehat{\text{ATE}} = \overline{Y}^{\text{obs}}_{t} - \overline{Y}^{\text{obs}}_{c}\)</span> no longer be unbiased for the ATE?</li>
 </ol>
 <details>
 <summary>
@@ -1486,7 +1506,7 @@ Solution
 <section id="computational-practice" class="level3" data-number="2.10.2">
 <h3 data-number="2.10.2" class="anchored" data-anchor-id="computational-practice"><span class="header-section-number">2.10.2</span> Computational Practice</h3>
 <ol start="5" type="1">
-<li><p><strong>Computing the Estimate</strong>: Consider the following observed data from a randomized experiment:</p>
+<li><p><strong>Computing the Estimate.</strong> Consider the following observed data from a randomized experiment:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1574,7 +1594,7 @@ Solution
 <p>Our estimate is that treatment increases outcomes by about 4.67 units on average.</p>
 </details>
 <ol start="6" type="1">
-<li><p><strong>Different Randomizations</strong>: Suppose the true potential outcomes for 4 individuals are:</p>
+<li><p><strong>Different Randomizations.</strong> Suppose the true potential outcomes for 4 individuals are:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1694,7 +1714,7 @@ Solution
 <p>This equals the true ATE exactly! The first randomization underestimated (0 vs.&nbsp;2), and the second overestimated (4 vs.&nbsp;2), but they balanced out. This illustrates unbiasedness: on average, the estimator gets it right.</p>
 </details>
 <ol start="7" type="1">
-<li><strong>Verifying Unbiasedness</strong>: Using the same potential outcomes from Exercise 6, list all possible ways to assign exactly 2 individuals to treatment and 2 to control. For each, compute <span class="math inline">\(\widehat{\text{ATE}}\)</span>. Then compute the average of all these estimates and verify that it equals the true ATE.</li>
+<li><strong>Verifying Unbiasedness.</strong> Using the same potential outcomes from Exercise 6, list all possible ways to assign exactly 2 individuals to treatment and 2 to control. For each, compute <span class="math inline">\(\widehat{\text{ATE}}\)</span>. Then compute the average of all these estimates and verify that it equals the true ATE.</li>
 </ol>
 <details>
 <summary>
@@ -1837,7 +1857,7 @@ E_D[\widehat{\text{ATE}}] &amp;= \frac{1}{6}(1.5 + 0 + 2.5 + 1.5 + 4 + 2.5) \\
 <section id="application-to-rasinskis-experiment" class="level3" data-number="2.10.3">
 <h3 data-number="2.10.3" class="anchored" data-anchor-id="application-to-rasinskis-experiment"><span class="header-section-number">2.10.3</span> Application to Rasinski’s Experiment</h3>
 <ol start="8" type="1">
-<li><p><strong>Rasinski’s Experiment Revisited</strong>: Return to the hypothetical Rasinski data from the previous chapter. Suppose we randomly assign 5 respondents to the “assistance to the poor” wording (treatment) and 5 to the “welfare” wording (control).</p>
+<li><p><strong>Rasinski’s Experiment Revisited.</strong> Return to the hypothetical Rasinski data from the previous chapter. Suppose we randomly assign 5 respondents to the “assistance to the poor” wording (treatment) and 5 to the “welfare” wording (control).</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1957,7 +1977,7 @@ Solution
 <p>Note: These two randomizations are not the only possible ones—there are <span class="math inline">\(\binom{10}{5} = 252\)</span> ways to assign 5 of 10 respondents to treatment. If we computed <span class="math inline">\(\widehat{\text{ATE}}\)</span> for all 252 and averaged them, we would get exactly <span class="math inline">\(-1.3\)</span>.</p>
 </details>
 <ol start="9" type="1">
-<li><p><strong>What the Researcher Sees</strong>: In Rasinski’s actual experiment, the researcher does not observe the potential outcomes table—they only observe the outcomes under the assigned condition.</p>
+<li><p><strong>What the Researcher Sees.</strong> In Rasinski’s actual experiment, the researcher does not observe the potential outcomes table—they only observe the outcomes under the assigned condition.</p>
 <ol type="a">
 <li><p>Using the randomization from Exercise 8a (respondents 1, 3, 5, 7, 9 assigned to treatment), write out the data table that the researcher would actually observe. Use “?” for unobserved potential outcomes.</p></li>
 <li><p>Can the researcher compute the true ATE from this observed data? Why or why not?</p></li>
@@ -1970,6 +1990,13 @@ Solution
 </summary>
 <p><strong>Part a.</strong> With respondents 1, 3, 5, 7, 9 assigned to treatment, the researcher observes:</p>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 11%">
+<col style="width: 35%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Respondent</th>
@@ -1982,7 +2009,7 @@ Solution
 <tbody>
 <tr class="odd">
 <td>1</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>1</td>
 <td>1</td>
 <td>1</td>
@@ -1990,13 +2017,13 @@ Solution
 <tr class="even">
 <td>2</td>
 <td>3</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>0</td>
 <td>3</td>
 </tr>
 <tr class="odd">
 <td>3</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>1</td>
 <td>1</td>
 <td>1</td>
@@ -2004,13 +2031,13 @@ Solution
 <tr class="even">
 <td>4</td>
 <td>3</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>0</td>
 <td>3</td>
 </tr>
 <tr class="odd">
 <td>5</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>1</td>
 <td>1</td>
 <td>1</td>
@@ -2018,13 +2045,13 @@ Solution
 <tr class="even">
 <td>6</td>
 <td>3</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>0</td>
 <td>3</td>
 </tr>
 <tr class="odd">
 <td>7</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>1</td>
 <td>1</td>
 <td>1</td>
@@ -2032,13 +2059,13 @@ Solution
 <tr class="even">
 <td>8</td>
 <td>3</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>0</td>
 <td>3</td>
 </tr>
 <tr class="odd">
 <td>9</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>2</td>
 <td>1</td>
 <td>2</td>
@@ -2046,7 +2073,7 @@ Solution
 <tr class="even">
 <td>10</td>
 <td>3</td>
-<td>?</td>
+<td><span class="qs">?</span></td>
 <td>0</td>
 <td>3</td>
 </tr>
@@ -2069,7 +2096,7 @@ Solution
 <p>Random assignment ensures that the treated and control groups are, on average, comparable samples from the same population. This allows us to use observed group means as stand-ins for the unobservable population means.</p>
 </details>
 <ol start="10" type="1">
-<li><p><strong>Interpreting the Estimate in Context</strong>: Using the estimate from Exercise 8a (<span class="math inline">\(\widehat{\text{ATE}} = -1.8\)</span>):</p>
+<li><p><strong>Interpreting the Estimate in Context.</strong> Using the estimate from Exercise 8a (<span class="math inline">\(\widehat{\text{ATE}} = -1.8\)</span>):</p>
 <ol type="a">
 <li><p>Write a one-sentence interpretation of this estimate in the context of Rasinski’s question-wording experiment. Be sure to explain what the negative sign means substantively.</p></li>
 <li><p>A colleague says, “A change of 1.8 points on a 3-point scale is huge!” Is this a fair characterization? What context would help evaluate the magnitude?</p></li>
@@ -2099,7 +2126,7 @@ Solution
 <section id="critical-thinking" class="level3" data-number="2.10.4">
 <h3 data-number="2.10.4" class="anchored" data-anchor-id="critical-thinking"><span class="header-section-number">2.10.4</span> Critical Thinking</h3>
 <ol start="11" type="1">
-<li><p><strong>Unbiasedness vs.&nbsp;Accuracy</strong>: An estimator can be unbiased but still give estimates that are far from the true value.</p>
+<li><p><strong>Unbiasedness vs.&nbsp;Accuracy.</strong> An estimator can be unbiased but still give estimates that are far from the true value.</p>
 <ol type="a">
 <li><p>How is this possible? What determines how far individual estimates might be from the truth?</p></li>
 <li><p>What might make <span class="math inline">\(\widehat{\text{ATE}}\)</span> more or less variable across different randomizations?</p></li>
@@ -2132,7 +2159,7 @@ Solution
 </ul>
 </details>
 <ol start="12" type="1">
-<li><p><strong>Breaking Unbiasedness</strong>: The proof of unbiasedness relies on the fact that <span class="math inline">\(E_D[D_i] = N_t/N\)</span> for all individuals <span class="math inline">\(i\)</span>.</p>
+<li><p><strong>Breaking Unbiasedness.</strong> The proof of unbiasedness relies on the fact that <span class="math inline">\(E_D[D_i] = N_t/N\)</span> for all individuals <span class="math inline">\(i\)</span>.</p>
 <ol type="a">
 <li><p>Give an example of an assignment mechanism where this would not hold.</p></li>
 <li><p>If we used such a biased assignment mechanism, would <span class="math inline">\(\widehat{\text{ATE}}\)</span> still be unbiased? Why or why not?</p></li>
@@ -2163,7 +2190,7 @@ Solution
 <p>The estimator would be capturing both the treatment effect <em>and</em> the selection effect, leading to bias.</p>
 </details>
 <ol start="13" type="1">
-<li><p><strong>Sample Size Considerations</strong>: Consider two experiments estimating the same ATE. Experiment A has <span class="math inline">\(N = 10\)</span> with <span class="math inline">\(N_t = 5\)</span>. Experiment B has <span class="math inline">\(N = 1000\)</span> with <span class="math inline">\(N_t = 500\)</span>.</p>
+<li><p><strong>Sample Size Considerations.</strong> Consider two experiments estimating the same ATE. Experiment A has <span class="math inline">\(N = 10\)</span> with <span class="math inline">\(N_t = 5\)</span>. Experiment B has <span class="math inline">\(N = 1000\)</span> with <span class="math inline">\(N_t = 500\)</span>.</p>
 <ol type="a">
 <li><p>Are both estimates unbiased for the ATE?</p></li>
 <li><p>In which experiment would you expect <span class="math inline">\(\widehat{\text{ATE}}\)</span> to be closer to the true ATE? Why?</p></li>
@@ -2193,7 +2220,7 @@ Solution
 <section id="r-practice" class="level3" data-number="2.10.5">
 <h3 data-number="2.10.5" class="anchored" data-anchor-id="r-practice"><span class="header-section-number">2.10.5</span> R Practice</h3>
 <ol start="14" type="1">
-<li><p><strong>Computing <span class="math inline">\(\widehat{\text{ATE}}\)</span> with <code>mean()</code></strong>: Suppose you have a data frame called <code>experiment</code> with columns <code>treatment</code> (1 = treated, 0 = control) and <code>outcome</code> (a numeric outcome variable).</p>
+<li><p><strong>Computing <span class="math inline">\(\widehat{\text{ATE}}\)</span> with <code>mean()</code>.</strong> Suppose you have a data frame called <code>experiment</code> with columns <code>treatment</code> (1 = treated, 0 = control) and <code>outcome</code> (a numeric outcome variable).</p>
 <ol type="a">
 <li><p>Write R code to compute <span class="math inline">\(\overline{Y}^{\text{obs}}_{t}\)</span> using logical indexing.</p></li>
 <li><p>Write R code to compute <span class="math inline">\(\overline{Y}^{\text{obs}}_{c}\)</span> using logical indexing.</p></li>
@@ -2222,7 +2249,7 @@ Solution
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>           <span class="fu">mean</span>(experiment<span class="sc">$</span>outcome[experiment<span class="sc">$</span>treatment <span class="sc">==</span> <span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <ol start="15" type="1">
-<li><p><strong>Understanding <code>lm()</code> Output</strong>: A researcher fits the model <code>lm(outcome ~ treatment, data = experiment)</code> and gets the following output:</p>
+<li><p><strong>Understanding <code>lm()</code> Output.</strong> A researcher fits the model <code>lm(outcome ~ treatment, data = experiment)</code> and gets the following output:</p>
 <pre><code>(Intercept)    treatment
       4.200        1.350</code></pre>
 <ol type="a">
@@ -2249,7 +2276,7 @@ Solution
 <p>We can verify: <span class="math inline">\(\overline{Y}^{\text{obs}}_{t} - \overline{Y}^{\text{obs}}_{c} = 5.550 - 4.200 = 1.350\)</span>, which matches the coefficient.</p>
 </details>
 <ol start="16" type="1">
-<li><strong>Reference Categories</strong>: Explain why we used <code>fct_relevel(desc, "welfare")</code> in the R code for the mock Rasinski data. What would happen if we had not done this? Would the <span class="math inline">\(\widehat{\text{ATE}}\)</span> computed using <code>mean()</code> and <code>lm()</code> still match?</li>
+<li><strong>Reference Categories.</strong> Explain why we used <code>fct_relevel(desc, "welfare")</code> in the R code for the mock Rasinski data. What would happen if we had not done this? Would the <span class="math inline">\(\widehat{\text{ATE}}\)</span> computed using <code>mean()</code> and <code>lm()</code> still match?</li>
 </ol>
 <details>
 <summary>
@@ -2279,7 +2306,7 @@ Solution
 <p>In practice, for the two approaches to give the same number (not just the same magnitude), we need to ensure the reference category in <code>lm()</code> matches which group we subtract in the <code>mean()</code> calculation.</p>
 </details>
 <ol start="17" type="1">
-<li><strong>Connecting <code>mean()</code> and <code>lm()</code></strong>: In your own words, explain why regressing the outcome on a binary treatment indicator produces a coefficient that equals the difference in means. What role does the intercept play in this relationship?</li>
+<li><strong>Connecting <code>mean()</code> and <code>lm()</code>.</strong> In your own words, explain why regressing the outcome on a binary treatment indicator produces a coefficient that equals the difference in means. What role does the intercept play in this relationship?</li>
 </ol>
 <details>
 <summary>

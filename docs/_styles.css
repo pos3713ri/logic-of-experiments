@@ -21,6 +21,11 @@
   font-size: 0.8em;
 }
 
+/* Grey question marks for missing/counterfactual values */
+.qs {
+  color: rgba(128, 128, 128, 0.2);
+}
+
 /* Exercise solutions styling */
 details {
   margin: 1em 0;

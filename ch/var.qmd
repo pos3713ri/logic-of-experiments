@@ -125,10 +125,13 @@ $$
 S_{tc}^2 = \frac{1}{N - 1} \sum_{i=1}^{N} \left(\tau_i - \text{ATE}\right)^2.
 $$
 
+:::
+
 ::: {.aside}
 
 Somewhat (or perhaps *very*) confusingly, $S_t^2$, $S_c^2$, and $S_{tc}^2$ are also called "variance." We use the variance $\text{Var}(X) = E\left[(X - E[X])^2\right]$ to describe the spread of random numbers (like noisy estimates) and the variances $S_t^2$, $S_c^2$, and $S_{tc}^2$ to describe the spread of a fixed collection of numbers (like potential outcomes under treatment). Statisticians sometimes call the latter **finite population variances** to distinguish them.
 
+:::
 
 ::: {.callout-note collapse="true"}
 ## On the $1/(N-1)$ Convention
@@ -147,9 +150,6 @@ The $1/(N-1)$ convention has a key advantage: it aligns the definition of the po
 
 :::
 
-:::
-
-:::
 
 Let's unpack this formula.
 

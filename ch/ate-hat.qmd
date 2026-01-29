@@ -1,10 +1,10 @@
 # Estimating the ATE
 
-In the previous chapter, we defined the average treatment effect (ATE) as the difference in average potential outcomes under treatment and control. This is simply the *hypothetical* difference between the average outcome if we assigned everyone to treatment and the average outcome if we assigned everyone to contrl.
+In the previous chapter, we defined the average treatment effect (ATE) as the difference in average potential outcomes under treatment and control. This is simply the *hypothetical* difference between the average outcome if we assigned everyone to treatment and the average outcome if we assigned everyone to control.
 
 But we also acknowledged a fundamental problem: we can never observe both potential outcomes for the same individual. So how can we design a procedure to *estimate* the ATE from data?
 
-In this chapter, we develop a a simple and intuitive procedure and estimator.
+In this chapter, we develop a simple and intuitive procedure and estimator.
 
 1. First, randomly assign individuals to treatment or control.
 2. Second, compute the difference in average outcomes between the treatment and control groups
@@ -147,16 +147,16 @@ Now suppose we run an experiment with $N_t = 5$ and $N_c = 5$. After randomizati
 
 | Respondent | $Y_i(0)$ | $Y_i(1)$ | $D_i$ | $Y_i^{\text{obs}}$ |
 |------|----------|----------|-------|---------------------|
-| 1    | ?        | 7        | 1     | 7                   |
-| 2    | 6        | ?        | 0     | 6                   |
-| 3    | 5        | ?        | 0     | 5                   |
-| 4    | ?        | 9        | 1     | 9                   |
-| 5    | ?        | 10       | 1     | 10                  |
-| 6    | 5        | ?        | 0     | 5                   |
-| 7    | ?        | 8        | 1     | 8                   |
-| 8    | 6        | ?        | 0     | 6                   |
-| 9    | 5        | ?        | 0     | 5                   |
-| 10   | ?        | 6        | 1     | 6                   |
+| 1    | <span class="qs">?</span> | 7        | 1     | 7                   |
+| 2    | 6        | <span class="qs">?</span> | 0     | 6                   |
+| 3    | 5        | <span class="qs">?</span> | 0     | 5                   |
+| 4    | <span class="qs">?</span> | 9        | 1     | 9                   |
+| 5    | <span class="qs">?</span> | 10       | 1     | 10                  |
+| 6    | 5        | <span class="qs">?</span> | 0     | 5                   |
+| 7    | <span class="qs">?</span> | 8        | 1     | 8                   |
+| 8    | 6        | <span class="qs">?</span> | 0     | 6                   |
+| 9    | 5        | <span class="qs">?</span> | 0     | 5                   |
+| 10   | <span class="qs">?</span> | 6        | 1     | 6                   |
 
 Notice that for each respondent, we observe exactly one potential outcome. The question marks represent the counterfactual outcomes we can never observe. We cannot compute $\tau_i = Y_i(1) - Y_i(0)$ for any individual because we never have both values.
 
@@ -283,7 +283,7 @@ This "plug-in" approach---replacing population quantities with their sample coun
 
 Before proving that the estimator $\widehat{\text{ATE}}$ is unbiased, we need to understand
 
-1. *that* the estimate \widehat{\text{ATE}}$ is a noisy and random estimate and  
+1. *that* the estimate $\widehat{\text{ATE}}$ is a noisy and random estimate and  
 2. *what* makes this estimate random in the first place.
 
 In typical statistical settings, we imagine that data are drawn from some distribution $Y_i \sim f(\theta)$. The randomness comes from imagining that the data could have been different if we had drawn a different sample from the population.
@@ -498,7 +498,7 @@ E_D\!\left[
 -
 \frac{(1 - D_i)\, Y_i(0)}{N_c/N}
 \right]
-\qquad \text{(expectation of asum; Rule 3)} \\[6pt]
+\qquad \text{(expectation of a sum; Rule 3)} \\[6pt]
 
 &= \frac{1}{N}
 \sum_{i=1}^{N}
@@ -509,7 +509,6 @@ E_D\!\left[
 \right)
 \qquad \text{(only $D_i$ is random; Rule 2)}.
 \end{align}
-}
 
 
 **Step 4: Compute the expectation of $D_i$.**
@@ -589,16 +588,16 @@ To reinforce that $\widehat{\text{ATE}}$ depends on the randomization, consider 
 
 | Respondent | $Y_i(0)$ | $Y_i(1)$ | $D_i$ | $Y_i^{\text{obs}}$ |
 |------|----------|----------|-------|---------------------|
-| 1    | 4        | ?        | 0     | 4                   |
-| 2    | ?        | 5        | 1     | 5                   |
-| 3    | ?        | 5        | 1     | 5                   |
-| 4    | 3        | ?        | 0     | 3                   |
-| 5    | 7        | ?        | 0     | 7                   |
-| 6    | ?        | 4        | 1     | 4                   |
-| 7    | 4        | ?        | 0     | 4                   |
-| 8    | ?        | 7        | 1     | 7                   |
-| 9    | ?        | 3        | 1     | 3                   |
-| 10   | 4        | ?        | 0     | 4                   |
+| 1    | 4        | <span class="qs">?</span> | 0     | 4                   |
+| 2    | <span class="qs">?</span> | 5        | 1     | 5                   |
+| 3    | <span class="qs">?</span> | 5        | 1     | 5                   |
+| 4    | 3        | <span class="qs">?</span> | 0     | 3                   |
+| 5    | 7        | <span class="qs">?</span> | 0     | 7                   |
+| 6    | <span class="qs">?</span> | 4        | 1     | 4                   |
+| 7    | 4        | <span class="qs">?</span> | 0     | 4                   |
+| 8    | <span class="qs">?</span> | 7        | 1     | 7                   |
+| 9    | <span class="qs">?</span> | 3        | 1     | 3                   |
+| 10   | 4        | <span class="qs">?</span> | 0     | 4                   |
 
 Now we compute
 
@@ -824,7 +823,7 @@ The values match exactly. **Using `mean()`** makes the calculation transparent. 
 
 ### Conceptual Understanding
 
-1. **Observed vs. Missing Outcomes**: In your own words, explain the difference between $Y_i^{\text{obs}}$ and $Y_i^{\text{mis}}$. Why is one observable and the other not?
+1. **Observed vs. Missing Outcomes.** In your own words, explain the difference between $Y_i^{\text{obs}}$ and $Y_i^{\text{mis}}$. Why is one observable and the other not?
 
 <details>
 <summary>Solution</summary>
@@ -839,7 +838,7 @@ This is the fundamental problem of causal inference applied to the observed data
 
 </details>
 
-2. **Design-Based Inference**: Explain what it means to say that inference in randomized experiments is "design-based" rather than "model-based." What is the source of randomness in each approach?
+2. **Design-Based Inference.** Explain what it means to say that inference in randomized experiments is "design-based" rather than "model-based." What is the source of randomness in each approach?
 
 <details>
 <summary>Solution</summary>
@@ -858,7 +857,7 @@ Design-based inference is powerful because we don't need to make assumptions abo
 
 </details>
 
-3. **The Meaning of Unbiasedness**: A student says, "Since $\widehat{\text{ATE}}$ is unbiased, my estimate must equal the true ATE." Explain why this is incorrect. What does unbiasedness actually guarantee?
+3. **The Meaning of Unbiasedness.** A student says, "Since $\widehat{\text{ATE}}$ is unbiased, my estimate must equal the true ATE." Explain why this is incorrect. What does unbiasedness actually guarantee?
 
 <details>
 <summary>Solution</summary>
@@ -877,7 +876,7 @@ The chapter example illustrates this: one randomization gave $\widehat{\text{ATE
 
 </details>
 
-4. **Why Randomization Matters**: Suppose instead of randomly assigning treatment, we let participants choose whether to receive treatment. Why would $\widehat{\text{ATE}} = \overline{Y}^{\text{obs}}_{t} - \overline{Y}^{\text{obs}}_{c}$ no longer be unbiased for the ATE?
+4. **Why Randomization Matters.** Suppose instead of randomly assigning treatment, we let participants choose whether to receive treatment. Why would $\widehat{\text{ATE}} = \overline{Y}^{\text{obs}}_{t} - \overline{Y}^{\text{obs}}_{c}$ no longer be unbiased for the ATE?
 
 <details>
 <summary>Solution</summary>
@@ -899,7 +898,7 @@ When treatment assignment is correlated with potential outcomes, the difference-
 
 ### Computational Practice
 
-5. **Computing the Estimate**: Consider the following observed data from a randomized experiment:
+5. **Computing the Estimate.** Consider the following observed data from a randomized experiment:
 
    | Individual | $D_i$ | $Y_i^{\text{obs}}$ |
    |------------|-------|---------------------|
@@ -964,7 +963,7 @@ Our estimate is that treatment increases outcomes by about 4.67 units on average
 
 </details>
 
-6. **Different Randomizations**: Suppose the true potential outcomes for 4 individuals are:
+6. **Different Randomizations.** Suppose the true potential outcomes for 4 individuals are:
 
    | Individual | $Y_i(0)$ | $Y_i(1)$ |
    |------------|----------|----------|
@@ -1040,7 +1039,7 @@ This equals the true ATE exactly! The first randomization underestimated (0 vs. 
 
 </details>
 
-7. **Verifying Unbiasedness**: Using the same potential outcomes from Exercise 6, list all possible ways to assign exactly 2 individuals to treatment and 2 to control. For each, compute $\widehat{\text{ATE}}$. Then compute the average of all these estimates and verify that it equals the true ATE.
+7. **Verifying Unbiasedness.** Using the same potential outcomes from Exercise 6, list all possible ways to assign exactly 2 individuals to treatment and 2 to control. For each, compute $\widehat{\text{ATE}}$. Then compute the average of all these estimates and verify that it equals the true ATE.
 
 <details>
 <summary>Solution</summary>
@@ -1143,7 +1142,7 @@ The average of all possible estimates equals 2, which is exactly the true ATE we
 
 ### Application to Rasinski's Experiment
 
-8. **Rasinski's Experiment Revisited**: Return to the hypothetical Rasinski data from the previous chapter. Suppose we randomly assign 5 respondents to the "assistance to the poor" wording (treatment) and 5 to the "welfare" wording (control).
+8. **Rasinski's Experiment Revisited.** Return to the hypothetical Rasinski data from the previous chapter. Suppose we randomly assign 5 respondents to the "assistance to the poor" wording (treatment) and 5 to the "welfare" wording (control).
 
    | Respondent | $Y_i(0)$ ("welfare") | $Y_i(1)$ ("assistance") |
    |------------|-------------------|----------------------|
@@ -1219,7 +1218,7 @@ Note: These two randomizations are not the only possible ones---there are $\bino
 
 </details>
 
-9. **What the Researcher Sees**: In Rasinski's actual experiment, the researcher does not observe the potential outcomes table---they only observe the outcomes under the assigned condition.
+9. **What the Researcher Sees.** In Rasinski's actual experiment, the researcher does not observe the potential outcomes table---they only observe the outcomes under the assigned condition.
 
    a. Using the randomization from Exercise 8a (respondents 1, 3, 5, 7, 9 assigned to treatment), write out the data table that the researcher would actually observe. Use "?" for unobserved potential outcomes.
 
@@ -1234,16 +1233,16 @@ Note: These two randomizations are not the only possible ones---there are $\bino
 
 | Respondent | $Y_i(0)$ | $Y_i(1)$ | $D_i$ | $Y_i^{\text{obs}}$ |
 |------------|----------|----------|-------|---------------------|
-| 1          | ?        | 1        | 1     | 1                   |
-| 2          | 3        | ?        | 0     | 3                   |
-| 3          | ?        | 1        | 1     | 1                   |
-| 4          | 3        | ?        | 0     | 3                   |
-| 5          | ?        | 1        | 1     | 1                   |
-| 6          | 3        | ?        | 0     | 3                   |
-| 7          | ?        | 1        | 1     | 1                   |
-| 8          | 3        | ?        | 0     | 3                   |
-| 9          | ?        | 2        | 1     | 2                   |
-| 10         | 3        | ?        | 0     | 3                   |
+| 1          | <span class="qs">?</span> | 1        | 1     | 1                   |
+| 2          | 3        | <span class="qs">?</span> | 0     | 3                   |
+| 3          | <span class="qs">?</span> | 1        | 1     | 1                   |
+| 4          | 3        | <span class="qs">?</span> | 0     | 3                   |
+| 5          | <span class="qs">?</span> | 1        | 1     | 1                   |
+| 6          | 3        | <span class="qs">?</span> | 0     | 3                   |
+| 7          | <span class="qs">?</span> | 1        | 1     | 1                   |
+| 8          | 3        | <span class="qs">?</span> | 0     | 3                   |
+| 9          | <span class="qs">?</span> | 2        | 1     | 2                   |
+| 10         | 3        | <span class="qs">?</span> | 0     | 3                   |
 
 For each respondent, the researcher sees only one potential outcome---the one corresponding to their assigned condition. The other potential outcome is forever unknown.
 
@@ -1270,7 +1269,7 @@ Random assignment ensures that the treated and control groups are, on average, c
 
 </details>
 
-10. **Interpreting the Estimate in Context**: Using the estimate from Exercise 8a ($\widehat{\text{ATE}} = -1.8$):
+10. **Interpreting the Estimate in Context.** Using the estimate from Exercise 8a ($\widehat{\text{ATE}} = -1.8$):
 
     a. Write a one-sentence interpretation of this estimate in the context of Rasinski's question-wording experiment. Be sure to explain what the negative sign means substantively.
 
@@ -1301,7 +1300,7 @@ So yes, the effect is substantively large, and the colleague's reaction is warra
 
 ### Critical Thinking
 
-11. **Unbiasedness vs. Accuracy**: An estimator can be unbiased but still give estimates that are far from the true value.
+11. **Unbiasedness vs. Accuracy.** An estimator can be unbiased but still give estimates that are far from the true value.
 
     a. How is this possible? What determines how far individual estimates might be from the truth?
 
@@ -1337,7 +1336,7 @@ What determines how far individual estimates might be from the truth:
 
 </details>
 
-12. **Breaking Unbiasedness**: The proof of unbiasedness relies on the fact that $E_D[D_i] = N_t/N$ for all individuals $i$.
+12. **Breaking Unbiasedness.** The proof of unbiasedness relies on the fact that $E_D[D_i] = N_t/N$ for all individuals $i$.
 
     a. Give an example of an assignment mechanism where this would not hold.
 
@@ -1380,7 +1379,7 @@ The estimator would be capturing both the treatment effect *and* the selection e
 
 </details>
 
-13. **Sample Size Considerations**: Consider two experiments estimating the same ATE. Experiment A has $N = 10$ with $N_t = 5$. Experiment B has $N = 1000$ with $N_t = 500$.
+13. **Sample Size Considerations.** Consider two experiments estimating the same ATE. Experiment A has $N = 10$ with $N_t = 5$. Experiment B has $N = 1000$ with $N_t = 500$.
 
     a. Are both estimates unbiased for the ATE?
 
@@ -1417,7 +1416,7 @@ Related concepts include:
 
 ### R Practice
 
-14. **Computing $\widehat{\text{ATE}}$ with `mean()`**: Suppose you have a data frame called `experiment` with columns `treatment` (1 = treated, 0 = control) and `outcome` (a numeric outcome variable).
+14. **Computing $\widehat{\text{ATE}}$ with `mean()`.** Suppose you have a data frame called `experiment` with columns `treatment` (1 = treated, 0 = control) and `outcome` (a numeric outcome variable).
 
     a. Write R code to compute $\overline{Y}^{\text{obs}}_{t}$ using logical indexing.
 
@@ -1463,7 +1462,7 @@ ate_hat <- mean(experiment$outcome[experiment$treatment == 1]) -
 
 </details>
 
-15. **Understanding `lm()` Output**: A researcher fits the model `lm(outcome ~ treatment, data = experiment)` and gets the following output:
+15. **Understanding `lm()` Output.** A researcher fits the model `lm(outcome ~ treatment, data = experiment)` and gets the following output:
 
     ```
     (Intercept)    treatment
@@ -1505,7 +1504,7 @@ We can verify: $\overline{Y}^{\text{obs}}_{t} - \overline{Y}^{\text{obs}}_{c} = 
 
 </details>
 
-16. **Reference Categories**: Explain why we used `fct_relevel(desc, "welfare")` in the R code for the mock Rasinski data. What would happen if we had not done this? Would the $\widehat{\text{ATE}}$ computed using `mean()` and `lm()` still match?
+16. **Reference Categories.** Explain why we used `fct_relevel(desc, "welfare")` in the R code for the mock Rasinski data. What would happen if we had not done this? Would the $\widehat{\text{ATE}}$ computed using `mean()` and `lm()` still match?
 
 <details>
 <summary>Solution</summary>
@@ -1539,7 +1538,7 @@ In practice, for the two approaches to give the same number (not just the same m
 
 </details>
 
-17. **Connecting `mean()` and `lm()`**: In your own words, explain why regressing the outcome on a binary treatment indicator produces a coefficient that equals the difference in means. What role does the intercept play in this relationship?
+17. **Connecting `mean()` and `lm()`.** In your own words, explain why regressing the outcome on a binary treatment indicator produces a coefficient that equals the difference in means. What role does the intercept play in this relationship?
 
 <details>
 <summary>Solution</summary>

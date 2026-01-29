@@ -180,6 +180,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The Variance of <span class="math inline">\(\widehat{\text{ATE}}\)</span></span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch/var-est.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Estimating the Variance</span></span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
@@ -192,7 +198,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/var-proof.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Appendix A: Proof of the Variance Formula</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Appendix A: Proof of the Variance Formula</span></span></a>
   </div>
 </li>
       </ul>
@@ -839,7 +845,7 @@ Rasinski, Kenneth A. 1989. <span>“The Effect of Question Wording on Public Sup
 <section id="conceptual-understanding" class="level3" data-number="1.7.1">
 <h3 data-number="1.7.1" class="anchored" data-anchor-id="conceptual-understanding"><span class="header-section-number">1.7.1</span> Conceptual Understanding</h3>
 <ol type="1">
-<li><strong>Defining Potential Outcomes</strong>: In your own words, explain what <span class="math inline">\(Y_i(1)\)</span> and <span class="math inline">\(Y_i(0)\)</span> represent in the context of Rasinski’s question-wording experiment. Why can we never observe both potential outcomes for the same respondent?</li>
+<li><strong>Defining Potential Outcomes.</strong> In your own words, explain what <span class="math inline">\(Y_i(1)\)</span> and <span class="math inline">\(Y_i(0)\)</span> represent in the context of Rasinski’s question-wording experiment. Why can we never observe both potential outcomes for the same respondent?</li>
 </ol>
 <details>
 <summary>
@@ -854,7 +860,7 @@ Solution
 <p>This is the fundamental problem of causal inference.</p>
 </details>
 <ol start="2" type="1">
-<li><strong>The Fundamental Problem</strong>: Explain why we call it the “fundamental problem of causal inference.” What makes this problem “fundamental” rather than just “difficult”?</li>
+<li><strong>The Fundamental Problem.</strong> Explain why we call it the “fundamental problem of causal inference.” What makes this problem “fundamental” rather than just “difficult”?</li>
 </ol>
 <details>
 <summary>
@@ -865,7 +871,7 @@ Solution
 <p>This is why we need research designs—like randomized experiments—that allow us to <em>estimate</em> causal effects at the group level, even though we can never directly <em>observe</em> individual-level causal effects.</p>
 </details>
 <ol start="3" type="1">
-<li><strong>ATE Interpretation</strong>: A researcher finds an ATE of 3.2 in an experiment testing the effect of a new study technique on exam scores (measured 0-100). Write two sentences explaining what this means in plain language that a non-statistician could understand.</li>
+<li><strong>ATE Interpretation.</strong> A researcher finds an ATE of 3.2 in an experiment testing the effect of a new study technique on exam scores (measured 0-100). Write two sentences explaining what this means in plain language that a non-statistician could understand.</li>
 </ol>
 <details>
 <summary>
@@ -875,7 +881,7 @@ Solution
 <p>Another way to say this: if we could magically give the study technique to all students and then also observe what would have happened if none of them used it, the average difference between these two scenarios would be 3.2 points.</p>
 </details>
 <ol start="4" type="1">
-<li><strong>Sharp Null vs.&nbsp;Zero ATE</strong>: Is it possible to have an ATE of zero even when the sharp null hypothesis does not hold? Explain your answer and provide an example using a simple table of potential outcomes for 4 individuals.</li>
+<li><strong>Sharp Null vs.&nbsp;Zero ATE.</strong> Is it possible to have an ATE of zero even when the sharp null hypothesis does not hold? Explain your answer and provide an example using a simple table of potential outcomes for 4 individuals.</li>
 </ol>
 <details>
 <summary>
@@ -938,7 +944,7 @@ Solution
 <section id="computational-practice" class="level3" data-number="1.7.2">
 <h3 data-number="1.7.2" class="anchored" data-anchor-id="computational-practice"><span class="header-section-number">1.7.2</span> Computational Practice</h3>
 <ol start="5" type="1">
-<li><p><strong>Computing Individual Treatment Effects</strong>: Consider the following potential outcomes for 6 respondents in a hypothetical experiment:</p>
+<li><p><strong>Computing Individual Treatment Effects.</strong> Consider the following potential outcomes for 6 respondents in a hypothetical experiment:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1067,7 +1073,7 @@ Solution
 </ul>
 </details>
 <ol start="6" type="1">
-<li><p><strong>Verifying the Sharp Null</strong>: Consider the following potential outcomes:</p>
+<li><p><strong>Verifying the Sharp Null.</strong> Consider the following potential outcomes:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1166,7 +1172,7 @@ Solution
 <p>The average of zeros is always zero.</p>
 </details>
 <ol start="7" type="1">
-<li><strong>Constant Treatment Effects</strong>: Create a table of potential outcomes for 5 individuals where the constant treatment effects assumption holds with <span class="math inline">\(\tau = -2.5\)</span> for all individuals. Show that the ATE equals -2.5.</li>
+<li><strong>Constant Treatment Effects.</strong> Create a table of potential outcomes for 5 individuals where the constant treatment effects assumption holds with <span class="math inline">\(\tau = -2.5\)</span> for all individuals. Show that the ATE equals -2.5.</li>
 </ol>
 <details>
 <summary>
@@ -1238,7 +1244,7 @@ Solution
 <section id="application-to-rasinskis-experiment" class="level3" data-number="1.7.3">
 <h3 data-number="1.7.3" class="anchored" data-anchor-id="application-to-rasinskis-experiment"><span class="header-section-number">1.7.3</span> Application to Rasinski’s Experiment</h3>
 <ol start="8" type="1">
-<li><p><strong>Understanding the Conditions</strong>:</p>
+<li><p><strong>Understanding the Conditions.</strong></p>
 <ol type="a">
 <li><p>In Rasinski’s experiment, what exactly differs between the treatment and control conditions? What stays the same?</p></li>
 <li><p>Why might the word “welfare” produce different responses than “assistance to the poor” even though both refer to the same government programs?</p></li>
@@ -1263,7 +1269,7 @@ Solution
 <p>These different framings can activate different considerations in respondents’ minds, leading them to express different levels of support even though the underlying programs are identical. This is exactly what Rasinski’s experiment was designed to detect.</p>
 </details>
 <ol start="9" type="1">
-<li><p><strong>Interpreting Rasinski’s Results</strong>: In the hypothetical Rasinski data presented in the notes, the ATE was -1.3.</p>
+<li><p><strong>Interpreting Rasinski’s Results.</strong> In the hypothetical Rasinski data presented in the notes, the ATE was -1.3.</p>
 <ol type="a">
 <li><p>Explain what this negative ATE means substantively. Does it indicate increased or decreased support for spending?</p></li>
 <li><p>Why is the sign (positive or negative) of the ATE potentially confusing in this example?</p></li>
@@ -1309,7 +1315,7 @@ Solution
 <p>The <em>substantive</em> interpretation does not change: the “assistance to the poor” wording still increases support for spending compared to “welfare.” The sign of the ATE simply reflects our arbitrary choice of how to code the responses.</p>
 </details>
 <ol start="10" type="1">
-<li><p><strong>Rasinski’s Potential Outcomes</strong>: Consider respondent 9 in the hypothetical Rasinski data, who answered “About right” (2) under both conditions.</p>
+<li><p><strong>Rasinski’s Potential Outcomes.</strong> Consider respondent 9 in the hypothetical Rasinski data, who answered “About right” (2) under both conditions.</p>
 <ol type="a">
 <li><p>What is this respondent’s individual treatment effect (<span class="math inline">\(\tau_9\)</span>)?</p></li>
 <li><p>Does this mean the question wording had no effect on this respondent? Explain.</p></li>
@@ -1386,7 +1392,7 @@ Solution
 <section id="critical-thinking" class="level3" data-number="1.7.4">
 <h3 data-number="1.7.4" class="anchored" data-anchor-id="critical-thinking"><span class="header-section-number">1.7.4</span> Critical Thinking</h3>
 <ol start="11" type="1">
-<li><p><strong>Beyond the Average</strong>: In the original hypothetical example (with 10 respondents and ATE = 1.5), we saw that treatment effects varied across individuals, with some positive, some negative, and some zero.</p>
+<li><p><strong>Beyond the Average.</strong> In the original hypothetical example (with 10 respondents and ATE = 1.5), we saw that treatment effects varied across individuals, with some positive, some negative, and some zero.</p>
 <ol type="a">
 <li><p>Why might this variation in individual treatment effects matter for policy or practical decisions?</p></li>
 <li><p>What are the limitations of focusing only on the ATE when individual treatment effects vary substantially?</p></li>
@@ -1411,7 +1417,7 @@ Solution
 </ul>
 </details>
 <ol start="12" type="1">
-<li><p><strong>Assumption Plausibility</strong>:</p>
+<li><p><strong>Assumption Plausibility.</strong></p>
 <ol type="a">
 <li><p>For what kinds of treatments or contexts—if any—might the constant treatment effects assumption be approximately reasonable?</p></li>
 <li><p>For what kinds of treatments would this assumption be clearly implausible? Provide a specific example and explain why treatment effects would likely vary across individuals.</p></li>

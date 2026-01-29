@@ -64,7 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../appendices/var-proof.html" rel="next">
+<link href="../ch/var-est.html" rel="next">
 <link href="../ch/ate-hat.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -194,6 +194,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The Variance of <span class="math inline">\(\widehat{\text{ATE}}\)</span></span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch/var-est.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Estimating the Variance</span></span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
@@ -206,7 +212,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/var-proof.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Appendix A: Proof of the Variance Formula</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Appendix A: Proof of the Variance Formula</span></span></a>
   </div>
 </li>
       </ul>
@@ -301,7 +307,7 @@ window.Quarto = {
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># take one sample from the collection</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(collection, <span class="at">size =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0</code></pre>
+<pre><code>[1] -1</code></pre>
 </div>
 </div>
 <p><em>What’s the variance of this sample?</em></p>
@@ -315,12 +321,12 @@ window.Quarto = {
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>sq_dev <span class="ot">&lt;-</span> (x <span class="sc">-</span> avg)<span class="sc">^</span><span class="dv">2</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(sq_dev)  <span class="co"># avg squared deviation</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.992016</code></pre>
+<pre><code>[1] 2.00787</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute in one step</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((x <span class="sc">-</span> <span class="fu">mean</span>(x))<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.992016</code></pre>
+<pre><code>[1] 2.00787</code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -386,13 +392,13 @@ S_c^2 = \frac{1}{N - 1} \sum_{i=1}^{N} (Y_i(0) - \overline{Y}(0))^2,
 <p><span class="math display">\[
 S_{tc}^2 = \frac{1}{N - 1} \sum_{i=1}^{N} \left(\tau_i - \text{ATE}\right)^2.
 \]</span></p>
+</div>
+</div>
 
-</div>
-</div>
-<div class="no-row-height column-margin column-container"><div class="margin-aside callout-2-contents callout-collapse collapse callout-margin-content">
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
 <p>Somewhat (or perhaps <em>very</em>) confusingly, <span class="math inline">\(S_t^2\)</span>, <span class="math inline">\(S_c^2\)</span>, and <span class="math inline">\(S_{tc}^2\)</span> are also called “variance.” We use the variance <span class="math inline">\(\text{Var}(X) = E\left[(X - E[X])^2\right]\)</span> to describe the spread of random numbers (like noisy estimates) and the variances <span class="math inline">\(S_t^2\)</span>, <span class="math inline">\(S_c^2\)</span>, and <span class="math inline">\(S_{tc}^2\)</span> to describe the spread of a fixed collection of numbers (like potential outcomes under treatment). Statisticians sometimes call the latter <strong>finite population variances</strong> to distinguish them.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+</div></div><div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -401,7 +407,7 @@ On the <span class="math inline">\(1/(N-1)\)</span> Convention
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>You may notice that <span class="math inline">\(S_t^2\)</span>, <span class="math inline">\(S_c^2\)</span>, and <span class="math inline">\(S_{tc}^2\)</span> are defined with <span class="math inline">\(1/(N-1)\)</span> in the denominator rather than <span class="math inline">\(1/N\)</span>. This follows the convention used by Cochran (1977) and later adopted by Imbens and Rubin (2015).</p>
 <p>This choice differs from the arguably more “elementary” variance</p>
@@ -413,7 +419,7 @@ V_N = \frac{1}{N} \sum_{i=1}^N (x_i - \bar{x})^2,
 </div>
 </div>
 </div>
-</div></div><p>Let’s unpack this formula.</p>
+<p>Let’s unpack this formula.</p>
 <section id="understanding-the-variance-formula" class="level3" data-number="3.2.1">
 <h3 data-number="3.2.1" class="anchored" data-anchor-id="understanding-the-variance-formula"><span class="header-section-number">3.2.1</span> Understanding the Variance Formula</h3>
 <p>Before interpreting the formula, let’s understand what each quantity measures. <span class="math inline">\(S_t^2\)</span> measures how spread out the potential outcomes under treatment are across individuals. <span class="math inline">\(S_c^2\)</span> measures the same for control. And <span class="math inline">\(S_{tc}^2\)</span> measures how spread out the individual treatment effects are—that is, how much the treatment effect varies from person to person.</p>
@@ -1619,8 +1625,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../appendices/var-proof.html" class="pagination-link" aria-label="Appendix A: Proof of the Variance Formula">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Appendix A: Proof of the Variance Formula</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../ch/var-est.html" class="pagination-link" aria-label="Estimating the Variance">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Estimating the Variance</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

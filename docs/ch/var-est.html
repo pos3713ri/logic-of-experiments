@@ -1,0 +1,2060 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>4&nbsp; Estimating the Variance – The Logic of Experiments</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../appendices/var-proof.html" rel="next">
+<link href="../ch/var.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-2db5a64a0f9238d29502e24e892d8c52.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../_styles.css">
+</head>
+
+<body class="nav-sidebar floating slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ch/var-est.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Estimating the Variance</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">The Logic of Experiments</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch/ate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">ATE</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch/ate-hat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Estimating the ATE</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch/var.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The Variance of <span class="math inline">\(\widehat{\text{ATE}}\)</span></span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch/var-est.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Estimating the Variance</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/var-proof.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Appendix A: Proof of the Variance Formula</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#the-problem-we-cant-observe-what-we-need" id="toc-the-problem-we-cant-observe-what-we-need" class="nav-link active" data-scroll-target="#the-problem-we-cant-observe-what-we-need"><span class="header-section-number">4.1</span> The Problem: We Can’t Observe What We Need</a></li>
+  <li><a href="#estimating-s_t2-and-s_c2" id="toc-estimating-s_t2-and-s_c2" class="nav-link" data-scroll-target="#estimating-s_t2-and-s_c2"><span class="header-section-number">4.2</span> Estimating <span class="math inline">\(S_t^2\)</span> and <span class="math inline">\(S_c^2\)</span></a>
+  <ul class="collapse">
+  <li><a href="#the-sample-variance-in-the-treatment-group" id="toc-the-sample-variance-in-the-treatment-group" class="nav-link" data-scroll-target="#the-sample-variance-in-the-treatment-group"><span class="header-section-number">4.2.1</span> The Sample Variance in the Treatment Group</a></li>
+  <li><a href="#the-sample-variance-in-the-control-group" id="toc-the-sample-variance-in-the-control-group" class="nav-link" data-scroll-target="#the-sample-variance-in-the-control-group"><span class="header-section-number">4.2.2</span> The Sample Variance in the Control Group</a></li>
+  <li><a href="#are-these-good-estimates" id="toc-are-these-good-estimates" class="nav-link" data-scroll-target="#are-these-good-estimates"><span class="header-section-number">4.2.3</span> Are These Good Estimates?</a></li>
+  </ul></li>
+  <li><a href="#the-problem-with-s_tc2" id="toc-the-problem-with-s_tc2" class="nav-link" data-scroll-target="#the-problem-with-s_tc2"><span class="header-section-number">4.3</span> The Problem with <span class="math inline">\(S_{tc}^2\)</span></a></li>
+  <li><a href="#neymans-variance-estimator" id="toc-neymans-variance-estimator" class="nav-link" data-scroll-target="#neymans-variance-estimator"><span class="header-section-number">4.4</span> Neyman’s Variance Estimator</a>
+  <ul class="collapse">
+  <li><a href="#case-1-the-sharp-null-hypothesis" id="toc-case-1-the-sharp-null-hypothesis" class="nav-link" data-scroll-target="#case-1-the-sharp-null-hypothesis"><span class="header-section-number">4.4.1</span> Case 1: The Sharp Null Hypothesis</a></li>
+  <li><a href="#case-2-constant-treatment-effects" id="toc-case-2-constant-treatment-effects" class="nav-link" data-scroll-target="#case-2-constant-treatment-effects"><span class="header-section-number">4.4.2</span> Case 2: Constant Treatment Effects</a></li>
+  <li><a href="#a-simulation-under-constant-effects" id="toc-a-simulation-under-constant-effects" class="nav-link" data-scroll-target="#a-simulation-under-constant-effects"><span class="header-section-number">4.4.3</span> A Simulation Under Constant Effects</a></li>
+  <li><a href="#case-3-non-constant-treatment-effects" id="toc-case-3-non-constant-treatment-effects" class="nav-link" data-scroll-target="#case-3-non-constant-treatment-effects"><span class="header-section-number">4.4.4</span> Case 3: Non-Constant Treatment Effects</a></li>
+  <li><a href="#a-simulation-under-non-constant-effects" id="toc-a-simulation-under-non-constant-effects" class="nav-link" data-scroll-target="#a-simulation-under-non-constant-effects"><span class="header-section-number">4.4.5</span> A Simulation Under Non-Constant Effects</a></li>
+  </ul></li>
+  <li><a href="#computing-the-variance-estimate-in-r" id="toc-computing-the-variance-estimate-in-r" class="nav-link" data-scroll-target="#computing-the-variance-estimate-in-r"><span class="header-section-number">4.5</span> Computing the Variance Estimate in R</a>
+  <ul class="collapse">
+  <li><a href="#computing-the-sample-variances" id="toc-computing-the-sample-variances" class="nav-link" data-scroll-target="#computing-the-sample-variances"><span class="header-section-number">4.5.1</span> Computing the Sample Variances</a></li>
+  <li><a href="#computing-neymans-variance-estimator" id="toc-computing-neymans-variance-estimator" class="nav-link" data-scroll-target="#computing-neymans-variance-estimator"><span class="header-section-number">4.5.2</span> Computing Neyman’s Variance Estimator</a></li>
+  <li><a href="#using-ols-with-hc2-standard-errors" id="toc-using-ols-with-hc2-standard-errors" class="nav-link" data-scroll-target="#using-ols-with-hc2-standard-errors"><span class="header-section-number">4.5.3</span> Using OLS with HC2 Standard Errors</a></li>
+  </ul></li>
+  <li><a href="#clifford2021" id="toc-clifford2021" class="nav-link" data-scroll-target="#clifford2021"><span class="header-section-number">4.6</span> <span class="citation" data-cites="clifford2021">Clifford, Sheagley, and Piston (2021)</span></a></li>
+  <li><a href="#key-terms" id="toc-key-terms" class="nav-link" data-scroll-target="#key-terms"><span class="header-section-number">4.7</span> Key Terms</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">4.8</span> Exercises</a>
+  <ul class="collapse">
+  <li><a href="#conceptual-understanding" id="toc-conceptual-understanding" class="nav-link" data-scroll-target="#conceptual-understanding"><span class="header-section-number">4.8.1</span> Conceptual Understanding</a></li>
+  <li><a href="#computational-practice" id="toc-computational-practice" class="nav-link" data-scroll-target="#computational-practice"><span class="header-section-number">4.8.2</span> Computational Practice</a></li>
+  <li><a href="#critical-thinking" id="toc-critical-thinking" class="nav-link" data-scroll-target="#critical-thinking"><span class="header-section-number">4.8.3</span> Critical Thinking</a></li>
+  <li><a href="#r-practice" id="toc-r-practice" class="nav-link" data-scroll-target="#r-practice"><span class="header-section-number">4.8.4</span> R Practice</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Estimating the Variance</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>In the previous chapter, we derived the variance of <span class="math inline">\(\widehat{\text{ATE}}\)</span> under completely randomized experiments. We showed that</p>
+<p><span class="math display">\[
+\text{Var}_D \left(\widehat{\text{ATE}}\right) = \frac{S_t^2}{N_t} + \frac{S_c^2}{N_c} - \frac{S_{tc}^2}{N},
+\]</span></p>
+<p>where <span class="math inline">\(S_t^2\)</span> and <span class="math inline">\(S_c^2\)</span> are the variances of the potential outcomes and <span class="math inline">\(S_{tc}^2\)</span> is the variance of the individual treatment effects. Remember, we defined these as</p>
+<p><span class="math display">\[
+S_t^2 = \frac{1}{N-1} \sum_{i=1}^{N} [Y_i(1) - \overline{Y}(1)]^2,
+\]</span></p>
+<p><span class="math display">\[
+S_c^2 = \frac{1}{N-1} \sum_{i=1}^{N} [Y_i(0) - \overline{Y}(0)]^2,
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+S_{tc}^2 = \frac{1}{N-1} \sum_{i=1}^{N} (\tau_i - \text{ATE})^2.
+\]</span></p>
+<p>But there’s a problem. This formula depends on quantities we cannot observe.</p>
+<ul>
+<li>We defined <span class="math inline">\(S_t^2\)</span> as the variance of <em>all</em> individuals’ potential outcomes under treatment, but we only observe <span class="math inline">\(Y_i(1)\)</span> for the treated individuals.</li>
+<li>Similarly, we only observe <span class="math inline">\(Y_i(0)\)</span> for the control individuals.</li>
+<li>And <span class="math inline">\(S_{tc}^2\)</span> depends on the individual treatment effects <span class="math inline">\(\tau_i = Y_i(1) - Y_i(0)\)</span>, which we can never observe for any individual.</li>
+</ul>
+<p>To make inferences about the ATE, we need to <em>estimate</em> the variance using only the observed data. This chapter addresses that challenge.</p>
+<section id="the-problem-we-cant-observe-what-we-need" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="the-problem-we-cant-observe-what-we-need"><span class="header-section-number">4.1</span> The Problem: We Can’t Observe What We Need</h2>
+<p>Let’s be explicit about what we can and cannot observe. Recall our running example with 10 respondents. Here are the full potential outcomes (which only we, as omniscient author and reader, can see).</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Respondent</th>
+<th><span class="math inline">\(Y_i(0)\)</span></th>
+<th><span class="math inline">\(Y_i(1)\)</span></th>
+<th><span class="math inline">\(\tau_i\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>4</td>
+<td>7</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>6</td>
+<td>5</td>
+<td>-1</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>5</td>
+<td>5</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>3</td>
+<td>9</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>7</td>
+<td>10</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>5</td>
+<td>4</td>
+<td>-1</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>4</td>
+<td>8</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>6</td>
+<td>7</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>5</td>
+<td>3</td>
+<td>-2</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>4</td>
+<td>6</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>From this complete table, we can compute <span class="math inline">\(S_t^2 \approx 4.93\)</span>, <span class="math inline">\(S_c^2 \approx 1.43\)</span>, and <span class="math inline">\(S_{tc}^2 = 6.5\)</span>. With <span class="math inline">\(N_t = N_c = 5\)</span>, the true variance of the estimator is</p>
+<p><span class="math display">\[
+\text{Var}_D(\widehat{\text{ATE}}) = \frac{4.93}{5} + \frac{1.43}{5} - \frac{6.5}{10} \approx 0.99 + 0.29 - 0.65 = 0.62.
+\]</span></p>
+<p>But in practice, after running the experiment, we only see the observed outcomes. Suppose respondents 1, 4, 5, 7, and 10 are assigned to treatment. Here’s what we actually observe.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 10%">
+<col style="width: 32%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Respondent</th>
+<th><span class="math inline">\(Y_i(0)\)</span></th>
+<th><span class="math inline">\(Y_i(1)\)</span></th>
+<th><span class="math inline">\(\tau_i\)</span></th>
+<th><span class="math inline">\(D_i\)</span></th>
+<th><span class="math inline">\(Y_i^{\text{obs}}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><span class="qs">?</span></td>
+<td>7</td>
+<td><span class="qs">?</span></td>
+<td>1</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>6</td>
+<td><span class="qs">?</span></td>
+<td><span class="qs">?</span></td>
+<td>0</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>5</td>
+<td><span class="qs">?</span></td>
+<td><span class="qs">?</span></td>
+<td>0</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><span class="qs">?</span></td>
+<td>9</td>
+<td><span class="qs">?</span></td>
+<td>1</td>
+<td>9</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><span class="qs">?</span></td>
+<td>10</td>
+<td><span class="qs">?</span></td>
+<td>1</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>5</td>
+<td><span class="qs">?</span></td>
+<td><span class="qs">?</span></td>
+<td>0</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td><span class="qs">?</span></td>
+<td>8</td>
+<td><span class="qs">?</span></td>
+<td>1</td>
+<td>8</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>6</td>
+<td><span class="qs">?</span></td>
+<td><span class="qs">?</span></td>
+<td>0</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>5</td>
+<td><span class="qs">?</span></td>
+<td><span class="qs">?</span></td>
+<td>0</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td><span class="qs">?</span></td>
+<td>6</td>
+<td><span class="qs">?</span></td>
+<td>1</td>
+<td>6</td>
+</tr>
+</tbody>
+</table>
+<p>The question marks represent counterfactual outcomes we cannot observe. We have no way to compute <span class="math inline">\(S_t^2\)</span>, <span class="math inline">\(S_c^2\)</span>, or <span class="math inline">\(S_{tc}^2\)</span> from this data because we don’t observe all the potential outcomes.</p>
+</section>
+<section id="estimating-s_t2-and-s_c2" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="estimating-s_t2-and-s_c2"><span class="header-section-number">4.2</span> Estimating <span class="math inline">\(S_t^2\)</span> and <span class="math inline">\(S_c^2\)</span></h2>
+<p>Even though we cannot compute <span class="math inline">\(S_t^2\)</span> exactly, we can <em>estimate</em> it using the observed outcomes in the treatment group. Similarly, we can estimate <span class="math inline">\(S_c^2\)</span> using the observed outcomes in the control group.</p>
+<section id="the-sample-variance-in-the-treatment-group" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="the-sample-variance-in-the-treatment-group"><span class="header-section-number">4.2.1</span> The Sample Variance in the Treatment Group</h3>
+<p>We define the <strong>sample variance in the treatment group</strong> as</p>
+<p><span class="math display">\[
+s_t^2 = \frac{1}{N_t - 1} \sum_{i:D_i=1} \left( Y^{\text{obs}}_i - \overline{Y}^{\text{obs}}_t \right)^2.
+\]</span></p>
+<p>This is just the ordinary sample variance formula applied to the observed outcomes of treated individuals.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Understanding This Formula
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The formula computes the variance of the observed outcomes among treated individuals. The subscript <span class="math inline">\(i:D_i=1\)</span> means “only sum over individuals with <span class="math inline">\(D_i = 1\)</span>” (i.e., the treated individuals).</p>
+<p>It’s exactly analogous to teh formatula for <span class="math inline">\(S_t^2\)</span>, except here we only use the <em>observed</em> values in the treatment group.</p>
+<p><strong>Example.</strong> In our experiment, the treated individuals (1, 4, 5, 7, 10) have observed outcomes 7, 9, 10, 8, 6. The treatment group mean is</p>
+<p><span class="math display">\[
+\overline{Y}^{\text{obs}}_t = \frac{7 + 9 + 10 + 8 + 6}{5} = \frac{40}{5} = 8.
+\]</span></p>
+<p>The sample variance is</p>
+<p><span class="math display">\[
+\begin{align}
+s_t^2 &amp;= \frac{1}{5-1}\left[(7-8)^2 + (9-8)^2 + (10-8)^2 + (8-8)^2 + (6-8)^2\right] \\
+&amp;= \frac{1 + 1 + 4 + 0 + 4}{4} \\
+&amp;= \frac{10}{4} = 2.5.
+\end{align}
+\]</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="the-sample-variance-in-the-control-group" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="the-sample-variance-in-the-control-group"><span class="header-section-number">4.2.2</span> The Sample Variance in the Control Group</h3>
+<p>Similarly, we define the <strong>sample variance in the control group</strong> as</p>
+<p><span class="math display">\[
+s_c^2 = \frac{1}{N_c - 1} \sum_{i:D_i=0} \left( Y^{\text{obs}}_i - \overline{Y}^{\text{obs}}_c \right)^2.
+\]</span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Understanding This Formula
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>This is the same idea, applied to the control group. We compute the variance of the observed outcomes among control individuals.</p>
+<p><strong>Example.</strong> The control individuals (2, 3, 6, 8, 9) have observed outcomes 6, 5, 5, 6, 5. The control group mean is</p>
+<p><span class="math display">\[
+\overline{Y}^{\text{obs}}_c = \frac{6 + 5 + 5 + 6 + 5}{5} = \frac{27}{5} = 5.4.
+\]</span></p>
+<p>The sample variance is</p>
+<p><span class="math display">\[
+\begin{align}
+s_c^2 &amp;= \frac{1}{4}\left[(6-5.4)^2 + (5-5.4)^2 + (5-5.4)^2 + (6-5.4)^2 + (5-5.4)^2\right] \\
+&amp;= \frac{0.36 + 0.16 + 0.16 + 0.36 + 0.16}{4} \\
+&amp;= \frac{1.2}{4} = 0.3.
+\end{align}
+\]</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="are-these-good-estimates" class="level3" data-number="4.2.3">
+<h3 data-number="4.2.3" class="anchored" data-anchor-id="are-these-good-estimates"><span class="header-section-number">4.2.3</span> Are These Good Estimates?</h3>
+<p>A natural question is whether <span class="math inline">\(s_t^2\)</span> and <span class="math inline">\(s_c^2\)</span> are good estimates of <span class="math inline">\(S_t^2\)</span> and <span class="math inline">\(S_c^2\)</span>. They are! Under random assignment, these variances of the <em>observed</em> outcomes equals the variance of <em>all</em> the potential outcomes.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Unbiasedness of Sample Variances
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Under completely randomized assignment, we have</p>
+<p><span class="math display">\[
+E_D[s_t^2] = S_t^2 \quad \text{and} \quad E_D[s_c^2] = S_c^2.
+\]</span></p>
+<p>That is, on average across all possible randomizations, the variances of the <em>observed</em> outcomes equals the variances of <em>all</em> the potential outcomes.</p>
+<p>The intuition is straightforward. Random assignment ensures that the treated individuals are a representative sample of the full population. So the variance of the observed outcomes among treated individuals should, on average, equal the variance of potential outcomes under treatment for the full population. The same logic applies to the control group.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="the-problem-with-s_tc2" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="the-problem-with-s_tc2"><span class="header-section-number">4.3</span> The Problem with <span class="math inline">\(S_{tc}^2\)</span></h2>
+<p>We can estimate <span class="math inline">\(S_t^2\)</span> and <span class="math inline">\(S_c^2\)</span> from observed data. But what about <span class="math inline">\(S_{tc}^2\)</span>, the variance of the individual treatment effects?</p>
+<p>Here’s a <strong>big problem</strong>. Recall that <span class="math inline">\(S_{tc}^2\)</span> is defined as</p>
+<p><span class="math display">\[
+S_{tc}^2 = \frac{1}{N-1} \sum_{i=1}^{N} (\tau_i - \text{ATE})^2,
+\]</span></p>
+<p>where <span class="math inline">\(\tau_i = Y_i(1) - Y_i(0)\)</span>. This requires knowing <em>both</em> potential outcomes for every individual. But we only observe one potential outcome per individual. We can never compute <span class="math inline">\(\tau_i\)</span> for <strong>any</strong> individual, let alone its variance across individuals.</p>
+<p>This is a fundamental limitation. The quantity <span class="math inline">\(S_{tc}^2\)</span> is inherently unobservable. <strong>We cannot even <em>estimate</em> it from the observed data.</strong></p>
+</section>
+<section id="neymans-variance-estimator" class="level2 page-columns page-full" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="neymans-variance-estimator"><span class="header-section-number">4.4</span> Neyman’s Variance Estimator</h2>
+<p>In 1923, Jerzy Neyman proposed a solution to this problem <span class="citation" data-cites="Neyman1923">(<a href="#ref-Neyman1923" role="doc-biblioref">Neyman 1923</a>)</span>. Rather than trying to estimate <span class="math inline">\(S_{tc}^2\)</span>, we simply <strong>drop the third term</strong> from the variance formula.</p>
+<div class="no-row-height column-margin column-container"><div id="ref-Neyman1923" class="csl-entry" role="listitem">
+Neyman, Jerzy. 1923. <span>“On the Application of Probability Theory to Agricultural Experiments: Essay on Principles, Section 9.”</span> <em>Statistical Science</em> 5 (4): 465–72.
+</div><div class="margin-aside">
+<p>Let that sink in: in the last chapter, we took a deep dive into this third term. Now we just drop it?!? How can that be right?</p>
+</div></div>
+<p>This gives what we call <strong>Neyman’s variance estimator</strong>.</p>
+<p><span class="math display">\[
+\widehat{\text{Var}}(\widehat{\text{ATE}}) = \frac{s_t^2}{N_t} + \frac{s_c^2}{N_c}.
+\]</span></p>
+<p>This estimator uses only observable quantities: the sample variances in the treatment and control groups.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Understanding This Estimator
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Neyman’s variance estimator replaces the population variances <span class="math inline">\(S_t^2\)</span> and <span class="math inline">\(S_c^2\)</span> with their sample counterparts <span class="math inline">\(s_t^2\)</span> and <span class="math inline">\(s_c^2\)</span>, and ignores the <span class="math inline">\(-S_{tc}^2/N\)</span> term entirely.</p>
+<p><strong>Example.</strong> Using our earlier calculations where <span class="math inline">\(s_t^2 = 2.5\)</span> and <span class="math inline">\(s_c^2 = 0.3\)</span> with <span class="math inline">\(N_t = N_c = 5\)</span>, Neyman’s variance estimator is</p>
+<p><span class="math display">\[
+\widehat{\text{Var}}(\widehat{\text{ATE}}) = \frac{2.5}{5} + \frac{0.3}{5} = 0.5 + 0.06 = 0.56.
+\]</span></p>
+<p>Recall that the true variance (computed from the full potential outcomes) was 0.62. Our estimate of 0.56 is reasonably close.</p>
+</div>
+</div>
+</div>
+<p>But why is it safe to drop this third term? Let’s consider three scenarios.</p>
+<section id="case-1-the-sharp-null-hypothesis" class="level3" data-number="4.4.1">
+<h3 data-number="4.4.1" class="anchored" data-anchor-id="case-1-the-sharp-null-hypothesis"><span class="header-section-number">4.4.1</span> Case 1: The Sharp Null Hypothesis</h3>
+<p>Under the <strong>sharp null hypothesis</strong>, the treatment has no effect on any individual. That is, <span class="math inline">\(Y_i(1) = Y_i(0)\)</span> for all <span class="math inline">\(i\)</span>, which means <span class="math inline">\(\tau_i = 0\)</span> for all <span class="math inline">\(i\)</span>.</p>
+<p>If all treatment effects are zero, then the variance of the treatment effects is also zero. We have <span class="math inline">\(S_{tc}^2 = 0\)</span>. What happens to the true variance formula? The third term vanishes, and the formula simplifies to</p>
+<p><span class="math display">\[
+\text{Var}_D(\widehat{\text{ATE}}) = \frac{S_t^2}{N_t} + \frac{S_c^2}{N_c}.
+\]</span></p>
+<p>But this is exactly what Neyman’s estimator estimates! This leads to a nice result: <em>Under the sharp null, Neyman’s estimator is unbiased.</em></p>
+</section>
+<section id="case-2-constant-treatment-effects" class="level3" data-number="4.4.2">
+<h3 data-number="4.4.2" class="anchored" data-anchor-id="case-2-constant-treatment-effects"><span class="header-section-number">4.4.2</span> Case 2: Constant Treatment Effects</h3>
+<p>Under <strong>constant treatment effects</strong>, every individual experiences the same treatment effect. That is, <span class="math inline">\(\tau_i = \tau\)</span> for some constant <span class="math inline">\(\tau\)</span> and all individuals <span class="math inline">\(i\)</span>.</p>
+<p>If treatment effects are constant, then there is no variance in the treatment effects. Every <span class="math inline">\(\tau_i\)</span> equals <span class="math inline">\(\tau\)</span>, which equals the ATE. So <span class="math inline">\(S_{tc}^2 = 0\)</span>. Once again, the third term vanishes, and the true variance formula simplifies to</p>
+<p><span class="math display">\[
+\text{Var}_D(\widehat{\text{ATE}}) = \frac{S_t^2}{N_t} + \frac{S_c^2}{N_c}.
+\]</span></p>
+<p>And we have another nice result: <em>Under constant treatment effects, Neyman’s estimator is unbiased.</em></p>
+</section>
+<section id="a-simulation-under-constant-effects" class="level3" data-number="4.4.3">
+<h3 data-number="4.4.3" class="anchored" data-anchor-id="a-simulation-under-constant-effects"><span class="header-section-number">4.4.3</span> A Simulation Under Constant Effects</h3>
+<p>Let’s verify this claim with a simulation. We’ll create a population where treatment effects are constant, then repeatedly randomize and compute both <span class="math inline">\(\widehat{\text{ATE}}\)</span> and <span class="math inline">\(\widehat{\text{Var}}(\widehat{\text{ATE}})\)</span>. If Neyman’s variance estimator is unbiased, the long-run average of our variance estimates should equal the true variance.</p>
+<p>What does it mean for a variance estimator to be “unbiased”? The idea is subtle. Just as <span class="math inline">\(\widehat{\text{ATE}}\)</span> is unbiased if its long-run average equals the true ATE, the variance estimator <span class="math inline">\(\widehat{\text{Var}}(\widehat{\text{ATE}})\)</span> is unbiased if its long-run average equals the true variance <span class="math inline">\(\text{Var}_D(\widehat{\text{ATE}})\)</span>. If we could repeat the experiment many times and compute Neyman’s variance estimate each time, the average of all those variance estimates would equal the true variance of the estimator.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># create potential outcomes with CONSTANT treatment effect of 2</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>po_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">respondent =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Y0 =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">4</span>),  <span class="co"># control potential outcomes</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Y1 =</span> Y0 <span class="sc">+</span> <span class="dv">2</span>  <span class="co"># treatment potential outcomes (constant effect = 2)</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>po_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 3
+   respondent    Y0    Y1
+        &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1          1     4     6
+ 2          2     6     8
+ 3          3     5     7
+ 4          4     3     5
+ 5          5     7     9
+ 6          6     5     7
+ 7          7     4     6
+ 8          8     6     8
+ 9          9     5     7
+10         10     4     6</code></pre>
+</div>
+</div>
+<p>With constant treatment effects, every <span class="math inline">\(\tau_i = 2\)</span>, so the ATE is also 2. We can verify that <span class="math inline">\(S_{tc}^2 = 0\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute the true ATE</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>true_ate <span class="ot">&lt;-</span> <span class="fu">mean</span>(po_data<span class="sc">$</span>Y1 <span class="sc">-</span> po_data<span class="sc">$</span>Y0)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>true_ate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># verify S_tc^2 = 0 (variance of treatment effects)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>tau <span class="ot">&lt;-</span> po_data<span class="sc">$</span>Y1 <span class="sc">-</span> po_data<span class="sc">$</span>Y0</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(tau) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+</div>
+<p>Now we simulate many randomizations. For each randomization, we compute <span class="math inline">\(\widehat{\text{ATE}}\)</span> and <span class="math inline">\(\widehat{\text{Var}}(\widehat{\text{ATE}})\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set seed for reproducibility</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># number of simulations</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>n_sims <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># group sizes</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>N_t <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>N_c <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># storage for results</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>ate_estimates <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_sims)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>var_estimates <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_sims)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co"># run the simulation</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_sims) {</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># randomly assign 5 of 10 respondents to treatment</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  treated <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">size =</span> <span class="dv">5</span>)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># compute observed outcomes</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  Y_obs <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span> <span class="sc">%in%</span> treated, po_data<span class="sc">$</span>Y1, po_data<span class="sc">$</span>Y0)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># compute ATE estimate</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  Y_bar_t <span class="ot">&lt;-</span> <span class="fu">mean</span>(Y_obs[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span> <span class="sc">%in%</span> treated])</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  Y_bar_c <span class="ot">&lt;-</span> <span class="fu">mean</span>(Y_obs[<span class="sc">!</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span> <span class="sc">%in%</span> treated)])</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  ate_estimates[i] <span class="ot">&lt;-</span> Y_bar_t <span class="sc">-</span> Y_bar_c</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># compute Neyman's variance estimate</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  s_t_sq <span class="ot">&lt;-</span> <span class="fu">var</span>(Y_obs[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span> <span class="sc">%in%</span> treated])</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  s_c_sq <span class="ot">&lt;-</span> <span class="fu">var</span>(Y_obs[<span class="sc">!</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span> <span class="sc">%in%</span> treated)])</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  var_estimates[i] <span class="ot">&lt;-</span> s_t_sq <span class="sc">/</span> N_t <span class="sc">+</span> s_c_sq <span class="sc">/</span> N_c</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now let’s compare our variance estimates to the actual variance of the ATE estimates across simulations.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compare average of variance estimates to variance of ATE estimates</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(var_estimates)  <span class="co"># average of estimated variances</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5733308</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(ate_estimates)   <span class="co"># variance of ATE estimates across simulations</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5733391</code></pre>
+</div>
+</div>
+<p>The average of our variance estimates (0.573) is very close to the actual variance of the ATE estimates (0.573). This confirms that under constant treatment effects, Neyman’s variance estimator is unbiased. In the long run, our variance estimates correctly capture how much <span class="math inline">\(\widehat{\text{ATE}}\)</span> varies across randomizations.</p>
+</section>
+<section id="case-3-non-constant-treatment-effects" class="level3" data-number="4.4.4">
+<h3 data-number="4.4.4" class="anchored" data-anchor-id="case-3-non-constant-treatment-effects"><span class="header-section-number">4.4.4</span> Case 3: Non-Constant Treatment Effects</h3>
+<p>What if treatment effects are neither zero nor constant? What if they vary across individuals, as they almost certainly do in practice?</p>
+<p>This is where things get interesting. Recall the true variance formula</p>
+<p><span class="math display">\[
+\text{Var}_D(\widehat{\text{ATE}}) = \frac{S_t^2}{N_t} + \frac{S_c^2}{N_c} - \frac{S_{tc}^2}{N}.
+\]</span></p>
+<p>When treatment effects vary, <span class="math inline">\(S_{tc}^2 &gt; 0\)</span>. Critically, the third term is <em>always negative</em>. It <em>shrinks</em> the variance. So what happens when Neyman’s estimator drops this term?</p>
+<p>The estimator becomes too large. It overestimates the true variance.</p>
+<p>More formally, since <span class="math inline">\(S_{tc}^2 \geq 0\)</span>, we have</p>
+<p><span class="math display">\[
+\frac{S_t^2}{N_t} + \frac{S_c^2}{N_c} \geq \frac{S_t^2}{N_t} + \frac{S_c^2}{N_c} - \frac{S_{tc}^2}{N} = \text{Var}_D(\widehat{\text{ATE}}).
+\]</span></p>
+<p>And since <span class="math inline">\(E_D[s_t^2] = S_t^2\)</span> and <span class="math inline">\(E_D[s_c^2] = S_c^2\)</span>, the expected value of Neyman’s estimator is</p>
+<p><span class="math display">\[
+E_D\left[\widehat{\text{Var}}(\widehat{\text{ATE}})\right] = \frac{S_t^2}{N_t} + \frac{S_c^2}{N_c} \geq \text{Var}_D(\widehat{\text{ATE}}).
+\]</span></p>
+<p>Here is the surprising result. We might have worried that dropping an unobservable term would cause serious problems. Instead, it makes our variance estimate <em>conservative</em>. We err on the side of overestimating uncertainty rather than underestimating it.</p>
+<p>In practice, having a conservative variance estimator is often acceptable. If we use an overestimated variance to construct confidence intervals or conduct hypothesis tests, our inferences will be conservative.</p>
+<ul>
+<li>Confidence intervals will be wider than necessary, so they will cover the true ATE <em>at least as often as advertised</em> (95% <em>or more</em>).</li>
+<li>Hypothesis tests will reject the null hypothesis less often than they “should,” so the actual Type I error rate will be <em>at most</em> the nominal level (5% or less).</li>
+</ul>
+</section>
+<section id="a-simulation-under-non-constant-effects" class="level3 page-columns page-full" data-number="4.4.5">
+<h3 data-number="4.4.5" class="anchored" data-anchor-id="a-simulation-under-non-constant-effects"><span class="header-section-number">4.4.5</span> A Simulation Under Non-Constant Effects</h3>
+<p>Let’s verify this with a simulation, using the same structure as before. This time, we’ll create a population where treatment effects vary across individuals, so <span class="math inline">\(S_{tc}^2 &gt; 0\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create potential outcomes with NON-CONSTANT treatment effects</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>po_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">respondent =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Y0 =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">4</span>),  <span class="co"># control potential outcomes (same as before)</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Y1 =</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">4</span>, <span class="dv">8</span>, <span class="dv">7</span>, <span class="dv">3</span>, <span class="dv">6</span>)   <span class="co"># treatment potential outcomes (varying effects)</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># compute individual treatment effects</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>po_data <span class="ot">&lt;-</span> po_data <span class="sc">|&gt;</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">tau =</span> Y1 <span class="sc">-</span> Y0)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>po_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 4
+   respondent    Y0    Y1   tau
+        &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1          1     4     7     3
+ 2          2     6     5    -1
+ 3          3     5     5     0
+ 4          4     3     9     6
+ 5          5     7    10     3
+ 6          6     5     4    -1
+ 7          7     4     8     4
+ 8          8     6     7     1
+ 9          9     5     3    -2
+10         10     4     6     2</code></pre>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(po_data<span class="sc">$</span>Y0, po_data<span class="sc">$</span>Y1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.02507061</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(po_data, <span class="fu">aes</span>(<span class="at">x =</span> Y0, <span class="at">y =</span> Y1)) <span class="sc">+</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="var-est_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="288"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div><p>Notice that the treatment effects vary across individuals, ranging from -2 to 6.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute S_tc^2 (variance of treatment effects)</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>S_tc_sq <span class="ot">&lt;-</span> <span class="fu">var</span>(po_data<span class="sc">$</span>tau)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>S_tc_sq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6.5</code></pre>
+</div>
+</div>
+<p>With <span class="math inline">\(S_{tc}^2 = 6.5\)</span>, the third term in the variance formula is no longer zero. Now we simulate many randomizations, just as before.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set seed for reproducibility</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># number of simulations</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>n_sims <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># group sizes</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>N_t <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>N_c <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co"># storage for results</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>ate_estimates <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_sims)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>var_estimates <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_sims)</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="co"># run the simulation</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_sims) {</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># randomly assign 5 of 10 respondents to treatment</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  treated <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">size =</span> <span class="dv">5</span>)</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># compute observed outcomes</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>  Y_obs <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span> <span class="sc">%in%</span> treated, po_data<span class="sc">$</span>Y1, po_data<span class="sc">$</span>Y0)</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># compute ATE estimate</span></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>  Y_bar_t <span class="ot">&lt;-</span> <span class="fu">mean</span>(Y_obs[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span> <span class="sc">%in%</span> treated])</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>  Y_bar_c <span class="ot">&lt;-</span> <span class="fu">mean</span>(Y_obs[<span class="sc">!</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span> <span class="sc">%in%</span> treated)])</span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>  ate_estimates[i] <span class="ot">&lt;-</span> Y_bar_t <span class="sc">-</span> Y_bar_c</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># compute Neyman's variance estimate</span></span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>  s_t_sq <span class="ot">&lt;-</span> <span class="fu">var</span>(Y_obs[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span> <span class="sc">%in%</span> treated])</span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>  s_c_sq <span class="ot">&lt;-</span> <span class="fu">var</span>(Y_obs[<span class="sc">!</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span> <span class="sc">%in%</span> treated)])</span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>  var_estimates[i] <span class="ot">&lt;-</span> s_t_sq <span class="sc">/</span> N_t <span class="sc">+</span> s_c_sq <span class="sc">/</span> N_c</span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now let’s compare our variance estimates to the actual variance of the ATE estimates across simulations.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compare average of variance estimates to variance of ATE estimates</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(var_estimates)  <span class="co"># average of estimated variances</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.27524</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(ate_estimates)   <span class="co"># variance of ATE estimates across simulations</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6219203</code></pre>
+</div>
+</div>
+<p>The average of our variance estimates (1.275) is larger than the actual variance of the ATE estimates (0.622). This confirms that under non-constant treatment effects, Neyman’s variance estimator is conservative. It systematically <em>overestimates</em> how much <span class="math inline">\(\widehat{\text{ATE}}\)</span> varies across randomizations.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The Overestimate Doesn’t Shrink with Sample Size
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You might hope that the conservative bias becomes negligible as the sample size grows. Unfortunately, the <em>percent</em> overestimate does not diminish with <span class="math inline">\(N\)</span>.</p>
+<p>To see why, suppose we split the sample evenly so that <span class="math inline">\(N_t = N_c = N/2\)</span>. Then the true variance is</p>
+<p><span class="math display">\[
+\text{Var}_D(\widehat{\text{ATE}}) = \frac{2S_t^2}{N} + \frac{2S_c^2}{N} - \frac{S_{tc}^2}{N} = \frac{2S_t^2 + 2S_c^2 - S_{tc}^2}{N},
+\]</span></p>
+<p>and Neyman’s estimator targets</p>
+<p><span class="math display">\[
+\frac{2S_t^2 + 2S_c^2}{N}.
+\]</span></p>
+<p>The percent overestimate is</p>
+<p><span class="math display">\[
+\frac{S_{tc}^2 / N}{(2S_t^2 + 2S_c^2 - S_{tc}^2)/N} = \frac{S_{tc}^2}{2S_t^2 + 2S_c^2 - S_{tc}^2}.
+\]</span></p>
+<p>Notice that <span class="math inline">\(N\)</span> cancels out entirely. The percent overestimate depends only on the population variances <span class="math inline">\(S_t^2\)</span>, <span class="math inline">\(S_c^2\)</span>, and <span class="math inline">\(S_{tc}^2\)</span>, not on the sample size. If treatment effects are heterogeneous, Neyman’s variance estimator will overestimate by the same percentage whether you have 10 respondents or 1,000.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="computing-the-variance-estimate-in-r" class="level2 page-columns page-full" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="computing-the-variance-estimate-in-r"><span class="header-section-number">4.5</span> Computing the Variance Estimate in R</h2>
+<p>Let’s compute Neyman’s variance estimator using R. We’ll use the same hypothetical experiment from above.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># create the observed data</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>obs_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">respondent =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">D =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>),  <span class="co"># treatment assignment</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Y_obs =</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">6</span>)  <span class="co"># observed outcomes</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>obs_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 3
+   respondent     D Y_obs
+        &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1          1     1     7
+ 2          2     0     6
+ 3          3     0     5
+ 4          4     1     9
+ 5          5     1    10
+ 6          6     0     5
+ 7          7     1     8
+ 8          8     0     6
+ 9          9     0     5
+10         10     1     6</code></pre>
+</div>
+</div>
+<section id="computing-the-sample-variances" class="level3" data-number="4.5.1">
+<h3 data-number="4.5.1" class="anchored" data-anchor-id="computing-the-sample-variances"><span class="header-section-number">4.5.1</span> Computing the Sample Variances</h3>
+<p>We compute the sample variances in each group.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sample variance in treatment group</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>s_t_sq <span class="ot">&lt;-</span> obs_data <span class="sc">|&gt;</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(D <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(Y_obs) <span class="sc">|&gt;</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">var</span>()</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>s_t_sq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sample variance in control group</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>s_c_sq <span class="ot">&lt;-</span> obs_data <span class="sc">|&gt;</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(D <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(Y_obs) <span class="sc">|&gt;</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">var</span>()</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>s_c_sq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3</code></pre>
+</div>
+</div>
+</section>
+<section id="computing-neymans-variance-estimator" class="level3" data-number="4.5.2">
+<h3 data-number="4.5.2" class="anchored" data-anchor-id="computing-neymans-variance-estimator"><span class="header-section-number">4.5.2</span> Computing Neyman’s Variance Estimator</h3>
+<p>Now we can compute Neyman’s variance estimator.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># group sizes</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>N_t <span class="ot">&lt;-</span> <span class="fu">sum</span>(obs_data<span class="sc">$</span>D)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>N_c <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="dv">1</span> <span class="sc">-</span> obs_data<span class="sc">$</span>D)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Neyman's variance estimator</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>var_hat <span class="ot">&lt;-</span> s_t_sq <span class="sc">/</span> N_t <span class="sc">+</span> s_c_sq <span class="sc">/</span> N_c</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>var_hat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.56</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># standard error is a common conversion (square root of variance)</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>se_hat <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(var_hat)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>se_hat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7483315</code></pre>
+</div>
+</div>
+<p>The estimated variance is 0.56 and the estimated standard error is 0.748.</p>
+</section>
+<section id="using-ols-with-hc2-standard-errors" class="level3 page-columns page-full" data-number="4.5.3">
+<h3 data-number="4.5.3" class="anchored" data-anchor-id="using-ols-with-hc2-standard-errors"><span class="header-section-number">4.5.3</span> Using OLS with HC2 Standard Errors</h3>
+<p>We can also compute Neyman’s variance estimator in R using <code>lm()</code>. As we showed in an earlier chapter, the difference-in-means estimator equals the coefficient from a regression of <span class="math inline">\(Y_i^{\text{obs}}\)</span> on <span class="math inline">\(D_i\)</span>. But the default standard errors from <code>lm()</code> (as reported by <code>summary()</code> for example) assume homoscedasticity, which is not appropriate here.</p>
+<p><span class="citation" data-cites="SamiiAronow2012">Samii and Aronow (<a href="#ref-SamiiAronow2012" role="doc-biblioref">2012</a>)</span> show that <strong>HC2 robust standard errors</strong> are exactly equivalent to Neyman’s variance estimator for completely randomized experiments. The HC2 estimator is one of several “heteroscedasticity-consistent” variance estimators developed in econometrics. Samii and Aronow’s result means we can obtain the Neyman standard error directly from regression output by requesting HC2 standard errors.</p>
+<div class="no-row-height column-margin column-container"><div id="ref-SamiiAronow2012" class="csl-entry" role="listitem">
+Samii, Cyrus, and Peter M. Aronow. 2012. <span>“On Equivalencies Between Design-Based and Regression-Based Variance Estimators for Randomized Experiments.”</span> <em>Statistics and Probability Letters</em> 82 (2): 365–70.
+</div></div><div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load the sandwich package for robust standard errors</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sandwich)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="co"># fit the regression</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y_obs <span class="sc">~</span> D, <span class="at">data =</span> obs_data)</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co"># print estimates and HC2 SEs</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>var_hat_hc2 <span class="ot">&lt;-</span> <span class="fu">vcovHC</span>(fit, <span class="at">type =</span> <span class="st">"HC2"</span>)</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="fu">coeftest</span>(fit, <span class="at">vcov. =</span> var_hat_hc2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+t test of coefficients:
+
+            Estimate Std. Error t value  Pr(&gt;|t|)    
+(Intercept)  5.40000    0.24495 22.0454 1.893e-08 ***
+D            2.60000    0.74833  3.4744  0.008388 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># extract variance estimates using HC2</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(var_hat_hc2)[<span class="dv">2</span>] <span class="co"># variance</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   D 
+0.56 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">diag</span>(var_hat_hc2)[<span class="dv">2</span>]) <span class="co"># SE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        D 
+0.7483315 </code></pre>
+</div>
+</div>
+<p>The coefficient on <code>D</code> is 2.6, which is our <span class="math inline">\(\widehat{\text{ATE}}\)</span>. The HC2 standard error is 0.748, which matches the Neyman standard error we computed by hand (0.748).</p>
+</section>
+</section>
+<section id="clifford2021" class="level2 page-columns page-full" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="clifford2021"><span class="header-section-number">4.6</span> <span class="citation" data-cites="clifford2021">Clifford, Sheagley, and Piston (<a href="#ref-clifford2021" role="doc-biblioref">2021</a>)</span></h2>
+<div class="no-row-height column-margin column-container"><div id="ref-clifford2021" class="csl-entry" role="listitem">
+Clifford, Scott, Geoffrey Sheagley, and Spencer Piston. 2021. <span>“Increasing Precision Without Altering Treatment Effects: Repeated Measures Designs in Survey Experiments.”</span> <em>American Political Science Review</em> 115 (3): 1048–65.
+</div></div><p>As part of an important paper we’ll return to later, <span class="citation" data-cites="clifford2021">Clifford, Sheagley, and Piston (<a href="#ref-clifford2021" role="doc-biblioref">2021</a>)</span> conducted a question-wording experiment similar to the Rasinski experiment we’ve been using as an example.</p>
+<p>Their Study 1 replicates the canonical welfare question-wording experiment examining whether public support for government spending differs when the policy is described as <strong>“welfare”</strong> versus <strong>“assistance to the poor”</strong>.</p>
+<p>Respondents were randomly assigned to one of two question wordings: “Generally speaking, do you think we’re spending too much, too little or about the right amount on…””</p>
+<ul>
+<li>“assistance to the poor?” (control)<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
+<li>“welfare?” (treatment)</li>
+</ul>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;In the original Rasinski example, we treated “welfare” as the control.</p></div></div><p>Both versions of the question used the same three-point response scale below.</p>
+<ul>
+<li>Too much (1)</li>
+<li>About the right amount (2)</li>
+<li>Too little (3 <span class="math inline">\(\rightarrow\)</span> higher = more liberal response)</li>
+</ul>
+<p>The R code below loads their data. Their experiment has other things going on, but the R code below wrangles it into the simple treatment-control portion that is analogous to our running Rasinski example (except they have over 400 real respondents!).<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;We’ll return to the other portions later.</p></div></div><div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load the study 1 data directly from Harvard Dataverse</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co"># https://dataverse.harvard.edu/file.xhtml?fileId=4459780&amp;version=1.0</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="co"># read tab-delimited file from the Dataverse API</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>study1 <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"https://dataverse.harvard.edu/api/access/datafile/4459780"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(design <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">response =</span> postdv, </span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">treatment_indicator =</span> treat) <span class="sc">|&gt;</span>  <span class="co"># 1 if "welfare"; 0 if "assistance..."</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 447
+Columns: 2
+$ response            &lt;dbl&gt; 3, 3, 2, 1, 3, 2, 3, 3, 2, 2, 3, 2, 2, 3, 2, 2, 3,…
+$ treatment_indicator &lt;dbl&gt; 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1,…</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit regression</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(response <span class="sc">~</span> treatment_indicator, <span class="at">data =</span> study1)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>var_hat <span class="ot">&lt;-</span> <span class="fu">vcovHC</span>(fit, <span class="at">type =</span> <span class="st">"HC2"</span>)</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="fu">coeftest</span>(fit, <span class="at">vcov. =</span> var_hat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+t test of coefficients:
+
+                     Estimate Std. Error t value  Pr(&gt;|t|)    
+(Intercept)          2.477612   0.048394 51.1962 &lt; 2.2e-16 ***
+treatment_indicator -0.239907   0.068852 -3.4844 0.0005423 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+</section>
+<section id="key-terms" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="key-terms"><span class="header-section-number">4.7</span> Key Terms</h2>
+<ul>
+<li>Sample variance (<span class="math inline">\(s_t^2\)</span>, <span class="math inline">\(s_c^2\)</span>)</li>
+<li>Neyman’s variance estimator</li>
+<li>Conservative variance estimation</li>
+<li>Relationship between <code>vcovHC(fit, type = "HC2")</code> and Neyman’s variance estimation</li>
+<li>Standard error (and relationship to variance)</li>
+</ul>
+</section>
+<section id="exercises" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="exercises"><span class="header-section-number">4.8</span> Exercises</h2>
+<section id="conceptual-understanding" class="level3" data-number="4.8.1">
+<h3 data-number="4.8.1" class="anchored" data-anchor-id="conceptual-understanding"><span class="header-section-number">4.8.1</span> Conceptual Understanding</h3>
+<ol type="1">
+<li><strong>Observable vs.&nbsp;Unobservable.</strong> Explain why we can estimate <span class="math inline">\(S_t^2\)</span> and <span class="math inline">\(S_c^2\)</span> from observed data, but we cannot estimate <span class="math inline">\(S_{tc}^2\)</span>. What fundamental feature of experiments makes <span class="math inline">\(S_{tc}^2\)</span> unobservable?</li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>We can estimate <span class="math inline">\(S_t^2\)</span> because random assignment ensures that the treated individuals are a representative sample of the full population. The observed outcomes <span class="math inline">\(Y_i^{\text{obs}}\)</span> for treated individuals are a random sample of all the potential outcomes <span class="math inline">\(Y_i(1)\)</span>. So the sample variance of observed outcomes in the treatment group is an unbiased estimate of the population variance of potential outcomes under treatment. The same logic applies to <span class="math inline">\(S_c^2\)</span> and the control group.</p>
+<p>We cannot estimate <span class="math inline">\(S_{tc}^2\)</span> because it measures the variance of <span class="math inline">\(\tau_i = Y_i(1) - Y_i(0)\)</span>, the individual-level treatment effect. To compute <span class="math inline">\(\tau_i\)</span> for any individual, we would need to observe <em>both</em> <span class="math inline">\(Y_i(1)\)</span> and <span class="math inline">\(Y_i(0)\)</span>. But the fundamental problem of causal inference is that we can only observe one potential outcome per individual. Since we can never observe <span class="math inline">\(\tau_i\)</span> for any individual, we cannot compute its variance across individuals.</p>
+<p>This is a fundamental limitation of experiments. We can learn about average effects, but the individual-level effects remain hidden.</p>
+</details>
+<ol start="2" type="1">
+<li><strong>Why Conservative?</strong> Explain in plain language why Neyman’s variance estimator is conservative (i.e., why it tends to overestimate the true variance). Under what conditions is it exactly unbiased?</li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>The true variance of <span class="math inline">\(\widehat{\text{ATE}}\)</span> is</p>
+<p><span class="math display">\[
+\text{Var}_D(\widehat{\text{ATE}}) = \frac{S_t^2}{N_t} + \frac{S_c^2}{N_c} - \frac{S_{tc}^2}{N}.
+\]</span></p>
+<p>Neyman’s variance estimator only uses the first two terms. It ignores the third term, <span class="math inline">\(-S_{tc}^2/N\)</span>, which is negative (or zero). By ignoring a negative term, we end up with a larger estimate than the true value.</p>
+<p>Intuitively, the negative term reflects the fact that treatment and control assignments are negatively correlated. When an individual with a large <span class="math inline">\(Y_i(1)\)</span> ends up in treatment, they’re not in control, which partially offsets the effect on the estimate. Neyman’s estimator ignores this offsetting effect, so it overestimates how much the estimate varies.</p>
+<p>Neyman’s estimator is exactly unbiased when <span class="math inline">\(S_{tc}^2 = 0\)</span>. This happens in two cases:</p>
+<ol type="1">
+<li><p><strong>Sharp null.</strong> If the treatment has no effect on anyone (<span class="math inline">\(\tau_i = 0\)</span> for all <span class="math inline">\(i\)</span>), then all treatment effects are zero, and their variance is zero.</p></li>
+<li><p><strong>Constant effects.</strong> If everyone experiences the same treatment effect (<span class="math inline">\(\tau_i = \tau\)</span> for all <span class="math inline">\(i\)</span>), then there’s no variation in treatment effects, and their variance is zero.</p></li>
+</ol>
+<p>In any other case, where treatment effects vary across individuals, Neyman’s estimator overestimates the true variance.</p>
+</details>
+<ol start="3" type="1">
+<li><strong>Conservative Inference.</strong> If you use a conservative variance estimator to construct a 95% confidence interval, will the actual coverage probability be greater than, less than, or equal to 95%? Explain.</li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>The actual coverage probability will be <strong>greater than</strong> 95%.</p>
+<p>A conservative variance estimator overestimates the variance, which means it also overestimates the standard error (the square root of the variance). When we construct a confidence interval, we compute</p>
+<p><span class="math display">\[
+\widehat{\text{ATE}} \pm 1.96 \times \widehat{\text{SE}}.
+\]</span></p>
+<p>If <span class="math inline">\(\widehat{\text{SE}}\)</span> is too large, the confidence interval will be wider than necessary. A wider interval is more likely to contain the true ATE, so the actual coverage probability exceeds the nominal 95%.</p>
+<p>This is why we call it “conservative.” The inference errs on the side of caution. We’re more likely to say “we’re uncertain” than to make a confident but wrong claim.</p>
+</details>
+<ol start="4" type="1">
+<li><strong>Sharp Null and Constant Effects.</strong> The sharp null hypothesis states that <span class="math inline">\(\tau_i = 0\)</span> for all individuals, while constant effects means <span class="math inline">\(\tau_i = \tau\)</span> for some constant <span class="math inline">\(\tau\)</span>. Explain why both assumptions lead to <span class="math inline">\(S_{tc}^2 = 0\)</span>, even though they seem quite different.</li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>Both assumptions lead to <span class="math inline">\(S_{tc}^2 = 0\)</span> because both eliminate <em>variation</em> in the treatment effects, even though they imply different average treatment effects.</p>
+<p><span class="math inline">\(S_{tc}^2\)</span> measures how much the individual treatment effects vary around their mean (the ATE). The formula is</p>
+<p><span class="math display">\[
+S_{tc}^2 = \frac{1}{N-1} \sum_{i=1}^{N} (\tau_i - \text{ATE})^2.
+\]</span></p>
+<p>Under the <strong>sharp null</strong>, every <span class="math inline">\(\tau_i = 0\)</span>, so the ATE is also 0. Every deviation <span class="math inline">\(\tau_i - \text{ATE} = 0 - 0 = 0\)</span>, so <span class="math inline">\(S_{tc}^2 = 0\)</span>.</p>
+<p>Under <strong>constant effects</strong>, every <span class="math inline">\(\tau_i = \tau\)</span>, so the ATE is also <span class="math inline">\(\tau\)</span>. Every deviation <span class="math inline">\(\tau_i - \text{ATE} = \tau - \tau = 0\)</span>, so <span class="math inline">\(S_{tc}^2 = 0\)</span>.</p>
+<p>The key insight is that <span class="math inline">\(S_{tc}^2\)</span> measures <em>heterogeneity</em> in treatment effects, not the level of the effect. Both the sharp null (zero effects for everyone) and constant effects (the same nonzero effect for everyone) eliminate heterogeneity, just in different ways.</p>
+</details>
+</section>
+<section id="computational-practice" class="level3" data-number="4.8.2">
+<h3 data-number="4.8.2" class="anchored" data-anchor-id="computational-practice"><span class="header-section-number">4.8.2</span> Computational Practice</h3>
+<ol start="5" type="1">
+<li><p><strong>Computing Sample Variances.</strong> Consider an experiment with 6 individuals. After randomization, you observe the following.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Individual</th>
+<th><span class="math inline">\(D_i\)</span></th>
+<th><span class="math inline">\(Y_i^{\text{obs}}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1</td>
+<td>8</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>0</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>1</td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>0</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>1</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>0</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<p>Use R for these computations. Start by creating vectors <code>D</code> and <code>Y_obs</code> to hold the data, then use <code>mean()</code> and <code>var()</code> along with logical indexing (e.g., <code>Y_obs[D == 1]</code>) as needed.</p>
+<ol type="a">
+<li><p>Compute the treatment group mean <span class="math inline">\(\overline{Y}^{\text{obs}}_t\)</span> and control group mean <span class="math inline">\(\overline{Y}^{\text{obs}}_c\)</span>.</p></li>
+<li><p>Compute the sample variance in the treatment group, <span class="math inline">\(s_t^2\)</span>.</p></li>
+<li><p>Compute the sample variance in the control group, <span class="math inline">\(s_c^2\)</span>.</p></li>
+<li><p>Compute Neyman’s variance estimator <span class="math inline">\(\widehat{\text{Var}}(\widehat{\text{ATE}})\)</span>.</p></li>
+<li><p>Compute the estimated standard error of <span class="math inline">\(\widehat{\text{ATE}}\)</span>.</p></li>
+</ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>First, we create the data vectors.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create data vectors</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>Y_obs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Part a.</strong> The treatment group mean and control group mean are</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># treatment group mean</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>Y_bar_t <span class="ot">&lt;-</span> <span class="fu">mean</span>(Y_obs[D <span class="sc">==</span> <span class="dv">1</span>])</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>Y_bar_t</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># control group mean</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>Y_bar_c <span class="ot">&lt;-</span> <span class="fu">mean</span>(Y_obs[D <span class="sc">==</span> <span class="dv">0</span>])</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>Y_bar_c</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4</code></pre>
+</div>
+</div>
+<p>So <span class="math inline">\(\overline{Y}^{\text{obs}}_t = 8\)</span> and <span class="math inline">\(\overline{Y}^{\text{obs}}_c = 4\)</span>.</p>
+<p><strong>Part b.</strong> The sample variance in the treatment group is</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sample variance in treatment group</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>s_t_sq <span class="ot">&lt;-</span> <span class="fu">var</span>(Y_obs[D <span class="sc">==</span> <span class="dv">1</span>])</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>s_t_sq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4</code></pre>
+</div>
+</div>
+<p>So <span class="math inline">\(s_t^2 = 4\)</span>.</p>
+<p><strong>Part c.</strong> The sample variance in the control group is</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sample variance in control group</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>s_c_sq <span class="ot">&lt;-</span> <span class="fu">var</span>(Y_obs[D <span class="sc">==</span> <span class="dv">0</span>])</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>s_c_sq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<p>So <span class="math inline">\(s_c^2 = 1\)</span>.</p>
+<p><strong>Part d.</strong> With <span class="math inline">\(N_t = 3\)</span> and <span class="math inline">\(N_c = 3\)</span>, Neyman’s variance estimator is</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># group sizes</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>N_t <span class="ot">&lt;-</span> <span class="fu">sum</span>(D <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>N_c <span class="ot">&lt;-</span> <span class="fu">sum</span>(D <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Neyman's variance estimator</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>var_hat <span class="ot">&lt;-</span> s_t_sq <span class="sc">/</span> N_t <span class="sc">+</span> s_c_sq <span class="sc">/</span> N_c</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>var_hat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.666667</code></pre>
+</div>
+</div>
+<p>So <span class="math inline">\(\widehat{\text{Var}}(\widehat{\text{ATE}}) \approx 1.67\)</span>.</p>
+<p><strong>Part e.</strong> The estimated standard error is</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># standard error</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>se_hat <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(var_hat)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>se_hat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.290994</code></pre>
+</div>
+</div>
+<p>So <span class="math inline">\(\widehat{\text{SE}}(\widehat{\text{ATE}}) \approx 1.29\)</span>.</p>
+</details>
+<ol start="6" type="1">
+<li><p><strong>True vs.&nbsp;Estimated Variance.</strong> Suppose the full potential outcomes for the 6 individuals in Exercise 5 are as follows.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Individual</th>
+<th><span class="math inline">\(Y_i(0)\)</span></th>
+<th><span class="math inline">\(Y_i(1)\)</span></th>
+<th><span class="math inline">\(\tau_i\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>5</td>
+<td>8</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>4</td>
+<td>7</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>4</td>
+<td>6</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>5</td>
+<td>9</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>6</td>
+<td>10</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>3</td>
+<td>5</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>Use R for these computations. Start by creating vectors <code>Y0</code>, <code>Y1</code>, and <code>tau</code> to hold the potential outcomes and treatment effects, then use <code>var()</code> as needed.</p>
+<ol type="a">
+<li><p>Compute <span class="math inline">\(S_t^2\)</span>, <span class="math inline">\(S_c^2\)</span>, and <span class="math inline">\(S_{tc}^2\)</span> using the full potential outcomes.</p></li>
+<li><p>Compute the true variance of <span class="math inline">\(\widehat{\text{ATE}}\)</span> using the formula with <span class="math inline">\(N_t = N_c = 3\)</span>.</p></li>
+<li><p>Compare the true variance to Neyman’s estimate from Exercise 5. Is Neyman’s estimate conservative, as expected?</p></li>
+</ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p>First, we create the data vectors.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create potential outcome vectors</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>Y0 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">3</span>)</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>Y1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">7</span>, <span class="dv">6</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">5</span>)</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>tau <span class="ot">&lt;-</span> Y1 <span class="sc">-</span> Y0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Part a.</strong> The finite population variances are computed using <code>var()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># finite population variances</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>S_t_sq <span class="ot">&lt;-</span> <span class="fu">var</span>(Y1)</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>S_c_sq <span class="ot">&lt;-</span> <span class="fu">var</span>(Y0)</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>S_tc_sq <span class="ot">&lt;-</span> <span class="fu">var</span>(tau)</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>S_t_sq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>S_c_sq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>S_tc_sq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.8</code></pre>
+</div>
+</div>
+<p>So <span class="math inline">\(S_t^2 = 3.5\)</span>, <span class="math inline">\(S_c^2 = 1.1\)</span>, and <span class="math inline">\(S_{tc}^2 = 0.8\)</span>.</p>
+<p><strong>Part b.</strong> The true variance is</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># group sizes</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>N_t <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>N_c <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">6</span></span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a><span class="co"># true variance formula</span></span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>true_var <span class="ot">&lt;-</span> S_t_sq <span class="sc">/</span> N_t <span class="sc">+</span> S_c_sq <span class="sc">/</span> N_c <span class="sc">-</span> S_tc_sq <span class="sc">/</span> N</span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>true_var</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.4</code></pre>
+</div>
+</div>
+<p>So <span class="math inline">\(\text{Var}_D(\widehat{\text{ATE}}) = 1.4\)</span>.</p>
+<p><strong>Part c.</strong> Neyman’s estimate from Exercise 5 was approximately 1.67. The true variance is 1.4. Since 1.67 &gt; 1.4, Neyman’s estimate is indeed conservative, as expected. It overestimates the true variance by about 0.27 (or about 19%).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Neyman's estimate from Exercise 5</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>neyman_est <span class="ot">&lt;-</span> <span class="dv">5</span><span class="sc">/</span><span class="dv">3</span>  <span class="co"># approximately 1.67</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a><span class="co"># difference</span></span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>neyman_est <span class="sc">-</span> true_var</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2666667</code></pre>
+</div>
+</div>
+<p>The difference is the dropped term <span class="math inline">\(S_{tc}^2/N = 0.8/6 \approx 0.133\)</span>. Since we drop a positive quantity that’s being subtracted, we end up with a larger estimate.</p>
+</details>
+</section>
+<section id="critical-thinking" class="level3" data-number="4.8.3">
+<h3 data-number="4.8.3" class="anchored" data-anchor-id="critical-thinking"><span class="header-section-number">4.8.3</span> Critical Thinking</h3>
+<ol start="7" type="1">
+<li><p><strong>Heterogeneous Effects and Standard Errors.</strong> Suppose you run an experiment and find that <span class="math inline">\(\widehat{\text{ATE}} = 5\)</span> with Neyman’s standard error of 2. A colleague points out that treatment effects might be heterogeneous, meaning <span class="math inline">\(S_{tc}^2 &gt; 0\)</span>.</p>
+<ol type="a">
+<li><p>Does the possibility of heterogeneous effects change your point estimate of the ATE? Why or why not?</p></li>
+<li><p>The standard error has a “give-or-take” interpretation: if we repeated the experiment many times, the estimates would typically fall within one or two standard errors of the true ATE. Does heterogeneity affect this interpretation?</p></li>
+<li><p>What would you say to your colleague about how heterogeneous effects impact the reliability of your findings?</p></li>
+</ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> No, the possibility of heterogeneous effects does not change the point estimate. The difference-in-means estimator <span class="math inline">\(\widehat{\text{ATE}}\)</span> is unbiased regardless of whether treatment effects are homogeneous or heterogeneous. The estimate of 5 is our best guess of the average treatment effect either way.</p>
+<p><strong>Part b.</strong> Heterogeneity affects the <em>accuracy</em> of the estimated standard error, but in a conservative direction. The true variance is</p>
+<p><span class="math display">\[
+\text{Var}_D(\widehat{\text{ATE}}) = \frac{S_t^2}{N_t} + \frac{S_c^2}{N_c} - \frac{S_{tc}^2}{N}.
+\]</span></p>
+<p>If <span class="math inline">\(S_{tc}^2 &gt; 0\)</span>, then the true variance is smaller than what Neyman’s estimator suggests. Our standard error of 2 is an overestimate of the true standard deviation of <span class="math inline">\(\widehat{\text{ATE}}\)</span>. This means the “give-or-take” range is actually smaller than we think. Our estimates are more precise than the standard error suggests.</p>
+<p><strong>Part c.</strong> I would tell my colleague the following. “Good point! If treatment effects are heterogeneous, then our standard error is conservative, meaning we’re overstating how much our estimate might vary across different randomizations. The true give-or-take range is actually smaller than <span class="math inline">\(\pm 2\)</span>.</p>
+<p>The key point is that heterogeneous effects don’t threaten the validity of our inference. They just make it more cautious. We can trust our estimate of 5, and we can trust that the true ATE is probably within a couple of standard errors of that estimate. If anything, the true uncertainty is smaller than what we’re reporting, not larger.”</p>
+</details>
+</section>
+<section id="r-practice" class="level3" data-number="4.8.4">
+<h3 data-number="4.8.4" class="anchored" data-anchor-id="r-practice"><span class="header-section-number">4.8.4</span> R Practice</h3>
+<ol start="8" type="1">
+<li><p><strong>Rasinski Data.</strong> In earlier chapters, we used mock data from Rasinski’s question-wording experiment. Here is the full dataset as a <code>tribble()</code>.</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>rasinski <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>desc,                     <span class="sc">~</span>response,</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb68-10"><a href="#cb68-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb68-11"><a href="#cb68-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb68-12"><a href="#cb68-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"About right"</span>,</span>
+<span id="cb68-13"><a href="#cb68-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb68-14"><a href="#cb68-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"About right"</span>,</span>
+<span id="cb68-15"><a href="#cb68-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb68-16"><a href="#cb68-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb68-17"><a href="#cb68-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb68-18"><a href="#cb68-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb68-19"><a href="#cb68-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"About right"</span>,</span>
+<span id="cb68-20"><a href="#cb68-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"About right"</span>,</span>
+<span id="cb68-21"><a href="#cb68-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb68-22"><a href="#cb68-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb68-23"><a href="#cb68-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too much"</span>,</span>
+<span id="cb68-24"><a href="#cb68-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"About right"</span>,</span>
+<span id="cb68-25"><a href="#cb68-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb68-26"><a href="#cb68-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb68-27"><a href="#cb68-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too much"</span>,</span>
+<span id="cb68-28"><a href="#cb68-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb68-29"><a href="#cb68-29" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"About right"</span>,</span>
+<span id="cb68-30"><a href="#cb68-30" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"About right"</span>,</span>
+<span id="cb68-31"><a href="#cb68-31" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"About right"</span>,</span>
+<span id="cb68-32"><a href="#cb68-32" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb68-33"><a href="#cb68-33" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb68-34"><a href="#cb68-34" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb68-35"><a href="#cb68-35" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb68-36"><a href="#cb68-36" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb68-37"><a href="#cb68-37" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb68-38"><a href="#cb68-38" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb68-39"><a href="#cb68-39" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb68-40"><a href="#cb68-40" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb68-41"><a href="#cb68-41" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span></span>
+<span id="cb68-42"><a href="#cb68-42" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol type="a">
+<li><p>Prepare the data for analysis by creating a numeric outcome variable (1 = “Too little”, 2 = “About right”, 3 = “Too much”) and a treatment indicator (1 = “assistance to the poor”, 0 = “welfare”).</p></li>
+<li><p>Use <code>lm()</code> to regress the outcome on the treatment indicator.</p></li>
+<li><p>Use the <code>sandwich</code> and <code>lmtest</code> packages to compute HC2 standard errors.</p></li>
+<li><p>Report the estimated ATE, its standard error, and interpret the results in one sentence.</p></li>
+</ol></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><strong>Part a.</strong> We create the numeric outcome and treatment indicator.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sandwich)</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a><span class="co"># create the data</span></span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>rasinski <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>desc,                     <span class="sc">~</span>response,</span>
+<span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb69-10"><a href="#cb69-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb69-11"><a href="#cb69-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb69-12"><a href="#cb69-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb69-13"><a href="#cb69-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb69-14"><a href="#cb69-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb69-15"><a href="#cb69-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb69-16"><a href="#cb69-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb69-17"><a href="#cb69-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb69-18"><a href="#cb69-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"About right"</span>,</span>
+<span id="cb69-19"><a href="#cb69-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb69-20"><a href="#cb69-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"About right"</span>,</span>
+<span id="cb69-21"><a href="#cb69-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb69-22"><a href="#cb69-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb69-23"><a href="#cb69-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb69-24"><a href="#cb69-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb69-25"><a href="#cb69-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"About right"</span>,</span>
+<span id="cb69-26"><a href="#cb69-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"About right"</span>,</span>
+<span id="cb69-27"><a href="#cb69-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb69-28"><a href="#cb69-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb69-29"><a href="#cb69-29" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too much"</span>,</span>
+<span id="cb69-30"><a href="#cb69-30" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"About right"</span>,</span>
+<span id="cb69-31"><a href="#cb69-31" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb69-32"><a href="#cb69-32" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb69-33"><a href="#cb69-33" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too much"</span>,</span>
+<span id="cb69-34"><a href="#cb69-34" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb69-35"><a href="#cb69-35" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"About right"</span>,</span>
+<span id="cb69-36"><a href="#cb69-36" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"About right"</span>,</span>
+<span id="cb69-37"><a href="#cb69-37" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"About right"</span>,</span>
+<span id="cb69-38"><a href="#cb69-38" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb69-39"><a href="#cb69-39" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb69-40"><a href="#cb69-40" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb69-41"><a href="#cb69-41" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb69-42"><a href="#cb69-42" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb69-43"><a href="#cb69-43" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb69-44"><a href="#cb69-44" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb69-45"><a href="#cb69-45" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span>,</span>
+<span id="cb69-46"><a href="#cb69-46" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assistance to the poor"</span>,  <span class="st">"Too little"</span>,</span>
+<span id="cb69-47"><a href="#cb69-47" aria-hidden="true" tabindex="-1"></a>  <span class="st">"welfare"</span>,                 <span class="st">"Too little"</span></span>
+<span id="cb69-48"><a href="#cb69-48" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb69-49"><a href="#cb69-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-50"><a href="#cb69-50" aria-hidden="true" tabindex="-1"></a><span class="co"># create numeric outcome (1 = Too little, 2 = About right, 3 = Too much)</span></span>
+<span id="cb69-51"><a href="#cb69-51" aria-hidden="true" tabindex="-1"></a>rasinski <span class="ot">&lt;-</span> rasinski <span class="sc">|&gt;</span></span>
+<span id="cb69-52"><a href="#cb69-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb69-53"><a href="#cb69-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">outcome =</span> <span class="fu">case_when</span>(</span>
+<span id="cb69-54"><a href="#cb69-54" aria-hidden="true" tabindex="-1"></a>      response <span class="sc">==</span> <span class="st">"Too little"</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb69-55"><a href="#cb69-55" aria-hidden="true" tabindex="-1"></a>      response <span class="sc">==</span> <span class="st">"About right"</span> <span class="sc">~</span> <span class="dv">2</span>,</span>
+<span id="cb69-56"><a href="#cb69-56" aria-hidden="true" tabindex="-1"></a>      response <span class="sc">==</span> <span class="st">"Too much"</span> <span class="sc">~</span> <span class="dv">3</span></span>
+<span id="cb69-57"><a href="#cb69-57" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb69-58"><a href="#cb69-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">treatment =</span> <span class="fu">if_else</span>(desc <span class="sc">==</span> <span class="st">"assistance to the poor"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb69-59"><a href="#cb69-59" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb69-60"><a href="#cb69-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-61"><a href="#cb69-61" aria-hidden="true" tabindex="-1"></a><span class="co"># check the data</span></span>
+<span id="cb69-62"><a href="#cb69-62" aria-hidden="true" tabindex="-1"></a>rasinski <span class="sc">|&gt;</span> <span class="fu">glimpse</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 39
+Columns: 4
+$ desc      &lt;chr&gt; "assistance to the poor", "welfare", "assistance to the poor…
+$ response  &lt;chr&gt; "Too little", "Too little", "Too little", "Too little", "Too…
+$ outcome   &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, …
+$ treatment &lt;dbl&gt; 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, …</code></pre>
+</div>
+</div>
+<p><strong>Part b.</strong> We fit the regression.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit regression</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(outcome <span class="sc">~</span> treatment, <span class="at">data =</span> rasinski)</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = outcome ~ treatment, data = rasinski)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-0.4210 -0.4210 -0.2000  0.1895  1.8000 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   1.4211     0.1297   10.95 3.62e-13 ***
+treatment    -0.2211     0.1812   -1.22     0.23    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.5655 on 37 degrees of freedom
+Multiple R-squared:  0.03868,   Adjusted R-squared:  0.0127 
+F-statistic: 1.489 on 1 and 37 DF,  p-value: 0.2301</code></pre>
+</div>
+</div>
+<p><strong>Part c.</strong> We compute HC2 standard errors.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute HC2 standard errors</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coeftest</span>(fit, <span class="at">vcov. =</span> <span class="fu">vcovHC</span>(fit, <span class="at">type =</span> <span class="st">"HC2"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+t test of coefficients:
+
+            Estimate Std. Error t value  Pr(&gt;|t|)    
+(Intercept)  1.42105    0.13925 10.2050 2.631e-12 ***
+treatment   -0.22105    0.18186 -1.2155    0.2319    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p><strong>Part d.</strong> The estimated ATE is approximately <span class="math inline">\(-0.22\)</span> with a standard error of approximately <span class="math inline">\(0.18\)</span>. Using the “give-or-take” interpretation, we might say that the estimate is <span class="math inline">\(-0.22\)</span> give or take <span class="math inline">\(0.18\)</span> or so. This means that describing government spending as “assistance to the poor” rather than “welfare” shifts responses by about 0.22 points toward more support for spending (since lower values indicate “too little” spending). However, the the standard error is almost as large as the estimate so we can’t be confident that this difference isn’t just noise. We’ll describe a formal hypothesis test in the next chapter.</p>
+</details>
+
+
+
+</section>
+</section>
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../ch/var.html" class="pagination-link" aria-label="The Variance of $\widehat{\text{ATE}}$">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The Variance of <span class="math inline">\(\widehat{\text{ATE}}\)</span></span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../appendices/var-proof.html" class="pagination-link" aria-label="Appendix A: Proof of the Variance Formula">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Appendix A: Proof of the Variance Formula</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
